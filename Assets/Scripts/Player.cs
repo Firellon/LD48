@@ -2,35 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+namespace LD48
 {
-    private Rigidbody2D body;
-
-    private float horizontal;
-    private float vertical;
-
-    public float runSpeed = 20.0f;
-
-    private void Start ()
+    public class Player : MonoBehaviour
     {
-        body = GetComponent<Rigidbody2D>(); 
-    }
+        public float runSpeed = 20.0f;
+        
+        private Rigidbody2D body;
+        private Human human;
 
-    private void Update ()
-    {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical"); 
-    }
+        private float horizontal;
+        private float vertical;
 
-    private void FixedUpdate()
-    {
-        body.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed);
-    }
+        [SerializeField] private bool isReadyToShoot = false;
 
-    private void OnCollisionEnter2D(Collision2D hit){
-        if(hit.gameObject.CompareTag("Wall"))
+        private void Start()
         {
-            body.velocity = Vector2.zero;
+            body = GetComponent<Rigidbody2D>();
+            human = GetComponent<Human>();
         }
-    } 
+
+        private void Update()
+        {
+            horizontal = Input.GetAxisRaw("Horizontal");
+            vertical = Input.GetAxisRaw("Vertical");
+
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Debug.Log("Fire1");
+                if (isReadyToShoot)
+                {
+                    human.Shoot();
+                }
+                else
+                {
+                    human.Fire();
+                }
+            }
+
+            if (Input.GetButtonDown("Fire2"))
+            {
+                Debug.Log("Fire2");
+                isReadyToShoot = !isReadyToShoot;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            body.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed);
+        }
+    }
 }

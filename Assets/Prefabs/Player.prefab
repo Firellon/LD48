@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 5133988400910477833}
   - component: {fileID: 5133988400910477834}
   - component: {fileID: 5133988400910477832}
-  - component: {fileID: 8461734601757475555}
   - component: {fileID: -7433266038967853080}
+  - component: {fileID: 8461734601757475555}
+  - component: {fileID: 1203980886353906568}
   m_Layer: 0
-  m_Name: Human
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,19 +112,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.27908325, y: 0.2676502}
   m_EdgeRadius: 0
---- !u!114 &8461734601757475555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5133988400910477835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb01107ec51b949c3b81ff152eec2ace, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runSpeed: 5
 --- !u!50 &-7433266038967853080
 Rigidbody2D:
   serializedVersion: 4
@@ -145,3 +133,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8461734601757475555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb01107ec51b949c3b81ff152eec2ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runSpeed: 5
+  isReadyToShoot: 0
+--- !u!114 &1203980886353906568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfbf388b9417448cb2efa3e222e34e15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  woodAmount: 0
+  maxWoodAmount: 10
