@@ -65,9 +65,8 @@ namespace LD48
                 Debug.Log("No Wood to burn!");
                 return;
             }
-            var bonfires = Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Default"))
-                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
-                .Where(bonfire => bonfire != null);
+
+            var bonfires = GetClosestBonfires();
             if (bonfires.Any())
             {
                 woodAmount--;
@@ -79,6 +78,14 @@ namespace LD48
                 CreateBonfire();
             }
         }
+
+        private IEnumerable<Bonfire> GetClosestBonfires()
+        {
+            return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Default"))
+                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+                .Where(bonfire => bonfire != null);
+        }
+        
 
         private void CreateBonfire()
         {
@@ -132,6 +139,20 @@ namespace LD48
         public void Hit()
         {
             Debug.Log("Hit!");
+        }
+
+        public string GetTipMessageText()
+        {
+            if (isReadyToShoot)
+            {
+                return "Press LMB to Shoot";
+            }
+            else
+            {
+                if (woodAmount <= 0) return "Gather some Wood to survive through the Night";
+                var bonfires = GetClosestBonfires();
+                return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
+            }
         }
     }
 }

@@ -1,4 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -14,6 +18,7 @@ public class DayNightCycle : MonoBehaviour
     private float currentCycleTime = 15f;
 
     public Light2D globalLight;
+    public TMP_Text cycleMessage;
 
     public Color morningColor;
     public float morningIntensity = 0.8f;
@@ -35,6 +40,7 @@ public class DayNightCycle : MonoBehaviour
         
         globalLight.intensity = targetIntensity;
         globalLight.color = targetColor;
+        cycleMessage.text = "";
     }
 
     // Update is called once per frame
@@ -53,9 +59,36 @@ public class DayNightCycle : MonoBehaviour
         else
         {
             Debug.Log($"Change Cycle Time: {currentCycle}");
+            StartCoroutine(ShowCycleMessage(GetCycleMessage(currentCycle)));
             currentCycle = GetNextCycle(currentCycle);
             currentCycleTime = cycleLength;
             UpdateTargetLight();
+        }
+    }
+
+    private IEnumerator ShowCycleMessage(string getCycleMessage)
+    {
+        cycleMessage.alpha = 0f;
+        cycleMessage.text = GetCycleMessage(currentCycle);
+        yield return cycleMessage.DOFade(1f, 0.5f);
+        yield return new WaitForSeconds(5f);
+        yield return cycleMessage.DOFade(0f, 0.5f);
+    }
+
+    private string GetCycleMessage(DayTime dayTime)
+    {
+        switch (dayTime)
+        {
+            case DayTime.Morning:
+                return "Day grows in power...";
+            case DayTime.Day:
+                return "Sunset approaches...";
+            case DayTime.Evening:
+                return "The Night arrived! Hide and cower, for its terrors are upon you!";
+            case DayTime.Night:
+                return "The Night has passed. Bless the raising Dawn!";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(dayTime), dayTime, null);
         }
     }
 

@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace LD48
 {
     public class Player : MonoBehaviour
     {
+        public TMP_Text woodAmountText;
+        public TMP_Text tipMessage;
         private Human human;
 
         private float horizontal;
@@ -30,6 +33,9 @@ namespace LD48
             {
                 human.SwitchReadyToShoot();
             }
+
+            woodAmountText.text = $"Wood: {human.woodAmount} / {human.maxWoodAmount}";
+            tipMessage.text = human.GetTipMessageText();
         }
 
         private void FixedUpdate()
