@@ -12,10 +12,9 @@ GameObject:
   - component: {fileID: 5133988400910477834}
   - component: {fileID: 5133988400910477832}
   - component: {fileID: -7433266038967853080}
-  - component: {fileID: 8461734601757475555}
   - component: {fileID: 1203980886353906568}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Stranger
   m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,18 +132,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &8461734601757475555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5133988400910477835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb01107ec51b949c3b81ff152eec2ace, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1203980886353906568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,7 +149,7 @@ MonoBehaviour:
   moveSpeed: 5
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
-  fireTouchRadius: 1
+  fireTouchRadius: 2
   bonfirePrefab: {fileID: 5667914319977949734, guid: 73bd7954e27114120a48a889595954e3, type: 3}
   isReadyToShoot: 0
   notReadyToShootSprite: {fileID: 21300000, guid: 7d3ac3d8e6f6647a4bc4df5e6cf11102, type: 3}

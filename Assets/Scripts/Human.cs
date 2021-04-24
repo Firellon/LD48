@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LD48
@@ -12,6 +14,8 @@ namespace LD48
         public float moveSpeed = 5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
+        public float fireTouchRadius = 2f;
+        public GameObject bonfirePrefab;
         
         [SerializeField] private bool isReadyToShoot = false;
 
@@ -55,7 +59,30 @@ namespace LD48
         public void Fire()
         {
             Debug.Log("Fire");
-            
+            if (woodAmount == 0)
+            {
+                // TODO: Show a proper message
+                Debug.Log("No Wood to burn!");
+                return;
+            }
+            var bonfires = Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Default"))
+                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+                .Where(bonfire => bonfire != null);
+            if (bonfires.Any())
+            {
+                woodAmount--;
+                bonfires.First().AddWood();
+            }
+            else
+            {
+                woodAmount--;
+                CreateBonfire();
+            }
+        }
+
+        private void CreateBonfire()
+        {
+            var bonfire = Instantiate(bonfirePrefab, transform.position, Quaternion.identity);
         }
 
         public void Shoot()

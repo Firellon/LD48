@@ -6,7 +6,6 @@ namespace LD48
 {
     public class Bullet : MonoBehaviour
     {
-        public float timeToLive = 1f;
         public float moveSpeed = 20f;
         
         private  Rigidbody2D body;
@@ -14,18 +13,6 @@ namespace LD48
         void Awake()
         {
             body = GetComponent<Rigidbody2D>();
-        }
-        
-        void Update()
-        {
-            if (timeToLive > 0)
-            {
-                timeToLive -= Time.deltaTime;
-            }
-            else
-            {
-                Destroy();
-            }
         }
 
         private void OnCollisionEnter2D(Collision2D hit)
