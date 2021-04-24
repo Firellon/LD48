@@ -23,7 +23,6 @@ namespace LD48
 
             if (Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("Fire1");
                 human.Act();
             }
 
