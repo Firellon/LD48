@@ -7,7 +7,7 @@ namespace LD48
 {
     public class Bonfire : MonoBehaviour
     {
-        public float burnTimePerWood = 10f;
+        public float burnTimePerWood = 20f;
         public GameObject fireParticlePrefab;
         
         private float timeToBurn = 0f;
@@ -40,11 +40,12 @@ namespace LD48
 
         private void Burn()
         {
-            if (Random.value > (1 - 0.01 * timeToBurn))
+            if (Random.value > (1 - 0.025 * timeToBurn))
             {
                 var fireParticle = Instantiate(fireParticlePrefab, transform);
                 fireParticle.transform.localPosition = new Vector2(Random.Range(-0.15f, 0.15f), 0.3f + Random.Range(-0.1f, 0.1f));
-                fireParticle.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 1.5f);
+                fireParticle.GetComponent<Rigidbody2D>().velocity = new Vector2(0, Random.Range(0.1f, 2f));
+                fireParticle.GetComponent<Temporary>().SetTimeToLive(0.1f + Random.Range(0f, 0.5f));
             }
         }
     }
