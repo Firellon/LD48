@@ -6,19 +6,13 @@ namespace LD48
 {
     public class Player : MonoBehaviour
     {
-        public float runSpeed = 20.0f;
-        
-        private Rigidbody2D body;
         private Human human;
 
         private float horizontal;
         private float vertical;
 
-        [SerializeField] private bool isReadyToShoot = false;
-
         private void Start()
         {
-            body = GetComponent<Rigidbody2D>();
             human = GetComponent<Human>();
         }
 
@@ -30,26 +24,19 @@ namespace LD48
             if (Input.GetButtonDown("Fire1"))
             {
                 Debug.Log("Fire1");
-                if (isReadyToShoot)
-                {
-                    human.Shoot();
-                }
-                else
-                {
-                    human.Fire();
-                }
+                human.Act();
             }
 
             if (Input.GetButtonDown("Fire2"))
             {
-                Debug.Log("Fire2");
-                isReadyToShoot = !isReadyToShoot;
+                human.SwitchReadyToShoot();
             }
         }
 
         private void FixedUpdate()
         {
-            body.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed);
+            var moveVector = new Vector2(horizontal, vertical); 
+            human.Move(moveVector);
         }
     }
 }
