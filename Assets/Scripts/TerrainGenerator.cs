@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using LD48;
 using TMPro;
@@ -46,13 +47,20 @@ public class TerrainGenerator : MonoBehaviour
     public TMP_Text woodAmountText;
     #endregion
 
-    #region
+    #region Dead
     public GameObject deadPrefab;
     public Vector2 deadDensity = new Vector2Int(25, 25);
     public Transform deadParent;
     public float deadSpawnProbability = 0.25f;
     
     private List<Transform> deads = new List<Transform>();
+    #endregion
+    
+    #region Ghosts
+    public GameObject ghostPrefab;
+    public Transform ghostParent;
+    public float ghostSpawnProbability = 0.2f;
+    private List<GameObject> ghosts = new List<GameObject>();
     #endregion
     
     // Start is called before the first frame update
@@ -165,9 +173,25 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateGhosts()
+    public void GenerateGhosts()
     {
+        foreach (var dead in deads)
+        {
+            if (Random.value < ghostSpawnProbability) continue;
+            var ghost = Instantiate(ghostPrefab, dead.position, dead.rotation);
+            ghost.transform.parent = ghostParent;
+            ghosts.Add(ghost);
+        }
+    }
+
+    public void DestroyGhosts()
+    {
+        foreach (var ghost in ghosts.Where(ghost => ghost != null))
+        {
+            ghost.GetComponent<Ghost>().Hit();
+        }
         
+        ghosts.Clear();
     }
 
     public void AddDead(Transform newDead)

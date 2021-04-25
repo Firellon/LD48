@@ -351,7 +351,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -555,7 +555,7 @@ MonoBehaviour:
   treeSpawnProbability: 0.5
   woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   itemParent: {fileID: 1640993705}
-  itemDensity: {x: 5, y: 5}
+  itemDensity: {x: 7, y: 7}
   itemSpawnProbability: 0.1
   strangerPrefabs:
   - {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
@@ -570,9 +570,12 @@ MonoBehaviour:
   tipMessageText: {fileID: 855145704}
   woodAmountText: {fileID: 151875214}
   deadPrefab: {fileID: 8517205137437858493, guid: c23ea6e9a4bcf4437a789d73a1b39181, type: 3}
-  deadDensity: {x: 25, y: 25}
+  deadDensity: {x: 20, y: 20}
   deadParent: {fileID: 27940415}
   deadSpawnProbability: 0.25
+  ghostPrefab: {fileID: 5133988400910477835, guid: 80e2f39ec1bf741a9afad02b3a2684cf, type: 3}
+  ghostParent: {fileID: 822315905}
+  ghostSpawnProbability: 0.5
 --- !u!114 &519420036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,6 +722,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   targetOffset: {x: 0, y: 0, z: 0}
+--- !u!1 &822315904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 822315905}
+  m_Layer: 0
+  m_Name: Ghosts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &822315905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822315904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &855145702
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +1013,7 @@ RectTransform:
   - {fileID: 855145703}
   - {fileID: 151875213}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -21,7 +21,7 @@ namespace LD48
         public Sprite attackSprite;
         public Sprite deadSprite;
 
-        public float walkSpeed = 2f;
+        public float walkSpeed = 4f;
 
         public float baseTimeToReload = 1f;
         private float timeToReload = 0f;
@@ -190,6 +190,7 @@ namespace LD48
             renderer.sprite = deadSprite;
             timeToDie = baseTimeToDie;
             body.velocity = Vector2.zero;
+            GetComponent<Collider2D>().enabled = false;
         }
     }
 }

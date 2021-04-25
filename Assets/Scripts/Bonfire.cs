@@ -25,7 +25,8 @@ namespace LD48
         
         void Start()
         {
-            AddWood();
+            timeToBurn += burnTimePerWood / 2;
+            isBurning = true;
         }
 
         // Update is called once per frame
