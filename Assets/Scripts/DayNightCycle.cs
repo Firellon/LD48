@@ -114,7 +114,7 @@ namespace LD48
                 case DayTime.Evening:
                     return "The Night arrived! Hide and cower, for its terrors are upon you!";
                 case DayTime.Night:
-                    return $"The Night has passed. Bless the raising Dawn of Day {currentDay}!";
+                    return $"Night has passed.\n Dawn of Day {currentDay}";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dayTime), dayTime, null);
             }
