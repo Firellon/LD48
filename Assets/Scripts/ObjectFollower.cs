@@ -8,16 +8,25 @@ namespace LD48
     {
         public Transform target;
         public Vector3 targetOffset;
-        private void Start()
-        {
-            targetOffset = transform.position - target.position;
-        }
+        
         void Update()
         {
             if (target)
             {
-                transform.position = Vector3.Lerp(transform.position, target.position + targetOffset, 0.1f);
+                if (Vector2.Distance(transform.position, target.position) > 5f)
+                {
+                    transform.position = target.position + targetOffset;
+                }
+                else
+                {
+                    transform.position = Vector3.Lerp(transform.position, target.position + targetOffset, 0.1f);    
+                }
             }
+        }
+
+        public void SetTarget(Transform newTarget)
+        {
+            target = newTarget;
         }
     }
 }

@@ -88,6 +88,7 @@ namespace LD48
         {
             if (hit.gameObject.CompareTag("Wall"))
             {
+                if (!body) return;
                 body.velocity = Vector2.zero;
             }
 
@@ -107,6 +108,7 @@ namespace LD48
         public void Move(Vector2 moveDirection)
         {
             if (isHit || isDead) return;
+            if (!body) return;
             body.velocity = moveDirection.normalized * moveSpeed;
             if (moveDirection.x != 0)
             {

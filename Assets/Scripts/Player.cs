@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LD48
 {
     public class Player : MonoBehaviour
     {
         public TMP_Text woodAmountText;
-        public TMP_Text tipMessage;
+        [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
         private Human human;
 
         private float horizontal;
@@ -34,8 +35,11 @@ namespace LD48
                 human.SwitchReadyToShoot();
             }
 
-            woodAmountText.text = $"Wood: {human.woodAmount} / {human.maxWoodAmount}";
-            tipMessage.text = human.GetTipMessageText();
+            if (woodAmountText && tipMessageText)
+            {
+                woodAmountText.text = $"Wood: {human.woodAmount} / {human.maxWoodAmount}";
+                tipMessageText.text = human.GetTipMessageText();   
+            }
         }
 
         private void FixedUpdate()

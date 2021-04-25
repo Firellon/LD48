@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using LD48;
+using TMPro;
 using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
@@ -26,11 +29,30 @@ public class TerrainGenerator : MonoBehaviour
     private readonly List<GameObject> items = new List<GameObject>();
     #endregion
     
+    #region Strangers
+    public List<GameObject> strangerPrefabs;
+    public Transform strangerParent;
+    public Vector2Int strangerDensity = new Vector2Int(5, 5);
+    public float strangerSpawnProbability = 0.2f;
+
+    private readonly List<GameObject> strangers = new List<GameObject>();
+    #endregion
+    
+    #region Player
+    public GameObject playerPrefab;
+    private GameObject player;
+    public List<ObjectFollower> playerFollowers;
+    public TMP_Text tipMessageText;
+    public TMP_Text woodAmountText;
+    #endregion
+    
     // Start is called before the first frame update
     void Start()
     {
         GenerateTrees();
         GenerateItems();
+        GenerateStrangers();
+        GeneratePlayer();
     }
 
     // Update is called once per frame
@@ -39,7 +61,7 @@ public class TerrainGenerator : MonoBehaviour
         
     }
 
-    void DeleteTrees()
+    private void DeleteTrees()
     {
         foreach (var tree in trees)
         {
@@ -47,8 +69,8 @@ public class TerrainGenerator : MonoBehaviour
         }
         treePositions.Clear();
     }
-    
-    void DeleteItems()
+
+    private void DeleteItems()
     {
         foreach (var item in items)
         {
@@ -57,41 +79,64 @@ public class TerrainGenerator : MonoBehaviour
         itemPositions.Clear();
     }
 
-    void GenerateTrees()
+    private void GenerateTrees()
     {
         treePositions.Clear();
         for (var treeX = 0; treeX < levelSize.x; treeX += treeDensity.x)
         {
             for (var treeY = 0; treeY < levelSize.y; treeY += treeDensity.y)
             {
-                if (Random.value > treeSpawnProbability)
-                {
-                    var treePosition = new Vector2(treeX + Random.Range(0f, treeDensity.x), treeY + Random.Range(0f, treeDensity.y));
-                    treePositions.Add(treePosition);
-                    var tree = Instantiate(treePrefab, treeParent);
-                    tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
-                    trees.Add(tree);
-                }
+                if (Random.value < treeSpawnProbability) continue;
+                var treePosition = new Vector2(treeX + Random.Range(0f, treeDensity.x), treeY + Random.Range(0f, treeDensity.y));
+                treePositions.Add(treePosition);
+                var tree = Instantiate(treePrefab, treeParent);
+                tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
+                trees.Add(tree);
             }
         }
     }
-    
-    void GenerateItems()
+
+    private void GenerateItems()
     {
         itemPositions = new List<Vector2>();
         for (var itemX = itemDensity.x / 2; itemX < levelSize.x; itemX += itemDensity.x)
         {
             for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
             {
-                if (Random.value > itemSpawnProbability)
-                {
-                    var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x), itemY + Random.Range(0f, itemDensity.y));
-                    treePositions.Add(itemPosition);
-                    var wood = Instantiate(woodPrefab, itemParent);
-                    wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
-                    items.Add(wood);
-                }
+                if (Random.value < itemSpawnProbability) continue;
+                var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x), itemY + Random.Range(0f, itemDensity.y));
+                treePositions.Add(itemPosition);
+                var wood = Instantiate(woodPrefab, itemParent);
+                wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
+                items.Add(wood);
             }
+        }
+    }
+
+    private void GenerateStrangers()
+    {
+        for (var strangerX = strangerDensity.x / 2; strangerX < levelSize.x; strangerX += strangerDensity.x)
+        {
+            for (var strangerY = strangerDensity.y / 2; strangerY < levelSize.y; strangerY += strangerDensity.y)
+            {
+                if (Random.value < itemSpawnProbability) continue;
+                var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x), strangerY + Random.Range(0f, strangerDensity.y));
+                treePositions.Add(strangerPosition);
+                var stranger = Instantiate(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
+                stranger.transform.position += new Vector3(strangerPosition.x, strangerPosition.y, 0);
+                strangers.Add(stranger);
+            }
+        }
+    }
+
+    private void GeneratePlayer()
+    {
+        player = Instantiate(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
+        player.GetComponent<Player>().tipMessageText = tipMessageText;
+        player.GetComponent<Player>().woodAmountText = woodAmountText;
+        foreach (var playerFollower in playerFollowers)
+        {
+            playerFollower.SetTarget(player.transform);
         }
     }
 }
