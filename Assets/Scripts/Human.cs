@@ -16,16 +16,58 @@ namespace LD48
         public GameObject bulletPrefab;
         public float fireTouchRadius = 2f;
         public GameObject bonfirePrefab;
+
+        public GameObject woodPrefab;
         
         [SerializeField] private bool isReadyToShoot = false;
 
         public Sprite notReadyToShootSprite;
         public Sprite readyToShootSprite;
+        public Sprite hitSprite;
+        public Sprite deadSprite;
+
+        private bool isHit = false;
+        private bool isDead = false;
+
+        public float baseTimeToRecover = 5f;
+        private float timeToRecover = 0f;
+
+        public float baseTimeToReload = 0.5f;
+        private float timeToReload = 0f;
+        private bool isReloading = false;
         
         private void Start()
         {
             body = GetComponent<Rigidbody2D>();
             renderer = GetComponent<SpriteRenderer>();
+        }
+
+        private void Update()
+        {
+            if (isReloading)
+            {
+                if (timeToReload > 0f)
+                {
+                    timeToReload -= Time.deltaTime;
+                }
+                else
+                {
+                    isReloading = false;
+                }
+            }
+            
+            if (isHit && !isDead)
+            {
+                if (timeToRecover > 0f)
+                {
+                    timeToRecover -= Time.deltaTime;
+                }
+                else
+                {
+                    isHit = false;
+                    renderer.sprite = GetRegularSprite();
+                }
+            }
         }
         private void OnCollisionEnter2D(Collision2D hit)
         {
@@ -49,6 +91,7 @@ namespace LD48
 
         public void Move(Vector2 moveDirection)
         {
+            if (isHit || isDead) return;
             body.velocity = moveDirection * moveSpeed;
             if (moveDirection.x != 0)
             {
@@ -58,7 +101,8 @@ namespace LD48
         
         public void Fire()
         {
-            Debug.Log("Fire");
+            if (isHit || isDead) return;
+            
             if (woodAmount == 0)
             {
                 // TODO: Show a proper message
@@ -92,7 +136,7 @@ namespace LD48
             var bonfire = Instantiate(bonfirePrefab, transform.position, Quaternion.identity);
         }
 
-        public void Shoot()
+        private void Shoot()
         {
             Debug.Log("Shoot");
             var bullet = Instantiate(bulletPrefab, transform);
@@ -105,6 +149,7 @@ namespace LD48
         
         private void PickUp(Item item)
         {
+            if (isHit || isDead) return;
             Debug.Log($"PickUp > {item.type}");
             switch (item.type)
             {
@@ -120,12 +165,19 @@ namespace LD48
 
         public void SwitchReadyToShoot()
         {
+            if (isHit || isDead) return;
             isReadyToShoot = !isReadyToShoot;
-            renderer.sprite = isReadyToShoot ? readyToShootSprite : notReadyToShootSprite;
+            renderer.sprite = GetRegularSprite();
         }
 
+        private Sprite GetRegularSprite()
+        {
+            return isReadyToShoot ? readyToShootSprite : notReadyToShootSprite;
+        }
+        
         public void Act()
         {
+            if (isHit || isDead) return;
             if (isReadyToShoot)
             {
                 Shoot();
@@ -139,10 +191,41 @@ namespace LD48
         public void Hit()
         {
             Debug.Log("Hit!");
+            if (!isHit && !isDead)
+            {
+                isHit = true;
+                renderer.sprite = hitSprite;
+                timeToRecover = 5f;
+            }
+            else
+            {
+                isDead = true;
+                renderer.sprite = deadSprite;
+                DropItems();
+            }
+        }
+
+        private void DropItems()
+        {
+            while (woodAmount > 0)
+            {
+                woodAmount--;
+                Instantiate(woodPrefab, transform.position + new Vector3(Random.value, Random.value), Quaternion.identity);
+            }
         }
 
         public string GetTipMessageText()
         {
+            if (isHit)
+            {
+                return "You have been wounded, a few seconds needed to recover!";
+            }
+            
+            if (isDead)
+            {
+                return "Alas, you have died. Press R to restart.";
+            }
+            
             if (isReadyToShoot)
             {
                 return "Press LMB to Shoot";

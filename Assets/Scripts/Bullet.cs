@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,12 +22,15 @@ namespace LD48
             {
                 Destroy();
             }
+        }
 
+        private void OnTriggerEnter2D(Collider2D hit)
+        {
             if (hit.gameObject.CompareTag("Human") && transform.parent.gameObject != hit.gameObject)
             {
-                var human = hit.gameObject.GetComponent<Human>();
+                var human = hit.transform.parent.gameObject.GetComponent<Human>();
                 if (human == null) {
-                    Debug.LogError($"OnCollisionEnter2D > {hit.gameObject} has Human tag and lacks Human component!");
+                    Debug.LogError($"OnTriggerEnter2D > {hit.gameObject} has Human tag and lacks Human component on its parent!");
                     return;
                 }
 
