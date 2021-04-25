@@ -27,6 +27,7 @@ namespace LD48
         public Sprite readyToShootSprite;
         public Sprite hitSprite;
         public Sprite deadSprite;
+        public Sprite restingSprite;
 
         private bool isHit = false;
         private bool isDead = false;
@@ -37,6 +38,10 @@ namespace LD48
         public float baseTimeToReload = 0.5f;
         private float timeToReload = 0f;
         private bool isReloading = false;
+        
+        public float baseTimeToRest = 3f;
+        private float timeToRest = 3f;
+        private bool isResting = false;
 
         private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
@@ -83,6 +88,32 @@ namespace LD48
                     renderer.sprite = GetRegularSprite();
                 }
             }
+
+            if (!isReadyToShoot && body.velocity == Vector2.zero && !isHit && !isDead)
+            {
+                if (!isResting)
+                {
+                    Debug.Log("Start Resting");
+                    isResting = true;
+                    timeToRest = baseTimeToRest;    
+                }
+            }
+            else
+            {
+                isResting = false;
+            }
+
+            if (isResting)
+            {
+                if (timeToRest > 0f)
+                {
+                    timeToRest -= Time.deltaTime;
+                }
+                else
+                {
+                    renderer.sprite = restingSprite;
+                }
+            }
         }
         private void OnCollisionEnter2D(Collision2D hit)
         {
@@ -109,6 +140,7 @@ namespace LD48
         {
             if (isHit || isDead) return;
             if (!body) return;
+            renderer.sprite = GetRegularSprite();
             body.velocity = moveDirection.normalized * moveSpeed;
             if (moveDirection.x != 0)
             {
@@ -170,7 +202,7 @@ namespace LD48
         private void PickUp(Item item)
         {
             if (isHit || isDead) return;
-            Debug.Log($"PickUp > {item.type}");
+            // Debug.Log($"PickUp > {item.type}");
             switch (item.type)
             {
                 case ItemType.Wood:
