@@ -138,6 +138,7 @@ namespace LD48
 
         private void Shoot()
         {
+            if (isReloading || isHit || isDead) return;
             Debug.Log("Shoot");
             var bullet = Instantiate(bulletPrefab, transform);
 
@@ -145,6 +146,8 @@ namespace LD48
             bullet.GetComponent<Bullet>().SetDirection(new Vector2(xDirection, 0));
             
             bullet.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
+            isReloading = true;
+            timeToReload = baseTimeToReload;
         }
         
         private void PickUp(Item item)
