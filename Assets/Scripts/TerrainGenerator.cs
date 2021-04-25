@@ -45,6 +45,15 @@ public class TerrainGenerator : MonoBehaviour
     public TMP_Text tipMessageText;
     public TMP_Text woodAmountText;
     #endregion
+
+    #region
+    public GameObject deadPrefab;
+    public Vector2 deadDensity = new Vector2Int(25, 25);
+    public Transform deadParent;
+    public float deadSpawnProbability = 0.25f;
+    
+    private List<Transform> deads = new List<Transform>();
+    #endregion
     
     // Start is called before the first frame update
     void Start()
@@ -52,6 +61,7 @@ public class TerrainGenerator : MonoBehaviour
         GenerateTrees();
         GenerateItems();
         GenerateStrangers();
+        GenerateDead();
         GeneratePlayer();
     }
 
@@ -128,6 +138,21 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
     }
+    
+    private void GenerateDead()
+    {
+        for (var deadX = deadDensity.x / 2; deadX < levelSize.x; deadX += deadDensity.x)
+        {
+            for (var deadY = deadDensity.y / 2; deadY < levelSize.y; deadY += deadDensity.y)
+            {
+                if (Random.value < deadSpawnProbability) continue;
+                var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x), deadY + Random.Range(0f, deadDensity.y));
+                var dead = Instantiate(deadPrefab, deadParent);
+                dead.transform.position += new Vector3(deadPosition.x, deadPosition.y, 0);
+                deads.Add(dead.transform);
+            }
+        }
+    }
 
     private void GeneratePlayer()
     {
@@ -138,5 +163,15 @@ public class TerrainGenerator : MonoBehaviour
         {
             playerFollower.SetTarget(player.transform);
         }
+    }
+
+    private void GenerateGhosts()
+    {
+        
+    }
+
+    public void AddDead(Transform newDead)
+    {
+        deads.Add(newDead);
     }
 }

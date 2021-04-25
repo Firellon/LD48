@@ -11,6 +11,8 @@ namespace LD48
     {
         private Rigidbody2D body;
         private new SpriteRenderer renderer;
+        private TerrainGenerator terrainGenerator;
+        private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
         
         public int woodAmount = 0;
         public int maxWoodAmount = 10;
@@ -43,8 +45,6 @@ namespace LD48
         private float timeToRest = 3f;
         private bool isResting = false;
 
-        private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
-
         public bool IsDead()
         {
             return isDead;
@@ -59,7 +59,8 @@ namespace LD48
         {
             body = GetComponent<Rigidbody2D>();
             renderer = GetComponent<SpriteRenderer>();
-            levelSize = Camera.main.GetComponent<TerrainGenerator>().levelSize;
+            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
+            levelSize = terrainGenerator.levelSize;
         }
 
         private void Update()
@@ -93,7 +94,6 @@ namespace LD48
             {
                 if (!isResting)
                 {
-                    Debug.Log("Start Resting");
                     isResting = true;
                     timeToRest = baseTimeToRest;    
                 }
@@ -248,13 +248,16 @@ namespace LD48
                 isHit = true;
                 isReadyToShoot = false;
                 renderer.sprite = hitSprite;
-                timeToRecover = 5f;
+                timeToRecover = baseTimeToRecover;
+                DropItems();
+                // TODO: Update Collider on hit and on recover
             }
             else
             {
                 isDead = true;
                 renderer.sprite = deadSprite;
-                DropItems();
+                GetComponent<Collider2D>().enabled = false;
+                terrainGenerator.AddDead(transform);
             }
         }
 
