@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 namespace LD48
 {
@@ -16,7 +19,6 @@ namespace LD48
         public GameObject bulletPrefab;
         public float fireTouchRadius = 2f;
         public GameObject bonfirePrefab;
-
         public GameObject woodPrefab;
         
         [SerializeField] private bool isReadyToShoot = false;
@@ -36,6 +38,8 @@ namespace LD48
         private float timeToReload = 0f;
         private bool isReloading = false;
 
+        private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+
         public bool IsDead()
         {
             return isDead;
@@ -50,6 +54,7 @@ namespace LD48
         {
             body = GetComponent<Rigidbody2D>();
             renderer = GetComponent<SpriteRenderer>();
+            levelSize = Camera.main.GetComponent<TerrainGenerator>().levelSize;
         }
 
         private void Update()
@@ -230,14 +235,19 @@ namespace LD48
 
         public string GetTipMessageText()
         {
+            if (isDead)
+            {
+                return "Alas, you have died. Press R to restart.";
+            }
+            
             if (isHit)
             {
                 return "You have been wounded, a few seconds needed to recover!";
             }
-            
-            if (isDead)
+
+            if (IsCloseToMapBorder())
             {
-                return "Alas, you have died. Press R to restart.";
+                return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
             }
             
             if (isReadyToShoot)
@@ -250,6 +260,16 @@ namespace LD48
                 var bonfires = GetClosestBonfires();
                 return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
             }
+        }
+
+        private bool IsCloseToMapBorder()
+        {
+            var minBorderDistance = 1f;
+            if (transform.position.x < minBorderDistance ||
+                transform.position.x > levelSize.x - minBorderDistance) return true;
+            if (transform.position.y < minBorderDistance ||
+                transform.position.y > levelSize.y - minBorderDistance) return true;
+            return false;
         }
     }
 }

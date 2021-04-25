@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -7433266038967853080}
   - component: {fileID: 1203980886353906568}
   - component: {fileID: 2968753310703807543}
+  - component: {fileID: -7590158872547758650}
   m_Layer: 0
   m_Name: Stranger
   m_TagString: Untagged
@@ -180,6 +181,18 @@ MonoBehaviour:
   state: 0
   target: {fileID: 0}
   baseTimeToWander: 3
+--- !u!114 &-7590158872547758650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a248e4e780945018e67e6a6a7a2eb14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6281792709375077079
 GameObject:
   m_ObjectHideFlags: 0
