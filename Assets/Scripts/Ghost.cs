@@ -14,7 +14,7 @@ namespace LD48
     }
     public class Ghost : MonoBehaviour, IHittable
     {
-        private SpriteRenderer renderer;
+        private new SpriteRenderer renderer;
         private Rigidbody2D body;
         
         public Sprite walkSprite;
@@ -38,6 +38,16 @@ namespace LD48
         private float baseTimeToIdle = 2f;
         private float timeToIdle = 0f;
         private Vector2 idleDirection;
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
+
+        public bool IsThreat()
+        {
+            return !isDead && state != GhostState.Flee;
+        }
 
         private void Start()
         {

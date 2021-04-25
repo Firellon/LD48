@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5133988400910477832}
   - component: {fileID: -7433266038967853080}
   - component: {fileID: 1203980886353906568}
+  - component: {fileID: 2968753310703807543}
   m_Layer: 0
   m_Name: Stranger
   m_TagString: Untagged
@@ -160,6 +161,23 @@ MonoBehaviour:
   deadSprite: {fileID: 21300000, guid: 0cabfa839079f4cd6b94ef6968e51f54, type: 3}
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
+--- !u!114 &2968753310703807543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d9dafb471974735a7c2d6aab2e5ab75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bravery: 4
+  threatRadius: 12
+  bonfireRadius: 10
+  gatherRadius: 12
+  baseTimeToWander: 3
 --- !u!1 &6281792709375077079
 GameObject:
   m_ObjectHideFlags: 0

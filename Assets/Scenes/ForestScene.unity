@@ -574,10 +574,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4069f96b51c446c4b15c01d20979b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSize: {x: 10, y: 10}
+  levelSize: {x: 30, y: 30}
   treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
   treeParent: {fileID: 1769398229}
-  treeDensity: {x: 1, y: 2}
+  treeDensity: {x: 2, y: 3}
   treeSpawnProbability: 0.5
   woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   itemParent: {fileID: 1640993705}
@@ -734,11 +734,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5133988400910477833, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.58
+      value: 3.91
       objectReference: {fileID: 0}
     - target: {fileID: 5133988400910477833, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.72
+      value: 12.49
       objectReference: {fileID: 0}
     - target: {fileID: 5133988400910477833, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_LocalPosition.z

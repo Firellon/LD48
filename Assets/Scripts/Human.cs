@@ -11,7 +11,7 @@ namespace LD48
         
         public int woodAmount = 0;
         public int maxWoodAmount = 10;
-        public float moveSpeed = 5f;
+        public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
         public float fireTouchRadius = 2f;
@@ -40,7 +40,12 @@ namespace LD48
         {
             return isDead;
         }
-        
+
+        public bool IsThreat()
+        {
+            return !isHit && !isDead && isReadyToShoot;
+        }
+
         private void Start()
         {
             body = GetComponent<Rigidbody2D>();
@@ -97,7 +102,7 @@ namespace LD48
         public void Move(Vector2 moveDirection)
         {
             if (isHit || isDead) return;
-            body.velocity = moveDirection * moveSpeed;
+            body.velocity = moveDirection.normalized * moveSpeed;
             if (moveDirection.x != 0)
             {
                 renderer.flipX = moveDirection.x < 0;    
@@ -154,7 +159,7 @@ namespace LD48
             isReloading = true;
             timeToReload = baseTimeToReload;
         }
-        
+
         private void PickUp(Item item)
         {
             if (isHit || isDead) return;
@@ -202,6 +207,7 @@ namespace LD48
             if (!isHit && !isDead)
             {
                 isHit = true;
+                isReadyToShoot = false;
                 renderer.sprite = hitSprite;
                 timeToRecover = 5f;
             }

@@ -17,6 +17,11 @@ namespace LD48
         {
             return isBurning;
         }
+
+        public float GetTimeToBurn()
+        {
+            return timeToBurn;
+        }
         
         void Start()
         {

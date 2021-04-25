@@ -127,5 +127,10 @@ public class DayNightCycle : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
-    } 
+    }
+
+    public DayTime GetCurrentCycle()
+    {
+        return currentCycle;
+    }
 }
