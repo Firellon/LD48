@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodAmount: 1
   maxWoodAmount: 10
-  moveSpeed: 5
+  moveSpeed: 2.5
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
   fireTouchRadius: 2
@@ -177,6 +177,8 @@ MonoBehaviour:
   threatRadius: 12
   bonfireRadius: 10
   gatherRadius: 12
+  state: 0
+  target: {fileID: 0}
   baseTimeToWander: 3
 --- !u!1 &6281792709375077079
 GameObject:
@@ -222,7 +224,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01608038, y: 0.18148024}
+  m_Offset: {x: 0.01608038, y: 0.035202406}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -233,5 +235,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.18678474, y: 0.24804386}
+  m_Size: {x: 0.18678474, y: 0.5405995}
   m_EdgeRadius: 0

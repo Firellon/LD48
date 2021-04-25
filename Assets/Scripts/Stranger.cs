@@ -29,6 +29,7 @@ namespace LD48
         
         [SerializeField]
         private StrangerState state;
+        [SerializeField]
         private Transform target;
 
         public float baseTimeToWander = 3f;
@@ -83,6 +84,7 @@ namespace LD48
                 .Select(collider => collider.gameObject)
                 .Where(threat =>
                 {
+                    if (threat.gameObject == gameObject) return false;
                     var hittable = threat.GetComponent<IHittable>();
                     return hittable != null && hittable.IsThreat();
                 })
