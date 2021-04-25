@@ -26,6 +26,7 @@ namespace LD48
         
         private Human human;
         private DayNightCycle dayNightCycle;
+        private TerrainGenerator terrainGenerator;
         
         [SerializeField]
         private StrangerState state;
@@ -41,6 +42,9 @@ namespace LD48
         {
             human = GetComponent<Human>();
             dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
+            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
+
+            human.woodAmount = Random.Range(1, 4);
         }
         
         private void Update()
@@ -163,7 +167,11 @@ namespace LD48
                 timeToWander = baseTimeToWander;
                 wanderDirection = Random.value > 0.9f 
                     ? new Vector2() 
-                    : new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)).normalized;
+                    : new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+                var centerPosition = new Vector3(terrainGenerator.levelSize.x / 2f, terrainGenerator.levelSize.y / 2f);
+                var centerDirection = new Vector2(centerPosition.x - transform.position.x,
+                    centerPosition.y - transform.position.y);
+                wanderDirection += centerDirection / 1000f;
             }
         }
 

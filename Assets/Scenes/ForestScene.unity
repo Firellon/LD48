@@ -552,17 +552,17 @@ MonoBehaviour:
   treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
   treeParent: {fileID: 1769398229}
   treeDensity: {x: 2, y: 3}
-  treeSpawnProbability: 0.5
+  treeSpawnProbability: 0.7
   woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   itemParent: {fileID: 1640993705}
-  itemDensity: {x: 8, y: 8}
-  itemSpawnProbability: 0.2
+  itemDensity: {x: 5, y: 5}
+  itemSpawnProbability: 0.25
   strangerPrefabs:
   - {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
   - {fileID: 4454069631617825706, guid: 185ceffcb9cee47fc95b3701a7b9a6b3, type: 3}
   strangerParent: {fileID: 1043748726}
   strangerDensity: {x: 20, y: 20}
-  strangerSpawnProbability: 25
+  strangerSpawnProbability: 0.25
   playerPrefab: {fileID: 5133988400910477835, guid: 2ffbe540af8504870bbe7222284299a3, type: 3}
   playerFollowers:
   - {fileID: 519420036}

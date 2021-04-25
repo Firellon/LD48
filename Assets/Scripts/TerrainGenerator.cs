@@ -67,8 +67,8 @@ public class TerrainGenerator : MonoBehaviour
     void Start()
     {
         GenerateTrees();
-        GenerateItems();
-        GenerateStrangers();
+        GenerateItems(itemSpawnProbability);
+        GenerateStrangers(strangerSpawnProbability);
         GenerateDead();
         GeneratePlayer();
     }
@@ -104,7 +104,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (var treeY = 0; treeY < levelSize.y; treeY += treeDensity.y)
             {
-                if (Random.value < treeSpawnProbability) continue;
+                if (Random.value > treeSpawnProbability) continue;
                 var treePosition = new Vector2(treeX + Random.Range(0f, treeDensity.x), treeY + Random.Range(0f, treeDensity.y));
                 treePositions.Add(treePosition);
                 var tree = Instantiate(treePrefab, treeParent);
@@ -114,14 +114,14 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateItems()
+    public void GenerateItems(float spawnProbability)
     {
         itemPositions = new List<Vector2>();
         for (var itemX = itemDensity.x / 2; itemX < levelSize.x; itemX += itemDensity.x)
         {
             for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
             {
-                if (Random.value < itemSpawnProbability) continue;
+                if (Random.value > spawnProbability) continue;
                 var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x), itemY + Random.Range(0f, itemDensity.y));
                 treePositions.Add(itemPosition);
                 var wood = Instantiate(woodPrefab, itemParent);
@@ -131,15 +131,14 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateStrangers()
+    public void GenerateStrangers(float spawnProbability)
     {
         for (var strangerX = strangerDensity.x / 2; strangerX < levelSize.x; strangerX += strangerDensity.x)
         {
             for (var strangerY = strangerDensity.y / 2; strangerY < levelSize.y; strangerY += strangerDensity.y)
             {
-                if (Random.value < itemSpawnProbability) continue;
+                if (Random.value > spawnProbability) continue;
                 var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x), strangerY + Random.Range(0f, strangerDensity.y));
-                treePositions.Add(strangerPosition);
                 var stranger = Instantiate(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
                 stranger.transform.position += new Vector3(strangerPosition.x, strangerPosition.y, 0);
                 strangers.Add(stranger);
@@ -153,7 +152,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (var deadY = deadDensity.y / 2; deadY < levelSize.y; deadY += deadDensity.y)
             {
-                if (Random.value < deadSpawnProbability) continue;
+                if (Random.value > deadSpawnProbability) continue;
                 var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x), deadY + Random.Range(0f, deadDensity.y));
                 var dead = Instantiate(deadPrefab, deadParent);
                 dead.transform.position += new Vector3(deadPosition.x, deadPosition.y, 0);

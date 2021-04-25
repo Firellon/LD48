@@ -56,7 +56,7 @@ namespace LD48
         {
             if (Math.Abs(globalLight.intensity - targetIntensity) > 0.05f)
             {
-                globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.01f);
+                globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.005f);
                 globalLight.color = Color.Lerp(globalLight.color, targetColor, 0.01f);
             }
 
@@ -74,6 +74,8 @@ namespace LD48
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
+                    terrainGenerator.GenerateItems(0.01f);
+                    terrainGenerator.GenerateStrangers(0.01f);
                 }
 
                 if (currentCycle == DayTime.Morning)
