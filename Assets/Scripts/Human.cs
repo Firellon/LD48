@@ -138,7 +138,7 @@ namespace LD48
 
         private void CreateBonfire()
         {
-            var bonfire = Instantiate(bonfirePrefab, transform.position, Quaternion.identity);
+            var bonfire = Instantiate(bonfirePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);
         }
 
         private void Shoot()
