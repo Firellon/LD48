@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LD48
 {
-    public class Human : MonoBehaviour
+    public class Human : MonoBehaviour, IHittable
     {
         private Rigidbody2D body;
         private new SpriteRenderer renderer;
@@ -35,6 +35,11 @@ namespace LD48
         public float baseTimeToReload = 0.5f;
         private float timeToReload = 0f;
         private bool isReloading = false;
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
         
         private void Start()
         {
@@ -125,7 +130,7 @@ namespace LD48
 
         private IEnumerable<Bonfire> GetClosestBonfires()
         {
-            return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Default"))
+            return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
                 .Select(collider => collider.gameObject.GetComponent<Bonfire>())
                 .Where(bonfire => bonfire != null);
         }
@@ -193,7 +198,7 @@ namespace LD48
 
         public void Hit()
         {
-            Debug.Log("Hit!");
+            body.velocity = Vector2.zero;
             if (!isHit && !isDead)
             {
                 isHit = true;

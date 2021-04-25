@@ -185,9 +185,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3292232444793506328}
   - component: {fileID: 9078800372448688710}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hitbox
-  m_TagString: Human
+  m_TagString: Hittable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

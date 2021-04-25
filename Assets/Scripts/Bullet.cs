@@ -26,15 +26,15 @@ namespace LD48
 
         private void OnTriggerEnter2D(Collider2D hit)
         {
-            if (hit.gameObject.CompareTag("Human") && transform.parent.gameObject != hit.gameObject)
+            if (hit.gameObject.CompareTag("Hittable") && transform.parent.gameObject != hit.gameObject)
             {
-                var human = hit.transform.parent.gameObject.GetComponent<Human>();
-                if (human == null) {
-                    Debug.LogError($"OnTriggerEnter2D > {hit.gameObject} has Human tag and lacks Human component on its parent!");
+                var hittable = hit.transform.parent.gameObject.GetComponent<IHittable>();
+                if (hittable == null) {
+                    Debug.LogError($"OnTriggerEnter2D > {hit.gameObject} has Hittable tag and lacks IHittable component on its parent!");
                     return;
                 }
 
-                human.Hit();
+                hittable.Hit();
                 Destroy();
             }
         }

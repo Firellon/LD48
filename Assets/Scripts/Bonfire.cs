@@ -12,6 +12,11 @@ namespace LD48
         
         private float timeToBurn = 0f;
         private bool isBurning;
+
+        public bool IsBurning()
+        {
+            return isBurning;
+        }
         
         void Start()
         {

@@ -170,9 +170,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2904487649671676013}
   - component: {fileID: 5325765997370103309}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hitbox
-  m_TagString: Human
+  m_TagString: Hittable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
