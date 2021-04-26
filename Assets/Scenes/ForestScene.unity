@@ -187,8 +187,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180.81042, y: -116}
-  m_SizeDelta: {x: 342.46143, y: 76.95911}
+  m_AnchoredPosition: {x: 143.44165, y: -74}
+  m_SizeDelta: {x: 267.7238, y: 64.631226}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &151875214
 MonoBehaviour:
@@ -237,12 +237,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 36
+  m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -561,7 +561,7 @@ MonoBehaviour:
   - {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
   - {fileID: 4454069631617825706, guid: 185ceffcb9cee47fc95b3701a7b9a6b3, type: 3}
   strangerParent: {fileID: 1043748726}
-  strangerDensity: {x: 20, y: 20}
+  strangerDensity: {x: 18, y: 18}
   strangerSpawnProbability: 0.25
   playerPrefab: {fileID: 5133988400910477835, guid: 2ffbe540af8504870bbe7222284299a3, type: 3}
   playerFollowers:
@@ -703,7 +703,7 @@ Transform:
   m_GameObject: {fileID: 665183077}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 24, y: 20, z: 0}
+  m_LocalScale: {x: 40, y: 40, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -784,10 +784,10 @@ RectTransform:
   m_Father: {fileID: 1225584351}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 35.770386}
-  m_SizeDelta: {x: 1920, y: 76.95911}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 48.286}
+  m_SizeDelta: {x: 0, y: 96.5721}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &855145704
 MonoBehaviour:
@@ -838,12 +838,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 36
   m_fontSizeBase: 48
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -874,7 +874,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -71.485245, z: 0, w: 0.00018310547}
+  m_margin: {x: 11.977692, y: 11.05088, z: 6.9870605, w: 7.985317}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1112,10 +1112,10 @@ RectTransform:
   m_Father: {fileID: 1225584351}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -54.65686}
-  m_SizeDelta: {x: 1920, y: 109.3134}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -53.158}
+  m_SizeDelta: {x: 0, y: 106.32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1873287171
 MonoBehaviour:
@@ -1137,7 +1137,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Night is coming...
+  m_text: 'Night is coming...
+
+    In Two lines'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 024773fa05b5947d78ba21797e7501c4, type: 2}
   m_sharedMaterial: {fileID: 7568967147634532787, guid: 024773fa05b5947d78ba21797e7501c4, type: 2}
@@ -1164,12 +1166,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 36
   m_fontSizeBase: 48
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1200,7 +1202,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0.00018310547}
+  m_margin: {x: 9.19043, y: 7.6587524, z: 10.722168, w: 6.992462}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

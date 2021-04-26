@@ -114,7 +114,7 @@ namespace LD48
                 case DayTime.Day:
                     return "Sunset approaches...";
                 case DayTime.Evening:
-                    return "The Night arrived! Hide and cower, for its terrors are upon you!";
+                    return "The Night arrived!\n Hide and cower, for its terrors are upon you!";
                 case DayTime.Night:
                     return $"Night has passed.\n Dawn of Day {currentDay}";
                 default:
