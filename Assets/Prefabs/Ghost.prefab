@@ -149,7 +149,7 @@ MonoBehaviour:
   walkSprite: {fileID: 21300000, guid: db243739772d54b23a3f8ec3a2a4dd86, type: 3}
   attackSprite: {fileID: 21300000, guid: 819f82dcf7cd446dc8d4202762c6f13d, type: 3}
   deadSprite: {fileID: 21300000, guid: a9ed60df842364bd0b463ad6a87d01f5, type: 3}
-  walkSpeed: 2
+  walkSpeed: 120
   baseTimeToReload: 1
   attackDistance: 0.5
   baseTimeToDie: 10

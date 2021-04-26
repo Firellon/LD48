@@ -163,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodAmount: 0
   maxWoodAmount: 10
-  moveSpeed: 2.5
+  moveSpeed: 75
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
   fireTouchRadius: 1
@@ -177,6 +177,7 @@ MonoBehaviour:
   restingSprite: {fileID: 21300000, guid: 2e91b81807222426d8fb21cccb4f78f0, type: 3}
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
+  baseTimeToRest: 3
 --- !u!114 &8931530567984793119
 MonoBehaviour:
   m_ObjectHideFlags: 0

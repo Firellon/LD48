@@ -141,7 +141,7 @@ namespace LD48
             if (isHit || isDead) return;
             if (!body) return;
             renderer.sprite = GetRegularSprite();
-            body.velocity = moveDirection.normalized * moveSpeed;
+            body.velocity = moveDirection.normalized * (moveSpeed * Time.deltaTime);
             if (moveDirection.x != 0)
             {
                 renderer.flipX = moveDirection.x < 0;    

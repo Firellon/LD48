@@ -95,7 +95,7 @@ namespace LD48
         {
             if (timeToIdle > 0f)
             {
-                SetVelocity(idleDirection);
+                Move(idleDirection);
                 timeToIdle -= Time.deltaTime;
             }
             else
@@ -112,9 +112,9 @@ namespace LD48
             }
         }
 
-        private void SetVelocity(Vector2 direction)
+        private void Move(Vector2 direction)
         {
-            body.velocity = direction * walkSpeed;
+            body.velocity = direction * (walkSpeed * Time.deltaTime);
             if (direction.x != 0)
             {
                 renderer.flipX = direction.x < 0;    
@@ -146,7 +146,7 @@ namespace LD48
             {
                 renderer.sprite = walkSprite;
                 var targetDirection = (target.position - transform.position).normalized;
-                SetVelocity(targetDirection);
+                Move(targetDirection);
             }
         }
 
@@ -154,7 +154,7 @@ namespace LD48
         {
             renderer.sprite = walkSprite;
             var targetDirection = (transform.position - target.position).normalized;
-            SetVelocity(targetDirection);
+            Move(targetDirection);
         }
 
         private GhostState GetCurrentState()

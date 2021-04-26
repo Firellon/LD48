@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 82683dc6f479a48c5bbb1a85504cdbcc, type: 3}
     - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: moveSpeed
-      value: 2.5
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: deadSprite
