@@ -608,13 +608,13 @@ MonoBehaviour:
   globalLight: {fileID: 519420034}
   cycleMessage: {fileID: 1873287171}
   morningColor: {r: 0.9, g: 0.7658823, b: 0.35999995, a: 1}
-  morningIntensity: 0.75
+  morningIntensity: 0.6
   dayColor: {r: 1, g: 0.9375, b: 0.75, a: 0}
-  dayIntensity: 1
+  dayIntensity: 0.8
   eveningColor: {r: 0.8, g: 0.64, b: 0.16, a: 0}
-  eveningIntensity: 0.5
+  eveningIntensity: 0.4
   nightColor: {r: 0.3, g: 0.2775, b: 0.21000001, a: 0}
-  nightIntensity: 0.2
+  nightIntensity: 0.15
 --- !u!114 &519420038
 MonoBehaviour:
   m_ObjectHideFlags: 0

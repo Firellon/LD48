@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
+    private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new Vector2Int(10, 10);
 
     #region Trees
@@ -66,6 +67,8 @@ public class TerrainGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dayNightCycle = GetComponent<DayNightCycle>();
+        
         GenerateTrees();
         GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
@@ -176,7 +179,7 @@ public class TerrainGenerator : MonoBehaviour
     {
         foreach (var dead in deads)
         {
-            if (Random.value < ghostSpawnProbability) continue;
+            if (Random.value > ghostSpawnProbability + dayNightCycle.GetCurrentDay() * 0.1f) continue;
             var ghost = Instantiate(ghostPrefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;
             ghosts.Add(ghost);

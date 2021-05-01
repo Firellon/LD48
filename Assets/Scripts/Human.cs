@@ -13,6 +13,7 @@ namespace LD48
         private Rigidbody2D body;
         private new SpriteRenderer renderer;
         private TerrainGenerator terrainGenerator;
+        private DayNightCycle dayNightCycle;
         private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
         
         public int woodAmount = 0;
@@ -67,6 +68,7 @@ namespace LD48
             body = GetComponent<Rigidbody2D>();
             renderer = GetComponent<SpriteRenderer>();
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
+            dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             levelSize = terrainGenerator.levelSize;
             if (!audio) audio = GetComponent<AudioSource>();
         }
@@ -286,7 +288,7 @@ namespace LD48
         {
             if (isDead)
             {
-                return "Alas, you have died. Press R to restart.";
+                return $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
             }
             
             if (isHit)

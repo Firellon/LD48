@@ -76,8 +76,8 @@ namespace LD48
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
-                    terrainGenerator.GenerateItems(0.01f);
-                    terrainGenerator.GenerateStrangers(0.01f);
+                    terrainGenerator.GenerateItems(0.05f);
+                    terrainGenerator.GenerateStrangers(0.05f);
                 }
 
                 if (currentCycle == DayTime.Morning)
@@ -86,6 +86,11 @@ namespace LD48
                     terrainGenerator.DestroyGhosts();
                 }
             }
+        }
+
+        public int GetCurrentDay()
+        {
+            return currentDay;
         }
 
         private float GetCycleLength(DayTime dayTime)

@@ -123,10 +123,8 @@ namespace LD48
                         if (other.gameObject == gameObject) return false;
                         var otherHuman = other.GetComponent<Human>();
                         if (otherHuman == null) return false;
-                        var doesHumanHaveWoodILack = otherHuman.woodAmount > human.woodAmount;
-                        // if (doesHumanHaveWoodILack) Debug.Log($"Other Human {otherHuman.name} has too much wood ({otherHuman.woodAmount}) compared to me ({human.woodAmount})!");
-                        
-                        return doesHumanHaveWoodILack;
+
+                        return DoesHumanHaveWoodILack(otherHuman);
                     })
                     .OrderBy(threat => Vector2.Distance(transform.position, threat.transform.position))
                     .ToList();
@@ -170,6 +168,11 @@ namespace LD48
             target = closestWood.First().transform;
             return StrangerState.Gather;
 
+        }
+
+        private bool DoesHumanHaveWoodILack(Human otherHuman)
+        {
+            return human.woodAmount < minWoodToSurvive && otherHuman.woodAmount > human.woodAmount + 2;
         }
 
         private void SeekBonfire()
@@ -255,7 +258,7 @@ namespace LD48
             }
 
             var targetHuman = target.GetComponent<Human>(); 
-            if (targetHuman == null || targetHuman.woodAmount <= human.woodAmount)
+            if (targetHuman == null || !DoesHumanHaveWoodILack(targetHuman))
             {
                 state = StrangerState.Wander;
                 return;

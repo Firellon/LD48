@@ -15,8 +15,8 @@ namespace LD48
             Vector3 pos = transform.position;
 
             // assuming map starts at (0, 0)
-            pos.x = Mathf.Max(Mathf.Min(pos.x, levelSize.x + 2), 0 - 2);
-            pos.y = Mathf.Max(Mathf.Min(pos.y, levelSize.y + 2), 0 - 2);
+            pos.x = Mathf.Max(Mathf.Min(pos.x, levelSize.x + 5), 0 - 5);
+            pos.y = Mathf.Max(Mathf.Min(pos.y, levelSize.y + 5), 0 - 5);
 
             // setting the transform position. Consider using local position when possible
             transform.position = pos;
