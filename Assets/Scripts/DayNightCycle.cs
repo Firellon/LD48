@@ -20,6 +20,8 @@ namespace LD48
         public float cycleLength = 10f;
         private float currentCycleTime = 15f;
 
+        public int nightLengthGrowth = 2;
+
         public Light2D globalLight;
         public TMP_Text cycleMessage;
 
@@ -90,7 +92,7 @@ namespace LD48
         {
             if (dayTime == DayTime.Night)
             {
-                return cycleLength + currentDay;
+                return cycleLength + currentDay * nightLengthGrowth;
             }
 
             return cycleLength;

@@ -16,10 +16,14 @@ namespace LD48
     {
         private new SpriteRenderer renderer;
         private Rigidbody2D body;
+        private AudioSource audio;
         
         public Sprite walkSprite;
         public Sprite attackSprite;
         public Sprite deadSprite;
+
+        public AudioClip spawnSound;
+        public AudioClip attackSound;
 
         public float walkSpeed = 4f;
 
@@ -53,6 +57,8 @@ namespace LD48
         {
             renderer = GetComponent<SpriteRenderer>();
             body = GetComponent<Rigidbody2D>();
+            audio = GetComponent<AudioSource>();
+            audio.PlayOneShot(spawnSound);
         }
 
         private void Update()
@@ -114,7 +120,7 @@ namespace LD48
 
         private void Move(Vector2 direction)
         {
-            body.velocity = direction * (walkSpeed * Time.deltaTime);
+            body.velocity = direction * walkSpeed;
             if (direction.x != 0)
             {
                 renderer.flipX = direction.x < 0;    
@@ -138,6 +144,7 @@ namespace LD48
                         Debug.LogError("Ghost > Attack > no Human component found in target!");
                     }
                     human.Hit();
+                    audio.PlayOneShot(attackSound);
                     renderer.sprite = attackSprite;
                     timeToReload = baseTimeToReload;
                 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -45,6 +46,12 @@ namespace LD48
         private float timeToRest = 3f;
         private bool isResting = false;
 
+        public new AudioSource audio;
+        [CanBeNull] public AudioClip hitSound;
+        [CanBeNull] public AudioClip deadSound;
+        [CanBeNull] public AudioClip shootSound;
+        [CanBeNull] public AudioClip itemPickupSound;
+
         public bool IsDead()
         {
             return isDead;
@@ -61,6 +68,7 @@ namespace LD48
             renderer = GetComponent<SpriteRenderer>();
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
             levelSize = terrainGenerator.levelSize;
+            if (!audio) audio = GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -141,7 +149,7 @@ namespace LD48
             if (isHit || isDead) return;
             if (!body) return;
             renderer.sprite = GetRegularSprite();
-            body.velocity = moveDirection.normalized * (moveSpeed * Time.deltaTime);
+            body.velocity = moveDirection.normalized * moveSpeed;
             if (moveDirection.x != 0)
             {
                 renderer.flipX = moveDirection.x < 0;    
@@ -197,6 +205,7 @@ namespace LD48
             bullet.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
             isReloading = true;
             timeToReload = baseTimeToReload;
+            if (shootSound) audio.PlayOneShot(shootSound);
         }
 
         private void PickUp(Item item)
@@ -209,6 +218,7 @@ namespace LD48
                     if (woodAmount < maxWoodAmount)
                     {
                         woodAmount++;
+                        if (itemPickupSound) audio.PlayOneShot(itemPickupSound);
                         Destroy(item.gameObject);
                     }
                     break;
@@ -251,6 +261,7 @@ namespace LD48
                 timeToRecover = baseTimeToRecover;
                 DropItems();
                 // TODO: Update Collider on hit and on recover
+                if (hitSound) audio.PlayOneShot(hitSound);
             }
             else
             {
@@ -258,6 +269,7 @@ namespace LD48
                 renderer.sprite = deadSprite;
                 GetComponent<Collider2D>().enabled = false;
                 terrainGenerator.AddDead(transform);
+                if (deadSound) audio.PlayOneShot(deadSound);
             }
         }
 

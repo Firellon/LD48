@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 82683dc6f479a48c5bbb1a85504cdbcc, type: 3}
     - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: moveSpeed
-      value: 75
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: deadSprite
@@ -27,6 +27,10 @@ PrefabInstance:
       propertyPath: woodPrefab
       value: 
       objectReference: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
+    - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+      propertyPath: maxWoodAmount
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1203980886353906568, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: restingSprite
       value: 
@@ -54,6 +58,14 @@ PrefabInstance:
     - target: {fileID: 2968753310703807543, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: baseTimeToWander
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3861742083327022146, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+      propertyPath: MaxDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3861742083327022146, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+      propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5133988400910477832, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y

@@ -9,6 +9,7 @@ namespace LD48
     {
         public float burnTimePerWood = 20f;
         public GameObject fireParticlePrefab;
+        [FormerlySerializedAs("audio")] public AudioSource fireSound;
         
         private float timeToBurn = 0f;
         private bool isBurning;
@@ -27,6 +28,7 @@ namespace LD48
         {
             timeToBurn += burnTimePerWood / 2;
             isBurning = true;
+            fireSound.Play();
         }
 
         // Update is called once per frame
@@ -41,6 +43,7 @@ namespace LD48
             else
             {
                 isBurning = false;
+                fireSound.Stop();
             }
         }
         public void AddWood()
@@ -57,6 +60,7 @@ namespace LD48
                 fireParticle.transform.localPosition = new Vector2(Random.Range(-0.15f, 0.15f), 0.3f + Random.Range(-0.1f, 0.1f));
                 fireParticle.GetComponent<Rigidbody2D>().velocity = new Vector2(0, Random.Range(0.1f, 2f));
                 fireParticle.GetComponent<Temporary>().SetTimeToLive(0.1f + Random.Range(0f, 0.5f));
+                fireSound.Play();
             }
         }
     }
