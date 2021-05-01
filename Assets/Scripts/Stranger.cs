@@ -140,7 +140,8 @@ namespace LD48
             var bonfireDistance = Vector2.Distance(target.transform.position, transform.position);
             if (bonfireDistance > human.fireTouchRadius)
             {
-                human.Move(target.transform.position - transform.position);
+                Vector2 bonfireDirection = target.transform.position - transform.position; 
+                human.Move(bonfireDirection.SkewDirection(5));
                 return;
             }
 
@@ -214,13 +215,16 @@ namespace LD48
                 state = StrangerState.Wander;
                 return;
             }
-            human.Move(target.position - transform.position);
+
+            Vector2 gatherDirection = target.position - transform.position; 
+            human.Move(gatherDirection.SkewDirection(5));
         }
 
         private void Flee()
         {
             SetReadyToShoot(false);
-            human.Move(transform.position - target.transform.position);
+            Vector2 fleeDirection = transform.position - target.transform.position;
+            human.Move(fleeDirection.SkewDirection(10));
         }
 
         private void SetReadyToShoot(bool ready)

@@ -139,7 +139,7 @@ namespace LD48
                 else
                 {
                     var human = target.gameObject.GetComponent<Human>();
-                    if (human == null)
+                    if (!human)
                     {
                         Debug.LogError("Ghost > Attack > no Human component found in target!");
                     }
@@ -152,16 +152,16 @@ namespace LD48
             else
             {
                 renderer.sprite = walkSprite;
-                var targetDirection = (target.position - transform.position).normalized;
-                Move(targetDirection);
+                Vector2 targetDirection = ((target.position - transform.position).normalized);
+                Move(targetDirection.SkewDirection(5));
             }
         }
 
         private void Flee()
         {
             renderer.sprite = walkSprite;
-            var targetDirection = (transform.position - target.position).normalized;
-            Move(targetDirection);
+            Vector2 fleeDirection = (transform.position - target.position).normalized;
+            Move(fleeDirection.SkewDirection(10));
         }
 
         private GhostState GetCurrentState()
