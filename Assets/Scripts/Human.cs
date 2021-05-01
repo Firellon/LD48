@@ -320,5 +320,10 @@ namespace LD48
                 transform.position.y > levelSize.y - minBorderDistance) return true;
             return false;
         }
+
+        public bool IsFacingTowards(Vector3 position)
+        {
+            return renderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
+        }
     }
 }

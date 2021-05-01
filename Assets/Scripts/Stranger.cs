@@ -12,6 +12,7 @@ namespace LD48
         SeekBonfire,
         StartBonfire,
         Fight,
+        Rob,
         Flee,
     }
     
@@ -36,6 +37,7 @@ namespace LD48
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
         private Vector2 wanderDirection = Vector2.zero;
+        public int minWoodToSurvive = 3;
 
 
         private void Start()
@@ -71,6 +73,9 @@ namespace LD48
                 case StrangerState.Fight:
                     Fight();
                     break;
+                case StrangerState.Rob:
+                    Rob();
+                    break;
                 case StrangerState.Flee:
                     Flee();
                     break;
@@ -90,15 +95,49 @@ namespace LD48
                 {
                     if (threat.gameObject == gameObject) return false;
                     var hittable = threat.GetComponent<IHittable>();
-                    return hittable != null && hittable.IsThreat();
+                    if (hittable == null) return false;
+                    var otherHuman = threat.GetComponent<Human>();
+                    if (otherHuman == null && hittable.IsThreat()) return true;
+                    if (otherHuman == null) return false;
+                    var humanVerticalDistance = Mathf.Abs(otherHuman.transform.position.y - transform.position.y);
+                    var isHumanCloseAndPointingAtMe = otherHuman.IsThreat() && otherHuman.IsFacingTowards(transform.position) && humanVerticalDistance < threatRadius / 3;
+                    // if (isHumanCloseAndPointingAtMe) Debug.Log($"Other Human {otherHuman.name} is trying to attack me!");
+
+                    return isHumanCloseAndPointingAtMe;
                 })
                 .OrderBy(threat => Vector2.Distance(transform.position, threat.transform.position))
                 .ToList();
             if (closestThreats.Any())
             {
                 target = closestThreats.First().transform;
+                // if (closestThreats.Count() > bravery) Debug.Log($"Too dangerous, I need to Flee! ({closestThreats.Count()})");
                 return closestThreats.Count() > bravery ? StrangerState.Flee : StrangerState.Fight;
             }
+
+            if (human.woodAmount < minWoodToSurvive)
+            {
+                var closestPeopleToRob = Physics2D.OverlapCircleAll(transform.position, threatRadius, 1 << LayerMask.NameToLayer("Default"))
+                    .Select(collider => collider.gameObject)
+                    .Where(other =>
+                    {
+                        if (other.gameObject == gameObject) return false;
+                        var otherHuman = other.GetComponent<Human>();
+                        if (otherHuman == null) return false;
+                        var doesHumanHaveWoodILack = otherHuman.woodAmount > human.woodAmount;
+                        // if (doesHumanHaveWoodILack) Debug.Log($"Other Human {otherHuman.name} has too much wood ({otherHuman.woodAmount}) compared to me ({human.woodAmount})!");
+                        
+                        return doesHumanHaveWoodILack;
+                    })
+                    .OrderBy(threat => Vector2.Distance(transform.position, threat.transform.position))
+                    .ToList();
+
+                if (closestPeopleToRob.Any())
+                {
+                    target = closestPeopleToRob.First().transform;
+                    return StrangerState.Rob;
+                }
+            }
+
 
             var currentCycle = dayNightCycle.GetCurrentCycle();
             if (currentCycle == DayTime.Evening || currentCycle == DayTime.Night)
@@ -201,6 +240,37 @@ namespace LD48
                     Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
                     Mathf.Sign(targetPosition.y - transformPosition.y)
                     ));
+                return;
+            }
+
+            human.Act();
+        }
+
+        private void Rob()
+        {
+            if (!target)
+            {
+                state = StrangerState.Wander;
+                return;
+            }
+
+            var targetHuman = target.GetComponent<Human>(); 
+            if (targetHuman == null || targetHuman.woodAmount <= human.woodAmount)
+            {
+                state = StrangerState.Wander;
+                return;
+            }
+            
+            SetReadyToShoot(true);
+            
+            if (Mathf.Abs( target.position.y - transform.position.y) > 0.05f)
+            {
+                var targetPosition = target.position;
+                var transformPosition = transform.position;
+                human.Move(new Vector2(
+                    Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
+                    Mathf.Sign(targetPosition.y - transformPosition.y)
+                ));
                 return;
             }
 
