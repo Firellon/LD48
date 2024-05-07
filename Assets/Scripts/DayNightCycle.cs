@@ -3,7 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+
 
 namespace LD48
 {
@@ -22,7 +22,7 @@ namespace LD48
 
         public int nightLengthGrowth = 2;
 
-        public Light2D globalLight;
+        public UnityEngine.Rendering.Universal.Light2D globalLight;
         public TMP_Text cycleMessage;
 
         public Color morningColor;
