@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DITools;
+using Map;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
@@ -11,6 +12,7 @@ namespace DI
     public class DiInstaller : MonoInstaller
     {
         [SerializeField] private PrefabPool prefabPool;
+        [SerializeField] private MapActorRegistry mapActorRegistry;
 
         protected virtual void ConfigureServices()
         {
@@ -27,6 +29,8 @@ namespace DI
             Container.Bind<IPrefabPool>().FromInstance(prefabPool).AsSingle().NonLazy();
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
+
+            Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
         }
 
         private void OnDisable()
