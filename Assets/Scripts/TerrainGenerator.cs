@@ -83,7 +83,7 @@ public class TerrainGenerator : MonoBehaviour
     {
         dayNightCycle = GetComponent<DayNightCycle>();
 
-        GenerateTrees();
+        // GenerateTrees();
         GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
         GenerateDead();
