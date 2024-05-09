@@ -111,7 +111,7 @@ namespace LD48
                 }
             }
 
-            if (!isReadyToShoot && characterController.IsMoving && !isHit && !isDead)
+            if (!isReadyToShoot && !characterController.IsMoving && !isHit && !isDead)
             {
                 if (!isResting)
                 {
