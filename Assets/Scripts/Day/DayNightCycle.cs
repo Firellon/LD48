@@ -4,16 +4,9 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-
-namespace LD48
+namespace Day
 {
-    public enum DayTime {
-        Morning,
-        Day,
-        Evening,
-        Night
-    }
-    public class DayNightCycle : MonoBehaviour
+    public class DayNightCycle : MonoBehaviour, IDayNightCycle
     {
         private TerrainGenerator terrainGenerator;
         
@@ -170,6 +163,8 @@ namespace LD48
         {
             return currentCycle;
         }
+
+        public float TargetIntensity => targetIntensity;
     }
 }
 

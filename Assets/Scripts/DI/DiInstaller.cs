@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Day;
 using DITools;
+using LD48;
 using Map;
 using UnityEngine;
 using Utilities.Prefabs;
@@ -13,6 +15,7 @@ namespace DI
     {
         [SerializeField] private PrefabPool prefabPool;
         [SerializeField] private MapActorRegistry mapActorRegistry;
+        [SerializeField] private DayNightCycle dayNightCycle;
 
         protected virtual void ConfigureServices()
         {
@@ -31,6 +34,7 @@ namespace DI
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
 
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
+            Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
         }
 
         private void OnDisable()

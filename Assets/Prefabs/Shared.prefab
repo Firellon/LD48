@@ -125,7 +125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489386c9df294da6b57898b109bf5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSegmentSize: {x: 10, y: 10}
+  mapSegmentSize: {x: 15, y: 10}
+  treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
+  treeParent: {fileID: 0}
+  treeDensity: {x: 2, y: 2}
+  treeSpawnProbability: 0.5
 --- !u!1 &6175899444449373084
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabPool: {fileID: 189264895322273740}
   mapActorRegistry: {fileID: 2528578677819702300}
+  dayNightCycle: {fileID: 0}
 --- !u!114 &1887026448949627522
 MonoBehaviour:
   m_ObjectHideFlags: 0

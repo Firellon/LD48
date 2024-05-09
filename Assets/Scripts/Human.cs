@@ -1,14 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using Day;
 using JetBrains.Annotations;
 using LD48.CharacterController2D;
 using UnityEngine;
+using Utilities.Prefabs;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace LD48
 {
     public class Human : MonoBehaviour, IHittable
     {
+        [Inject] private IPrefabPool prefabPool;
+        
         private PlayerMovement2D characterController;
 
         private Rigidbody2D body;
@@ -211,14 +216,14 @@ namespace LD48
 
         private void CreateBonfire()
         {
-            var bonfire = Instantiate(bonfirePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);
+            var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);
         }
 
         private void Shoot()
         {
             if (isReloading || isHit || isDead) return;
             Debug.Log("Shoot");
-            var bullet = Instantiate(bulletPrefab, transform);
+            var bullet = prefabPool.Spawn(bulletPrefab, transform);
 
             var xDirection = renderer.flipX ? -1 : 1;
             bullet.GetComponent<Bullet>().SetDirection(new Vector2(xDirection, 0));
@@ -299,7 +304,7 @@ namespace LD48
             while (woodAmount > 0)
             {
                 woodAmount--;
-                Instantiate(woodPrefab, transform.position + new Vector3(Random.value, Random.value), Quaternion.identity);
+                prefabPool.Spawn(woodPrefab, transform.position + new Vector3(Random.value, Random.value), Quaternion.identity);
             }
         }
 

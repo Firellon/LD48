@@ -1,19 +1,19 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
-using JetBrains.Annotations;
+using Day;
 using LD48;
 using Map;
 using TMPro;
 using UnityEngine;
+using Utilities.Prefabs;
 using Random = UnityEngine.Random;
 using Zenject;
 
 public class TerrainGenerator : MonoBehaviour
 {
     [Inject] private IMapActorRegistry mapActorRegistry;
+    [Inject] private IPrefabPool prefabPool;
 
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
@@ -117,7 +117,7 @@ public class TerrainGenerator : MonoBehaviour
                 var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x),
                     itemY + Random.Range(0f, itemDensity.y));
                 itemPositions.Add(itemPosition);
-                var wood = Instantiate(woodPrefab, itemParent);
+                var wood = prefabPool.Spawn(woodPrefab, itemParent);
                 wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
                 items.Add(wood);
             }
@@ -133,7 +133,7 @@ public class TerrainGenerator : MonoBehaviour
                 if (Random.value > spawnProbability) continue;
                 var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x),
                     strangerY + Random.Range(0f, strangerDensity.y));
-                var stranger = Instantiate(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
+                var stranger = prefabPool.Spawn(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
                 stranger.transform.position += new Vector3(strangerPosition.x, strangerPosition.y, 0);
                 strangers.Add(stranger);
             }
@@ -149,7 +149,7 @@ public class TerrainGenerator : MonoBehaviour
                 if (Random.value > deadSpawnProbability) continue;
                 var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x),
                     deadY + Random.Range(0f, deadDensity.y));
-                var dead = Instantiate(deadPrefab, deadParent);
+                var dead = prefabPool.Spawn(deadPrefab, deadParent);
                 dead.transform.position += new Vector3(deadPosition.x, deadPosition.y, 0);
                 deads.Add(dead.transform);
             }
@@ -158,7 +158,7 @@ public class TerrainGenerator : MonoBehaviour
 
     private void GeneratePlayer()
     {
-        playerObject = Instantiate(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
+        playerObject = prefabPool.Spawn(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
         var player = playerObject.GetComponent<Player>();
         player.tipMessageText = tipMessageText;
         player.woodAmountText = woodAmountText;
@@ -178,7 +178,7 @@ public class TerrainGenerator : MonoBehaviour
         foreach (var dead in deads)
         {
             if (Random.value > ghostSpawnProbability + dayNightCycle.GetCurrentDay() * 0.1f) continue;
-            var ghost = Instantiate(ghostPrefab, dead.position, dead.rotation);
+            var ghost = prefabPool.Spawn(ghostPrefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;
             ghosts.Add(ghost);
         }
