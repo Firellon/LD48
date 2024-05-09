@@ -587,10 +587,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSize: {x: 100, y: 100}
-  treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
-  treeParent: {fileID: 1769398229}
-  treeDensity: {x: 2, y: 3}
-  treeSpawnProbability: 0.7
   woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   itemParent: {fileID: 1640993705}
   itemDensity: {x: 5, y: 5}
@@ -1419,6 +1415,10 @@ PrefabInstance:
       propertyPath: treePrefab
       value: 
       objectReference: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
+    - target: {fileID: 4669150510530452025, guid: 6a322352a4dcb534385a649399813af3, type: 3}
+      propertyPath: mapSegmentSize.x
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -11,19 +11,7 @@ public class TerrainGenerator : MonoBehaviour
     [Inject] private IMapActorRegistry mapActorRegistry;
 
     private DayNightCycle dayNightCycle;
-    public Vector2Int levelSize = new Vector2Int(10, 10);
-
-    #region Trees
-
-    public GameObject treePrefab;
-    public Transform treeParent;
-    public Vector2Int treeDensity = new Vector2Int(2, 2);
-    public float treeSpawnProbability = 0.5f;
-
-    private List<Vector2> treePositions = new List<Vector2>();
-    private readonly List<GameObject> trees = new List<GameObject>();
-
-    #endregion
+    public Vector2Int levelSize = new(10, 10);
 
     #region Items
 
@@ -95,16 +83,6 @@ public class TerrainGenerator : MonoBehaviour
     {
     }
 
-    private void DeleteTrees()
-    {
-        foreach (var tree in trees)
-        {
-            Destroy(tree);
-        }
-
-        treePositions.Clear();
-    }
-
     private void DeleteItems()
     {
         foreach (var item in items)
@@ -113,24 +91,6 @@ public class TerrainGenerator : MonoBehaviour
         }
 
         itemPositions.Clear();
-    }
-
-    private void GenerateTrees()
-    {
-        treePositions.Clear();
-        for (var treeX = 0; treeX < levelSize.x; treeX += treeDensity.x)
-        {
-            for (var treeY = 0; treeY < levelSize.y; treeY += treeDensity.y)
-            {
-                if (Random.value > treeSpawnProbability) continue;
-                var treePosition = new Vector2(treeX + Random.Range(0f, treeDensity.x),
-                    treeY + Random.Range(0f, treeDensity.y));
-                treePositions.Add(treePosition);
-                var tree = Instantiate(treePrefab, treeParent);
-                tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
-                trees.Add(tree);
-            }
-        }
     }
 
     public void GenerateItems(float spawnProbability)
@@ -143,7 +103,7 @@ public class TerrainGenerator : MonoBehaviour
                 if (Random.value > spawnProbability) continue;
                 var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x),
                     itemY + Random.Range(0f, itemDensity.y));
-                treePositions.Add(itemPosition);
+                itemPositions.Add(itemPosition);
                 var wood = Instantiate(woodPrefab, itemParent);
                 wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
                 items.Add(wood);
