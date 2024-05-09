@@ -9,6 +9,7 @@ TagManager:
   - Human
   - Ghost
   - Hittable
+  - Collidable
   layers:
   - Default
   - TransparentFX

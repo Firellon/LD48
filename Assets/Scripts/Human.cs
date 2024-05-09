@@ -1,15 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using LD48.CharacterController2D;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 namespace LD48
 {
     public class Human : MonoBehaviour, IHittable
     {
+        private PlayerMovement2D characterController;
+
         private Rigidbody2D body;
         private new SpriteRenderer renderer;
         private TerrainGenerator terrainGenerator;
@@ -52,6 +53,11 @@ namespace LD48
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        private void Awake()
+        {
+            characterController = GetComponent<PlayerMovement2D>();
+        }
 
         public bool IsDead()
         {
@@ -100,7 +106,7 @@ namespace LD48
                 }
             }
 
-            if (!isReadyToShoot && body.velocity == Vector2.zero && !isHit && !isDead)
+            if (!isReadyToShoot && characterController.IsMoving && !isHit && !isDead)
             {
                 if (!isResting)
                 {
@@ -125,6 +131,7 @@ namespace LD48
                 }
             }
         }
+
         private void OnCollisionEnter2D(Collision2D hit)
         {
             if (hit.gameObject.CompareTag("Wall"))
@@ -150,11 +157,23 @@ namespace LD48
         {
             if (isHit || isDead) return;
             if (!body) return;
+
             renderer.sprite = GetRegularSprite();
-            body.velocity = moveDirection.normalized * moveSpeed;
+            // body.velocity = moveDirection.normalized * moveSpeed;
+
+            characterController.MoveSpeed = moveSpeed;
+            characterController.Move(moveDirection);
+
+            // playerMotor2D.movementDir = moveDirection;
+            // characterController.MovePosition(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime);
+
             if (moveDirection.x != 0)
             {
-                renderer.flipX = moveDirection.x < 0;    
+                var scale = transform.localScale;
+                scale.x = moveDirection.x < 0 ? -1 : 1;
+                transform.localScale = scale;
+
+                // renderer.flipX = moveDirection.x < 0;
             }
         }
         

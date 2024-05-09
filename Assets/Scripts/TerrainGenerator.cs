@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using JetBrains.Annotations;
 using LD48;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -43,6 +46,7 @@ public class TerrainGenerator : MonoBehaviour
     #region Player
     public GameObject playerPrefab;
     private GameObject player;
+    private CinemachineVirtualCamera cinemachineCam;
     public List<ObjectFollower> playerFollowers;
     public TMP_Text tipMessageText;
     public TMP_Text woodAmountText;
@@ -63,7 +67,12 @@ public class TerrainGenerator : MonoBehaviour
     public float ghostSpawnProbability = 0.2f;
     private List<GameObject> ghosts = new List<GameObject>();
     #endregion
-    
+
+    private void Awake()
+    {
+        cinemachineCam = GetComponent<CinemachineVirtualCamera>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -169,6 +178,9 @@ public class TerrainGenerator : MonoBehaviour
         player = Instantiate(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
         player.GetComponent<Player>().tipMessageText = tipMessageText;
         player.GetComponent<Player>().woodAmountText = woodAmountText;
+
+        cinemachineCam.Follow = player.transform;
+
         foreach (var playerFollower in playerFollowers)
         {
             playerFollower.SetTarget(player.transform);
