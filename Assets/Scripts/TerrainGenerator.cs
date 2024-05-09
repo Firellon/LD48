@@ -5,67 +5,72 @@ using System.Linq;
 using Cinemachine;
 using JetBrains.Annotations;
 using LD48;
+using Map;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Zenject;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    private DayNightCycle dayNightCycle;
-    public Vector2Int levelSize = new Vector2Int(10, 10);
+    [Inject] private IMapActorRegistry mapActorRegistry;
 
-    #region Trees
-    public GameObject treePrefab;
-    public Transform treeParent;
-    public Vector2Int treeDensity = new Vector2Int(2, 2);
-    public float treeSpawnProbability = 0.5f;
-    
-    private List<Vector2> treePositions = new List<Vector2>();
-    private readonly List<GameObject> trees = new List<GameObject>();
-    #endregion
+    private DayNightCycle dayNightCycle;
+    public Vector2Int levelSize = new(10, 10);
 
     #region Items
+
     public GameObject woodPrefab;
     public Transform itemParent;
     public Vector2Int itemDensity = new Vector2Int(2, 2);
     public float itemSpawnProbability = 0.1f;
-    
+
     private List<Vector2> itemPositions = new List<Vector2>();
     private readonly List<GameObject> items = new List<GameObject>();
+
     #endregion
-    
+
     #region Strangers
+
     public List<GameObject> strangerPrefabs;
     public Transform strangerParent;
     public Vector2Int strangerDensity = new Vector2Int(5, 5);
     public float strangerSpawnProbability = 0.2f;
 
     private readonly List<GameObject> strangers = new List<GameObject>();
+
     #endregion
-    
+
     #region Player
+
     public GameObject playerPrefab;
     private GameObject player;
     private CinemachineVirtualCamera cinemachineCam;
+    private GameObject playerObject;
     public List<ObjectFollower> playerFollowers;
     public TMP_Text tipMessageText;
     public TMP_Text woodAmountText;
+
     #endregion
 
     #region Dead
+
     public GameObject deadPrefab;
     public Vector2 deadDensity = new Vector2Int(25, 25);
     public Transform deadParent;
     public float deadSpawnProbability = 0.25f;
-    
+
     private List<Transform> deads = new List<Transform>();
+
     #endregion
-    
+
     #region Ghosts
+
     public GameObject ghostPrefab;
     public Transform ghostParent;
     public float ghostSpawnProbability = 0.2f;
     private List<GameObject> ghosts = new List<GameObject>();
+
     #endregion
 
     private void Awake()
@@ -73,12 +78,13 @@ public class TerrainGenerator : MonoBehaviour
         cinemachineCam = GetComponent<CinemachineVirtualCamera>();
     }
 
+
     // Start is called before the first frame update
     void Start()
     {
         dayNightCycle = GetComponent<DayNightCycle>();
-        
-        GenerateTrees();
+
+        // GenerateTrees();
         GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
         GenerateDead();
@@ -88,16 +94,6 @@ public class TerrainGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    private void DeleteTrees()
-    {
-        foreach (var tree in trees)
-        {
-            Destroy(tree);
-        }
-        treePositions.Clear();
     }
 
     private void DeleteItems()
@@ -106,24 +102,8 @@ public class TerrainGenerator : MonoBehaviour
         {
             Destroy(item);
         }
-        itemPositions.Clear();
-    }
 
-    private void GenerateTrees()
-    {
-        treePositions.Clear();
-        for (var treeX = 0; treeX < levelSize.x; treeX += treeDensity.x)
-        {
-            for (var treeY = 0; treeY < levelSize.y; treeY += treeDensity.y)
-            {
-                if (Random.value > treeSpawnProbability) continue;
-                var treePosition = new Vector2(treeX + Random.Range(0f, treeDensity.x), treeY + Random.Range(0f, treeDensity.y));
-                treePositions.Add(treePosition);
-                var tree = Instantiate(treePrefab, treeParent);
-                tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
-                trees.Add(tree);
-            }
-        }
+        itemPositions.Clear();
     }
 
     public void GenerateItems(float spawnProbability)
@@ -134,8 +114,9 @@ public class TerrainGenerator : MonoBehaviour
             for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
             {
                 if (Random.value > spawnProbability) continue;
-                var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x), itemY + Random.Range(0f, itemDensity.y));
-                treePositions.Add(itemPosition);
+                var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x),
+                    itemY + Random.Range(0f, itemDensity.y));
+                itemPositions.Add(itemPosition);
                 var wood = Instantiate(woodPrefab, itemParent);
                 wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
                 items.Add(wood);
@@ -150,14 +131,15 @@ public class TerrainGenerator : MonoBehaviour
             for (var strangerY = strangerDensity.y / 2; strangerY < levelSize.y; strangerY += strangerDensity.y)
             {
                 if (Random.value > spawnProbability) continue;
-                var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x), strangerY + Random.Range(0f, strangerDensity.y));
+                var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x),
+                    strangerY + Random.Range(0f, strangerDensity.y));
                 var stranger = Instantiate(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
                 stranger.transform.position += new Vector3(strangerPosition.x, strangerPosition.y, 0);
                 strangers.Add(stranger);
             }
         }
     }
-    
+
     private void GenerateDead()
     {
         for (var deadX = deadDensity.x / 2; deadX < levelSize.x; deadX += deadDensity.x)
@@ -165,7 +147,8 @@ public class TerrainGenerator : MonoBehaviour
             for (var deadY = deadDensity.y / 2; deadY < levelSize.y; deadY += deadDensity.y)
             {
                 if (Random.value > deadSpawnProbability) continue;
-                var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x), deadY + Random.Range(0f, deadDensity.y));
+                var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x),
+                    deadY + Random.Range(0f, deadDensity.y));
                 var dead = Instantiate(deadPrefab, deadParent);
                 dead.transform.position += new Vector3(deadPosition.x, deadPosition.y, 0);
                 deads.Add(dead.transform);
@@ -175,16 +158,19 @@ public class TerrainGenerator : MonoBehaviour
 
     private void GeneratePlayer()
     {
-        player = Instantiate(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
-        player.GetComponent<Player>().tipMessageText = tipMessageText;
-        player.GetComponent<Player>().woodAmountText = woodAmountText;
-
+        playerObject = Instantiate(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
+        var player = playerObject.GetComponent<Player>();
+        player.tipMessageText = tipMessageText;
+        player.woodAmountText = woodAmountText;
+        
         cinemachineCam.Follow = player.transform;
 
         foreach (var playerFollower in playerFollowers)
         {
-            playerFollower.SetTarget(player.transform);
+            playerFollower.SetTarget(playerObject.transform);
         }
+
+        mapActorRegistry.SetPlayer(player);
     }
 
     public void GenerateGhosts()
@@ -204,7 +190,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             ghost.GetComponent<Ghost>().Hit();
         }
-        
+
         ghosts.Clear();
     }
 
