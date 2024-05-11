@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using DG.Tweening;
+using Plugins.Sirenix.Odin_Inspector.Modules;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Day
 {
     public class DayNightCycle : MonoBehaviour, IDayNightCycle
     {
         private TerrainGenerator terrainGenerator;
-        
+
         public float cycleLength = 10f;
         private float currentCycleTime = 15f;
 
@@ -18,35 +20,49 @@ namespace Day
         public UnityEngine.Rendering.Universal.Light2D globalLight;
         public TMP_Text cycleMessage;
 
-        public Color morningColor;
-        public float morningIntensity = 0.8f;
-        public Color dayColor;
-        public float dayIntensity = 1f;
-        public Color eveningColor;
-        public float eveningIntensity = 0.5f;
-        public Color nightColor;
-        public float nightIntensity = 0.2f;
+        [SerializeField, FormerlySerializedAs("DayTimeColor")]
+        private DayTimeToColorDictionary dayTimeColor = new();
+
+        [SerializeField, FormerlySerializedAs("DayTimeIntensity")]
+        private DayTimeToFloatDictionary dayTimeIntensity = new();
+
+        // TODO: Replace with loca terms
+        [SerializeField] private DayTimeToStringDictionary dayTimeMessages = new()
+        {
+            {DayTime.Morning, "Day grows in power..."},
+            {DayTime.Day, "Sunset approaches..."},
+            {DayTime.Evening, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
+            {DayTime.Night, "Night has passed.\n Dawn of Day {0}"},
+        };
+
+        [SerializeField] private DayTimeToDayTimeDictionary nextDayTime = new()
+        {
+            {DayTime.Morning, DayTime.Day},
+            {DayTime.Day, DayTime.Evening},
+            {DayTime.Evening, DayTime.Night},
+            {DayTime.Night, DayTime.Morning},
+        };
 
         private DayTime currentCycle = DayTime.Morning;
         private float targetIntensity = 1f;
         private Color targetColor = Color.white;
 
         private int currentDay = 1;
-        // Start is called before the first frame update
+
         void Start()
         {
+            // TODO: Inject
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
-            
+
             currentCycleTime = cycleLength;
             UpdateTargetLight();
-            
+
             globalLight.intensity = targetIntensity;
             globalLight.color = targetColor;
             cycleMessage.text = "";
             StartCoroutine(ShowCycleMessage(DayTime.Night));
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (Math.Abs(globalLight.intensity - targetIntensity) > 0.05f)
@@ -107,56 +123,25 @@ namespace Day
 
         private string GetCycleMessage(DayTime dayTime)
         {
-            switch (dayTime)
-            {
-                case DayTime.Morning:
-                    return "Day grows in power...";
-                case DayTime.Day:
-                    return "Sunset approaches...";
-                case DayTime.Evening:
-                    return "The Night arrived!\n Hide and cower, for its terrors are upon you!";
-                case DayTime.Night:
-                    return $"Night has passed.\n Dawn of Day {currentDay}";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(dayTime), dayTime, null);
-            }
+            return dayTimeMessages.ContainsKey(dayTime)
+                ? string.Format(dayTimeMessages[dayTime], currentDay)
+                : GetDayTimeNotFoundMessage(dayTime);
+        }
+
+        private string GetDayTimeNotFoundMessage(DayTime dayTime)
+        {
+            return $"[DayTime {dayTime} not found!]";
         }
 
         private DayTime GetNextCycle(DayTime cycle)
         {
-            return cycle switch
-            {
-                DayTime.Night => DayTime.Morning,
-                DayTime.Evening => DayTime.Night,
-                DayTime.Day => DayTime.Evening,
-                DayTime.Morning => DayTime.Day,
-                _ => throw new ArgumentOutOfRangeException(nameof(cycle), currentCycle, null)
-            };
+            return nextDayTime[cycle];
         }
 
         private void UpdateTargetLight()
         {
-            switch (currentCycle)
-            {
-                case DayTime.Morning:
-                    targetIntensity = morningIntensity;
-                    targetColor = morningColor;
-                    break;
-                case DayTime.Day:
-                    targetIntensity = dayIntensity;
-                    targetColor = dayColor;
-                    break;
-                case DayTime.Evening:
-                    targetIntensity = eveningIntensity;
-                    targetColor = eveningColor;
-                    break;
-                case DayTime.Night:
-                    targetIntensity = nightIntensity;
-                    targetColor = nightColor;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            targetIntensity = dayTimeIntensity[currentCycle];
+            targetColor = dayTimeColor[currentCycle];
         }
 
         public DayTime GetCurrentCycle()
@@ -166,5 +151,24 @@ namespace Day
 
         public float TargetIntensity => targetIntensity;
     }
-}
 
+    [Serializable]
+    public class DayTimeToColorDictionary : UnitySerializedDictionary<DayTime, Color>
+    {
+    }
+
+    [Serializable]
+    public class DayTimeToFloatDictionary : UnitySerializedDictionary<DayTime, float>
+    {
+    }
+
+    [Serializable]
+    public class DayTimeToStringDictionary : UnitySerializedDictionary<DayTime, string>
+    {
+    }
+
+    [Serializable]
+    public class DayTimeToDayTimeDictionary : UnitySerializedDictionary<DayTime, DayTime>
+    {
+    }
+}
