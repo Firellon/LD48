@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: baseTimeToWander
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3471607891558574174, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d01f232a1c2f64ce0a6e3c34b93c88db, type: 3}
     - target: {fileID: 3861742083327022146, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: MaxDistance
       value: 5
@@ -68,6 +72,10 @@ PrefabInstance:
       propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4777048309013230726, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 56ce1cf858544db4fb3fcafaa11aed04, type: 2}
     - target: {fileID: 5133988400910477832, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
       value: 0
