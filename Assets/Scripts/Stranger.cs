@@ -68,7 +68,7 @@ namespace LD48
                     SeekBonfire();
                     break;
                 case StrangerState.StartBonfire:
-                    human.Fire();
+                    human.LightAFire();
                     state = GetCurrentState();
                     break;
                 case StrangerState.Fight:
@@ -306,7 +306,7 @@ namespace LD48
             var isThreat = human.IsThreat();
             if ((ready && !isThreat) || (!ready && isThreat))
             {
-                human.SwitchReadyToShoot();
+                human.ToggleIsAiming();
             }
         }
     }

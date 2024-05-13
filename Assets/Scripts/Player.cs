@@ -30,7 +30,7 @@ namespace LD48
 
             if (Input.GetButtonDown("Fire2"))
             {
-                human.SwitchReadyToShoot();
+                human.ToggleIsAiming();
             }
 
             if (woodAmountText && tipMessageText)

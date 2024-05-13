@@ -10,18 +10,18 @@ using Random = UnityEngine.Random;
 
 namespace LD48
 {
+    [RequireComponent(typeof(PlayerMovement2D))]
     public class Human : MonoBehaviour, IHittable
     {
         [Inject] private IPrefabPool prefabPool;
-        
+
         private PlayerMovement2D characterController;
 
         private Rigidbody2D body;
-        private new SpriteRenderer renderer;
         private TerrainGenerator terrainGenerator;
         private DayNightCycle dayNightCycle;
         private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
-        
+
         public int woodAmount = 0;
         public int maxWoodAmount = 10;
         public float moveSpeed = 2.5f;
@@ -30,8 +30,10 @@ namespace LD48
         public float fireTouchRadius = 2f;
         public GameObject bonfirePrefab;
         public GameObject woodPrefab;
-        
-        [SerializeField] private bool isReadyToShoot = false;
+
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private Animator humanAnimator;
+        [SerializeField] private Collider2D collider2d;
 
         public Sprite notReadyToShootSprite;
         public Sprite readyToShootSprite;
@@ -41,6 +43,7 @@ namespace LD48
 
         private bool isHit = false;
         private bool isDead = false;
+        private bool isAiming = false;
 
         public float baseTimeToRecover = 5f;
         private float timeToRecover = 0f;
@@ -48,7 +51,7 @@ namespace LD48
         public float baseTimeToReload = 0.5f;
         private float timeToReload = 0f;
         private bool isReloading = false;
-        
+
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
         private bool isResting = false;
@@ -58,6 +61,14 @@ namespace LD48
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        private static readonly int MovementSpeedAnimation = Animator.StringToHash("MovementSpeed");
+        private static readonly int IsRestingAnimation = Animator.StringToHash("IsResting");
+        private static readonly int IsReloadingAnimation = Animator.StringToHash("IsReloading");
+        private static readonly int ShootingAnimation = Animator.StringToHash("Shoot");
+        private static readonly int IsAimingAnimation = Animator.StringToHash("IsAiming");
+        private static readonly int IsHitAnimation = Animator.StringToHash("IsHit");
+        private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead");
 
         private void Awake()
         {
@@ -71,13 +82,12 @@ namespace LD48
 
         public bool IsThreat()
         {
-            return !isHit && !isDead && isReadyToShoot;
+            return !isHit && !isDead && isAiming;
         }
 
         private void Start()
         {
             body = GetComponent<Rigidbody2D>();
-            renderer = GetComponent<SpriteRenderer>();
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
             dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             levelSize = terrainGenerator.levelSize;
@@ -95,9 +105,10 @@ namespace LD48
                 else
                 {
                     isReloading = false;
+                    humanAnimator.SetBool(IsReloadingAnimation, false);
                 }
             }
-            
+
             if (isHit && !isDead)
             {
                 if (timeToRecover > 0f)
@@ -107,34 +118,38 @@ namespace LD48
                 else
                 {
                     isHit = false;
-                    renderer.sprite = GetRegularSprite();
+                    humanAnimator.SetBool(IsHitAnimation, false);
                 }
             }
 
-            if (!isReadyToShoot && !characterController.IsMoving && !isHit && !isDead)
+            if (!isAiming && !characterController.IsMoving && !isHit && !isDead)
             {
                 if (!isResting)
                 {
                     isResting = true;
-                    timeToRest = baseTimeToRest;    
+                    humanAnimator.SetFloat(MovementSpeedAnimation, 0f);
+                    humanAnimator.SetBool(IsRestingAnimation, true);
+                    timeToRest = baseTimeToRest;
                 }
             }
             else
             {
                 isResting = false;
+                humanAnimator.SetBool(IsRestingAnimation, false);
             }
 
-            if (isResting)
-            {
-                if (timeToRest > 0f)
-                {
-                    timeToRest -= Time.deltaTime;
-                }
-                else
-                {
-                    renderer.sprite = restingSprite;
-                }
-            }
+            // if (isResting)
+            // {
+            //     if (timeToRest > 0f)
+            //     {
+            //         timeToRest -= Time.deltaTime;
+            //     }
+            //     else
+            //     {
+            //         isResting = false;
+            //         humanAnimator.SetBool(IsRestingAnimation, false);
+            //     }
+            // }
         }
 
         private void OnCollisionEnter2D(Collision2D hit)
@@ -163,9 +178,7 @@ namespace LD48
             if (isHit || isDead) return;
             if (!body) return;
 
-            renderer.sprite = GetRegularSprite();
-            // body.velocity = moveDirection.normalized * moveSpeed;
-
+            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
 
@@ -177,15 +190,13 @@ namespace LD48
                 var scale = transform.localScale;
                 scale.x = moveDirection.x < 0 ? -1 : 1;
                 transform.localScale = scale;
-
-                // renderer.flipX = moveDirection.x < 0;
             }
         }
-        
-        public void Fire()
+
+        public void LightAFire()
         {
             if (isHit || isDead) return;
-            
+
             if (woodAmount == 0)
             {
                 // TODO: Show a proper message
@@ -206,30 +217,34 @@ namespace LD48
             }
         }
 
-        private IEnumerable<Bonfire> GetClosestBonfires()
+        private IList<Bonfire> GetClosestBonfires()
         {
             return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
                 .Select(collider => collider.gameObject.GetComponent<Bonfire>())
-                .Where(bonfire => bonfire != null);
+                .Where(bonfire => bonfire != null)
+                .ToList();
         }
-        
+
 
         private void CreateBonfire()
         {
-            var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);
+            var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f,
+                Quaternion.identity);
         }
 
         private void Shoot()
         {
             if (isReloading || isHit || isDead) return;
             Debug.Log("Shoot");
+            humanAnimator.SetTrigger(ShootingAnimation);
             var bullet = prefabPool.Spawn(bulletPrefab, transform);
 
-            var xDirection = renderer.flipX ? -1 : 1;
+            var xDirection = spriteRenderer.flipX ? -1 : 1;
             bullet.GetComponent<Bullet>().SetDirection(new Vector2(xDirection, 0));
-            
+
             bullet.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
             isReloading = true;
+            humanAnimator.SetBool(IsReloadingAnimation, true);
             timeToReload = baseTimeToReload;
             if (shootSound) audio.PlayOneShot(shootSound);
         }
@@ -247,32 +262,28 @@ namespace LD48
                         if (itemPickupSound) audio.PlayOneShot(itemPickupSound);
                         Destroy(item.gameObject);
                     }
+
                     break;
             }
         }
 
-        public void SwitchReadyToShoot()
+        public void ToggleIsAiming()
         {
             if (isHit || isDead) return;
-            isReadyToShoot = !isReadyToShoot;
-            renderer.sprite = GetRegularSprite();
+            isAiming = !isAiming;
+            humanAnimator.SetBool(IsAimingAnimation, isAiming);
         }
 
-        private Sprite GetRegularSprite()
-        {
-            return isReadyToShoot ? readyToShootSprite : notReadyToShootSprite;
-        }
-        
         public void Act()
         {
             if (isHit || isDead) return;
-            if (isReadyToShoot)
+            if (isAiming)
             {
                 Shoot();
             }
             else
             {
-                Fire();
+                LightAFire();
             }
         }
 
@@ -282,8 +293,8 @@ namespace LD48
             if (!isHit && !isDead)
             {
                 isHit = true;
-                isReadyToShoot = false;
-                renderer.sprite = hitSprite;
+                isAiming = false;
+                humanAnimator.SetBool(IsHitAnimation, true);
                 timeToRecover = baseTimeToRecover;
                 DropItems();
                 // TODO: Update Collider on hit and on recover
@@ -292,8 +303,8 @@ namespace LD48
             else
             {
                 isDead = true;
-                renderer.sprite = deadSprite;
-                GetComponent<Collider2D>().enabled = false;
+                humanAnimator.SetBool(IsDeadAnimation, true);
+                collider2d.enabled = false;
                 terrainGenerator.AddDead(transform);
                 if (deadSound) audio.PlayOneShot(deadSound);
             }
@@ -304,7 +315,8 @@ namespace LD48
             while (woodAmount > 0)
             {
                 woodAmount--;
-                prefabPool.Spawn(woodPrefab, transform.position + new Vector3(Random.value, Random.value), Quaternion.identity);
+                prefabPool.Spawn(woodPrefab, transform.position + new Vector3(Random.value, Random.value),
+                    Quaternion.identity);
             }
         }
 
@@ -312,9 +324,10 @@ namespace LD48
         {
             if (isDead)
             {
-                return $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
+                return
+                    $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
             }
-            
+
             if (isHit)
             {
                 return "You have been wounded, a few seconds needed to recover!";
@@ -324,17 +337,15 @@ namespace LD48
             {
                 return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
             }
-            
-            if (isReadyToShoot)
+
+            if (isAiming)
             {
                 return "Press LMB to Shoot";
             }
-            else
-            {
-                if (woodAmount <= 0) return "Gather some Wood to survive through the Night";
-                var bonfires = GetClosestBonfires();
-                return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
-            }
+
+            if (woodAmount <= 0) return "Gather some Wood to survive through the Night";
+            var bonfires = GetClosestBonfires();
+            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
         }
 
         private bool IsCloseToMapBorder()
@@ -349,7 +360,7 @@ namespace LD48
 
         public bool IsFacingTowards(Vector3 position)
         {
-            return renderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
+            return spriteRenderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
         }
     }
 }
