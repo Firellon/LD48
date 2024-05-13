@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DG.Tweening;
+using FunkyCode;
 using TMPro;
 using UnityEngine;
 
@@ -22,7 +23,8 @@ namespace LD48
 
         public int nightLengthGrowth = 2;
 
-        public UnityEngine.Rendering.Universal.Light2D globalLight;
+        // public UnityEngine.Rendering.Universal.Light2D globalLight;
+
         public TMP_Text cycleMessage;
 
         public Color morningColor;
@@ -39,27 +41,51 @@ namespace LD48
         private Color targetColor = Color.white;
 
         private int currentDay = 1;
+
+        private LightingManager2D lightManager;
+
         // Start is called before the first frame update
         void Start()
         {
+            lightManager = LightingManager2D.Get();
+            
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
             
             currentCycleTime = cycleLength;
             UpdateTargetLight();
-            
-            globalLight.intensity = targetIntensity;
-            globalLight.color = targetColor;
+
+            SetDarknessLevel(targetIntensity);
+
+            // globalLight.intensity = targetIntensity;
+            // globalLight.color = targetColor;
             cycleMessage.text = "";
             StartCoroutine(ShowCycleMessage(DayTime.Night));
+        }
+
+        private void SetDarknessLevel(float value)
+        {
+            var darknessColor = lightManager.profile.DarknessColor;
+            darknessColor.a = value;
+            lightManager.profile.DarknessColor = darknessColor;
+        }
+
+        public float GetDarknessLevel()
+        {
+            return lightManager.profile.DarknessColor.a;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Math.Abs(globalLight.intensity - targetIntensity) > 0.05f)
+            if (Math.Abs(GetDarknessLevel() - targetIntensity) > 0.05f)
             {
-                globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.005f);
-                globalLight.color = Color.Lerp(globalLight.color, targetColor, 0.01f);
+                // globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.005f);
+                // globalLight.color = Color.Lerp(globalLight.color, targetColor, 0.01f);
+
+                var level = GetDarknessLevel();
+
+                var nextValue = Mathf.Lerp(level, targetIntensity, 0.005f);
+                SetDarknessLevel(nextValue);
             }
 
             if (currentCycleTime > 0f)
@@ -73,6 +99,7 @@ namespace LD48
                 currentCycle = GetNextCycle(currentCycle);
                 currentCycleTime = GetCycleLength(currentCycle);
                 UpdateTargetLight();
+
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();

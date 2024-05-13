@@ -28,7 +28,7 @@ MonoBehaviour:
     enabled: 1
     chunkSize: 10
   colorSpace: 0
-  managerInternal: 0
+  managerInternal: 1
   managerInstance: 0
   shaderPreview: 0
   MaxLightSize: 100

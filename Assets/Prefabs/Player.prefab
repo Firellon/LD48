@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 8931530567984793119}
   - component: {fileID: 4954182882433421130}
   - component: {fileID: 8292827878907360640}
+  - component: {fileID: 4033039772867592256}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -430,6 +431,43 @@ CapsuleCollider2D:
   m_Offset: {x: -0.03, y: 0}
   m_Size: {x: 0.3, y: 0.13}
   m_Direction: 1
+--- !u!114 &4033039772867592256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5783dbbad6a59184fa58aa75d79bcc02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowType: 0
+  shadowLayer: 0
+  shadowDistance: 1
+  shadowDistanceMin: 0
+  shadowDistanceMax: 1.2160034
+  shadowTranslucency: 0.833
+  maskType: 1
+  maskLit: 4
+  maskPivot: 0
+  maskLayer: 0
+  maskLitCustom: 1
+  bumpMapMode:
+    type: 0
+    textureType: 0
+    texture: {fileID: 0}
+    sprite: {fileID: 0}
+    invertX: 0
+    invertY: 0
+    depth: 1
+    spriteRenderer: {fileID: 5133988400910477834}
+  mainShape:
+    shadowType: 0
+    maskType: 1
+    maskPivot: 0
+    transform: {fileID: 5133988400910477833}
 --- !u!1 &9183629015102132643
 GameObject:
   m_ObjectHideFlags: 0

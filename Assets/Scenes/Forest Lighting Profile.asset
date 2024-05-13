@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b19cefa3bf552f94390d1c272b19ea6e, type: 3}
-  m_Name: Custom Physics Shape
+  m_Name: Forest Lighting Profile
   m_EditorClassIdentifier: 
   lightmapPresets:
     list:
@@ -36,7 +36,7 @@ MonoBehaviour:
           type: 0
           sorting: 4
           sortingIgnore: 0
-          shadowEffect: 1
+          shadowEffect: 0
           shadowEffectLayer: 0
           maskLit: 1
           maskLitDistance: 1
@@ -53,8 +53,8 @@ MonoBehaviour:
   qualitySettings:
     lightTextureSize: 2
     lightEffectTextureSize: 2
-    lightFilterMode: 1
-    lightmapFilterMode: 1
+    lightFilterMode: 0
+    lightmapFilterMode: 0
     updateMethod: 0
     coreAxis: 0
     projection: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
       - Default
     lightLayers:
       names:
-      - Lighting
+      - Default
     dayLayers:
       names:
       - Default
