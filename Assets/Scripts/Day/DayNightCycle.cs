@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using DG.Tweening;
 using Plugins.Sirenix.Odin_Inspector.Modules;
+using FunkyCode;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Day
 {
@@ -12,87 +12,87 @@ namespace Day
     {
         private TerrainGenerator terrainGenerator;
 
-        public float cycleLength = 10f;
-        private float currentCycleTime = 15f;
+        [SerializeField] private float cycleLength = 15f;
 
-        public int nightLengthGrowth = 2;
+        [SerializeField] private int nightLengthGrowth = 2;
 
-        public UnityEngine.Rendering.Universal.Light2D globalLight;
-        public TMP_Text cycleMessage;
+        [SerializeField] private TMP_Text cycleMessage;
 
-        [SerializeField, FormerlySerializedAs("DayTimeColor")]
-        private DayTimeToColorDictionary dayTimeColor = new();
+        [SerializeField] private float dayIntensity = 0f;
+        [SerializeField] private float nightIntensity = 1f;
 
-        [SerializeField, FormerlySerializedAs("DayTimeIntensity")]
-        private DayTimeToFloatDictionary dayTimeIntensity = new();
-
-        // TODO: Replace with loca terms
+        [SerializeField] private DayTimeToDayTimeDictionary nextDayTime;
         [SerializeField] private DayTimeToStringDictionary dayTimeMessages = new()
         {
-            {DayTime.Morning, "Day grows in power..."},
+            {DayTime.DayComing, "Day grows in power..."},
             {DayTime.Day, "Sunset approaches..."},
-            {DayTime.Evening, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
+            {DayTime.NightComing, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
             {DayTime.Night, "Night has passed.\n Dawn of Day {0}"},
         };
 
-        [SerializeField] private DayTimeToDayTimeDictionary nextDayTime = new()
-        {
-            {DayTime.Morning, DayTime.Day},
-            {DayTime.Day, DayTime.Evening},
-            {DayTime.Evening, DayTime.Night},
-            {DayTime.Night, DayTime.Morning},
-        };
-
-        private DayTime currentCycle = DayTime.Morning;
-        private float targetIntensity = 1f;
-        private Color targetColor = Color.white;
+        private DayTime currentCycle = DayTime.Day;
 
         private int currentDay = 1;
 
+        private LightCycle lightCycle;
+
         void Start()
         {
-            // TODO: Inject
+            lightCycle = FindObjectOfType<LightCycle>();
+
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
 
-            currentCycleTime = cycleLength;
-            UpdateTargetLight();
-
-            globalLight.intensity = targetIntensity;
-            globalLight.color = targetColor;
-            cycleMessage.text = "";
-            StartCoroutine(ShowCycleMessage(DayTime.Night));
+            StartCoroutine(DayNightCycleProcess());
         }
 
-        void Update()
+        private void SetDarknessLevel(float value)
         {
-            if (Math.Abs(globalLight.intensity - targetIntensity) > 0.05f)
-            {
-                globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.005f);
-                globalLight.color = Color.Lerp(globalLight.color, targetColor, 0.01f);
-            }
+            lightCycle.SetTime(value);
+        }
 
-            if (currentCycleTime > 0f)
+        public float GetDarknessLevel()
+        {
+            return lightCycle.time;
+        }
+
+        private IEnumerator DayNightCycleProcess()
+        {
+            SetDarknessLevel(GetTargetLightIntensity(currentCycle));
+            cycleMessage.SetText("");
+
+            while (true)
             {
-                currentCycleTime -= Time.deltaTime;
-            }
-            else
-            {
-                Debug.Log($"Change Cycle Time: {currentCycle}");
-                StartCoroutine(ShowCycleMessage(currentCycle));
+                if (currentCycle == DayTime.DayComing || currentCycle == DayTime.NightComing)
+                {
+                    var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(currentCycle));
+                    
+                    var currentCycleTime = GetCycleLength(currentCycle);
+
+                    yield return DOVirtual
+                        .Float(GetDarknessLevel(), nextLightIntensity, currentCycleTime, SetDarknessLevel)
+                        .WaitForCompletion();
+                }
+                else
+                {
+                    var currentCycleTime = GetCycleLength(currentCycle);
+                    yield return new WaitForSeconds(currentCycleTime);
+                }
+
                 currentCycle = GetNextCycle(currentCycle);
-                currentCycleTime = GetCycleLength(currentCycle);
-                UpdateTargetLight();
+
+                StartCoroutine(ShowCycleMessage(currentCycle));
+
+                if (currentCycle == DayTime.DayComing)
+                {
+                    currentDay++;
+                    terrainGenerator.DestroyGhosts();
+                }
+
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
                     terrainGenerator.GenerateItems(0.05f);
                     terrainGenerator.GenerateStrangers(0.05f);
-                }
-
-                if (currentCycle == DayTime.Morning)
-                {
-                    currentDay++;
-                    terrainGenerator.DestroyGhosts();
                 }
             }
         }
@@ -109,6 +109,11 @@ namespace Day
                 return cycleLength + currentDay * nightLengthGrowth;
             }
 
+            // if (dayTime == DayTime.DayComing || dayTime == DayTime.NightComing)
+            // {
+            //     return cycleLength / 2f;
+            // }
+
             return cycleLength;
         }
 
@@ -116,8 +121,11 @@ namespace Day
         {
             cycleMessage.alpha = 0f;
             cycleMessage.text = GetCycleMessage(cycle);
+
             yield return cycleMessage.DOFade(1f, 0.5f);
+
             yield return new WaitForSeconds(5f);
+
             yield return cycleMessage.DOFade(0f, 0.5f);
         }
 
@@ -131,6 +139,19 @@ namespace Day
         private string GetDayTimeNotFoundMessage(DayTime dayTime)
         {
             return $"[DayTime {dayTime} not found!]";
+            switch (dayTime)
+            {
+                case DayTime.DayComing:
+                    return "Day grows in power...";
+                case DayTime.Day:
+                    return "Sunset approaches...";
+                case DayTime.NightComing:
+                    return "The Night arrived!\n Hide and cower, for its terrors are upon you!";
+                case DayTime.Night:
+                    return $"Night has passed.\n Dawn of Day {currentDay}";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dayTime), dayTime, null);
+            }
         }
 
         private DayTime GetNextCycle(DayTime cycle)
@@ -138,10 +159,18 @@ namespace Day
             return nextDayTime[cycle];
         }
 
-        private void UpdateTargetLight()
+        private float GetTargetLightIntensity(DayTime time)
         {
-            targetIntensity = dayTimeIntensity[currentCycle];
-            targetColor = dayTimeColor[currentCycle];
+            switch (time)
+            {
+                case DayTime.Day:
+                    return dayIntensity;
+                case DayTime.Night:
+                    return nightIntensity;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public DayTime GetCurrentCycle()
@@ -149,7 +178,7 @@ namespace Day
             return currentCycle;
         }
 
-        public float TargetIntensity => targetIntensity;
+        public float TargetIntensity { get; }
     }
 
     [Serializable]

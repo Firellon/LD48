@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3164662886346592670}
   - component: {fileID: 7920688031621408536}
   - component: {fileID: 7476991000698447668}
-  - component: {fileID: 8920351417735487388}
   - component: {fileID: 5630489734164516771}
   - component: {fileID: 4906072383102550967}
   - component: {fileID: 1728177888284282089}
@@ -171,56 +170,6 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
---- !u!114 &8920351417735487388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304517227016174079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ComponentVersion: 1
-  m_LightType: 4
-  m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
-  m_Color: {r: 0.7372549, g: 0.62352943, b: 0.2901961, a: 1}
-  m_Intensity: 0.2
-  m_LightVolumeIntensity: 0
-  m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 000000000b235f99
-  m_LightCookieSprite: {fileID: 0}
-  m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
-  m_AlphaBlendOnOverlap: 0
-  m_OverlapOperation: 0
-  m_NormalMapDistance: 3
-  m_NormalMapQuality: 2
-  m_UseNormalMap: 0
-  m_ShadowIntensityEnabled: 0
-  m_ShadowIntensity: 0
-  m_ShadowVolumeIntensityEnabled: 0
-  m_ShadowVolumeIntensity: 0
-  m_LocalBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_PointLightInnerAngle: 360
-  m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 1
-  m_ShapeLightParametricSides: 5
-  m_ShapeLightParametricAngleOffset: 0
-  m_ShapeLightParametricRadius: 1
-  m_ShapeLightFalloffSize: 0.5
-  m_ShapeLightFalloffOffset: {x: 0, y: 0}
-  m_ShapePath:
-  - {x: -0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: -0.5, y: 0.5, z: 0}
 --- !u!114 &5630489734164516771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,22 +219,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cycleLength: 15
   nightLengthGrowth: 2
-  globalLight: {fileID: 8920351417735487388}
   cycleMessage: {fileID: 0}
-  DayTimeColor:
-    keyData: 00000000010000000200000003000000
+  dayIntensity: 0
+  nightIntensity: 1
+  nextDayTime:
+    keyData: 01000000040000000200000003000000
+    valueData: 04000000020000000300000001000000
+  dayTimeMessages:
+    keyData: 03000000010000000400000002000000
     valueData:
-    - {r: 0.9, g: 0.7658823, b: 0.35999995, a: 0.6}
-    - {r: 1, g: 0.9375, b: 0.75, a: 0.8}
-    - {r: 0.8, g: 0.64, b: 0.16, a: 0.4}
-    - {r: 0.3, g: 0.2775, b: 0.21000001, a: 0.14901961}
-  DayTimeIntensity:
-    keyData: 00000000010000000200000003000000
-    valueData:
-    - 0.6
-    - 0.8
-    - 0.4
-    - 0.15
+    - Day grows in power...
+    - Sunset approaches...
+    - "The Night arrived!\n Hide and cower, for its terrors are upon you!"
+    - "Night has passed.\n Dawn of Day {0}"
 --- !u!114 &1728177888284282089
 MonoBehaviour:
   m_ObjectHideFlags: 0

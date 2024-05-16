@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 2110516460938890561}
   - component: {fileID: 2110516460938890560}
   - component: {fileID: 2110516460938890566}
-  - component: {fileID: 5962224734891058055}
+  - component: {fileID: 4792742769248431098}
+  - component: {fileID: 768966079986612834}
   m_Layer: 7
   m_Name: Tree
   m_TagString: Wall
@@ -132,7 +133,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.1246078, y: 0.119377166}
   m_EdgeRadius: 0
---- !u!114 &5962224734891058055
+--- !u!114 &4792742769248431098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,10 +142,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 2110516460938890563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f48a8d66b2adc46887f23a3a88ac01, type: 3}
+  m_Script: {fileID: 11500000, guid: 5783dbbad6a59184fa58aa75d79bcc02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShadowGroup: 0
+  shadowType: 1
+  shadowLayer: 0
+  shadowDistance: 0
+  shadowDistanceMin: 0.5
+  shadowDistanceMax: 1
+  shadowTranslucency: 0
+  maskType: 1
+  maskLit: 0
+  maskPivot: 0
+  maskLayer: 0
+  maskLitCustom: 1
+  bumpMapMode:
+    type: 0
+    textureType: 0
+    texture: {fileID: 0}
+    sprite: {fileID: 0}
+    invertX: 0
+    invertY: 0
+    depth: 1
+    spriteRenderer: {fileID: 2110516460938890560}
+  mainShape:
+    shadowType: 1
+    maskType: 1
+    maskPivot: 0
+    transform: {fileID: 2110516460938890561}
+--- !u!210 &768966079986612834
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110516460938890563}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &5202355537595165995
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,9 +1,9 @@
 namespace Day
 {
     public enum DayTime {
-        Morning,
-        Day,
-        Evening,
-        Night
+        Day = 1,
+        Night = 2,
+        DayComing = 3,
+        NightComing = 4,
     }
 }
