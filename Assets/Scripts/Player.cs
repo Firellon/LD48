@@ -42,7 +42,7 @@ namespace LD48
 
         private void FixedUpdate()
         {
-            var moveVector = new Vector2(horizontal, vertical); 
+            var moveVector = new Vector2(horizontal, vertical);
             human.Move(moveVector);
         }
     }

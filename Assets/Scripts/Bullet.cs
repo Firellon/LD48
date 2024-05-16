@@ -26,7 +26,7 @@ namespace LD48
 
         private void OnTriggerEnter2D(Collider2D hit)
         {
-            if (hit.gameObject.CompareTag("Hittable") && transform.parent.gameObject != hit.gameObject)
+            if (hit.gameObject.CompareTag("Hittable") && transform.parent.gameObject != hit.gameObject && transform.parent.gameObject != hit.transform.parent.gameObject)
             {
                 var hittable = hit.transform.parent.gameObject.GetComponent<IHittable>();
                 if (hittable == null) {

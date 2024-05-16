@@ -128,7 +128,6 @@ namespace LD48
                 {
                     isResting = true;
                     humanAnimator.SetFloat(MovementSpeedAnimation, 0f);
-                    humanAnimator.SetBool(IsRestingAnimation, true);
                     timeToRest = baseTimeToRest;
                 }
             }
@@ -138,18 +137,17 @@ namespace LD48
                 humanAnimator.SetBool(IsRestingAnimation, false);
             }
 
-            // if (isResting)
-            // {
-            //     if (timeToRest > 0f)
-            //     {
-            //         timeToRest -= Time.deltaTime;
-            //     }
-            //     else
-            //     {
-            //         isResting = false;
-            //         humanAnimator.SetBool(IsRestingAnimation, false);
-            //     }
-            // }
+            if (isResting && !humanAnimator.GetBool(IsRestingAnimation))
+            {
+                if (timeToRest > 0f)
+                {
+                    timeToRest -= Time.deltaTime;
+                }
+                else
+                {
+                    humanAnimator.SetBool(IsRestingAnimation, true);
+                }
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D hit)
@@ -178,7 +176,7 @@ namespace LD48
             if (isHit || isDead) return;
             if (!body) return;
 
-            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed);
+            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveDirection.magnitude);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
 
@@ -187,9 +185,10 @@ namespace LD48
 
             if (moveDirection.x != 0)
             {
-                var scale = transform.localScale;
-                scale.x = moveDirection.x < 0 ? -1 : 1;
-                transform.localScale = scale;
+                // var scale = transform.localScale;
+                // scale.x = moveDirection.x < 0 ? -1 : 1;
+                // transform.localScale = scale;
+                spriteRenderer.flipX = moveDirection.x < 0;
             }
         }
 
@@ -237,12 +236,12 @@ namespace LD48
             if (isReloading || isHit || isDead) return;
             Debug.Log("Shoot");
             humanAnimator.SetTrigger(ShootingAnimation);
-            var bullet = prefabPool.Spawn(bulletPrefab, transform);
-
+            var bulletObject = prefabPool.Spawn(bulletPrefab, transform);
             var xDirection = spriteRenderer.flipX ? -1 : 1;
-            bullet.GetComponent<Bullet>().SetDirection(new Vector2(xDirection, 0));
+            var bullet = bulletObject.GetComponent<Bullet>();
+            bullet.SetDirection(new Vector2(xDirection, 0));
 
-            bullet.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
+            bulletObject.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
             isReloading = true;
             humanAnimator.SetBool(IsReloadingAnimation, true);
             timeToReload = baseTimeToReload;
