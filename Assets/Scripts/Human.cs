@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Day;
@@ -35,12 +36,6 @@ namespace LD48
         [SerializeField] private Animator humanAnimator;
         [SerializeField] private Collider2D collider2d;
 
-        public Sprite notReadyToShootSprite;
-        public Sprite readyToShootSprite;
-        public Sprite hitSprite;
-        public Sprite deadSprite;
-        public Sprite restingSprite;
-
         private bool isHit = false;
         private bool isDead = false;
         private bool isAiming = false;
@@ -49,8 +44,10 @@ namespace LD48
         private float timeToRecover = 0f;
 
         public float baseTimeToReload = 0.5f;
+        [SerializeField] private float shootAnimationLengthSeconds = 0.5f;
         private float timeToReload = 0f;
         private bool isReloading = false;
+
 
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
@@ -173,21 +170,20 @@ namespace LD48
 
         public void Move(Vector2 moveDirection)
         {
-            if (isHit || isDead) return;
+            if (isHit || isDead || isReloading)
+            {
+                StopMovement();
+                return;
+            }
+
             if (!body) return;
 
             humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveDirection.magnitude);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
 
-            // playerMotor2D.movementDir = moveDirection;
-            // characterController.MovePosition(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime);
-
             if (moveDirection.x != 0)
             {
-                // var scale = transform.localScale;
-                // scale.x = moveDirection.x < 0 ? -1 : 1;
-                // transform.localScale = scale;
                 spriteRenderer.flipX = moveDirection.x < 0;
             }
         }
@@ -235,17 +231,34 @@ namespace LD48
         {
             if (isReloading || isHit || isDead) return;
             Debug.Log("Shoot");
+            StopMovement();
+            isReloading = true;
+            timeToReload = baseTimeToReload;
             humanAnimator.SetTrigger(ShootingAnimation);
+            StartCoroutine(ShootCoroutine());
+        }
+
+        private IEnumerator ShootCoroutine()
+        {
+            yield return new WaitForSeconds(shootAnimationLengthSeconds);
+
             var bulletObject = prefabPool.Spawn(bulletPrefab, transform);
             var xDirection = spriteRenderer.flipX ? -1 : 1;
             var bullet = bulletObject.GetComponent<Bullet>();
             bullet.SetDirection(new Vector2(xDirection, 0));
 
             bulletObject.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
-            isReloading = true;
             humanAnimator.SetBool(IsReloadingAnimation, true);
             timeToReload = baseTimeToReload;
+            isReloading = true;
             if (shootSound) audio.PlayOneShot(shootSound);
+        }
+
+        private void StopMovement()
+        {
+            body.velocity = Vector2.zero;
+            characterController.MoveSpeed = 0;
+            humanAnimator.SetFloat(MovementSpeedAnimation, 0);
         }
 
         private void PickUp(Item item)
@@ -288,7 +301,7 @@ namespace LD48
 
         public void Hit()
         {
-            body.velocity = Vector2.zero;
+            StopMovement();
             if (!isHit && !isDead)
             {
                 isHit = true;
