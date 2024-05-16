@@ -288,23 +288,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2302759436790332106}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21c5680887b9848ac9a7d23ab8cc8188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cycleLength: 15
+  nextStepChangeTime: 1
   nightLengthGrowth: 2
-  globalLight: {fileID: 0}
   cycleMessage: {fileID: 0}
-  morningColor: {r: 0.9, g: 0.7658823, b: 0.35999995, a: 1}
-  morningIntensity: 0.6
-  dayColor: {r: 1, g: 0.9375, b: 0.75, a: 0}
-  dayIntensity: 0.8
-  eveningColor: {r: 0.8, g: 0.64, b: 0.16, a: 0}
-  eveningIntensity: 0.4
-  nightColor: {r: 0.3, g: 0.2775, b: 0.21000001, a: 0}
-  nightIntensity: 0.15
+  morningIntensity: 0.2
+  dayIntensity: 0
+  eveningIntensity: 0.2
+  nightIntensity: 1
 --- !u!82 &853585348427248246
 AudioSource:
   m_ObjectHideFlags: 0

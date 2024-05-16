@@ -138,9 +138,8 @@ namespace LD48
 
 
             var currentCycle = dayNightCycle.GetCurrentCycle();
-            if (currentCycle == DayTime.Evening || currentCycle == DayTime.Night)
+            if (currentCycle == DayTime.NightComing || currentCycle == DayTime.Night)
             {
-                
                 var closestBonfires = Physics2D.OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
                     .Select(collider => collider.gameObject.GetComponent<Bonfire>())
                     .Where(bonfire => bonfire != null && bonfire.IsBurning())

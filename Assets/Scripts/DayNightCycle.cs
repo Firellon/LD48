@@ -9,108 +9,90 @@ using UnityEngine;
 namespace LD48
 {
     public enum DayTime {
-        Morning,
-        Day,
-        Evening,
-        Night
+        Day = 1,
+        Night = 2,
+        DayComing = 3,
+        NightComing = 4,
     }
+
     public class DayNightCycle : MonoBehaviour
     {
         private TerrainGenerator terrainGenerator;
-        
-        public float cycleLength = 10f;
-        private float currentCycleTime = 15f;
+
+        [SerializeField] private float cycleLength = 15f;
 
         public int nightLengthGrowth = 2;
 
-        // public UnityEngine.Rendering.Universal.Light2D globalLight;
-
         public TMP_Text cycleMessage;
 
-        public Color morningColor;
-        public float morningIntensity = 0.8f;
-        public Color dayColor;
-        public float dayIntensity = 1f;
-        public Color eveningColor;
-        public float eveningIntensity = 0.5f;
-        public Color nightColor;
-        public float nightIntensity = 0.2f;
+        public float morningIntensity = 0.2f;
+        public float dayIntensity = 0f;
+        public float eveningIntensity = 0.2f;
+        public float nightIntensity = 1f;
 
-        private DayTime currentCycle = DayTime.Morning;
-        private float targetIntensity = 1f;
-        private Color targetColor = Color.white;
+        private DayTime currentCycle = DayTime.Day;
 
         private int currentDay = 1;
 
-        private LightingManager2D lightManager;
+        private LightCycle lightCycle;
 
-        // Start is called before the first frame update
         void Start()
         {
-            lightManager = LightingManager2D.Get();
-            
+            lightCycle = FindObjectOfType<LightCycle>();
+
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
-            
-            currentCycleTime = cycleLength;
-            UpdateTargetLight();
 
-            SetDarknessLevel(targetIntensity);
-
-            // globalLight.intensity = targetIntensity;
-            // globalLight.color = targetColor;
-            cycleMessage.text = "";
-            StartCoroutine(ShowCycleMessage(DayTime.Night));
+            StartCoroutine(DayNightCycleProcess());
         }
 
         private void SetDarknessLevel(float value)
         {
-            var darknessColor = lightManager.profile.DarknessColor;
-            darknessColor.a = value;
-            lightManager.profile.DarknessColor = darknessColor;
+            lightCycle.SetTime(value);
         }
 
         public float GetDarknessLevel()
         {
-            return lightManager.profile.DarknessColor.a;
+            return lightCycle.time;
         }
 
-        // Update is called once per frame
-        void Update()
+        private IEnumerator DayNightCycleProcess()
         {
-            if (Math.Abs(GetDarknessLevel() - targetIntensity) > 0.05f)
-            {
-                // globalLight.intensity = Mathf.Lerp(globalLight.intensity, targetIntensity, 0.005f);
-                // globalLight.color = Color.Lerp(globalLight.color, targetColor, 0.01f);
+            SetDarknessLevel(GetTargetLightIntensity(currentCycle));
+            cycleMessage.SetText("");
 
-                var level = GetDarknessLevel();
-
-                var nextValue = Mathf.Lerp(level, targetIntensity, 0.005f);
-                SetDarknessLevel(nextValue);
-            }
-
-            if (currentCycleTime > 0f)
+            while (true)
             {
-                currentCycleTime -= Time.deltaTime;
-            }
-            else
-            {
-                Debug.Log($"Change Cycle Time: {currentCycle}");
-                StartCoroutine(ShowCycleMessage(currentCycle));
+                if (currentCycle == DayTime.DayComing || currentCycle == DayTime.NightComing)
+                {
+                    var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(currentCycle));
+                    
+                    var currentCycleTime = GetCycleLength(currentCycle);
+
+                    yield return DOVirtual
+                        .Float(GetDarknessLevel(), nextLightIntensity, currentCycleTime, SetDarknessLevel)
+                        .WaitForCompletion();
+                }
+                else
+                {
+                    var currentCycleTime = GetCycleLength(currentCycle);
+                    yield return new WaitForSeconds(currentCycleTime);
+                }
+
                 currentCycle = GetNextCycle(currentCycle);
-                currentCycleTime = GetCycleLength(currentCycle);
-                UpdateTargetLight();
+
+                StartCoroutine(ShowCycleMessage(currentCycle));
+
+                if (currentCycle == DayTime.DayComing)
+                {
+                    currentDay++;
+                    terrainGenerator.DestroyGhosts();
+                }
 
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
                     terrainGenerator.GenerateItems(0.05f);
                     terrainGenerator.GenerateStrangers(0.05f);
-                }
-
-                if (currentCycle == DayTime.Morning)
-                {
-                    currentDay++;
-                    terrainGenerator.DestroyGhosts();
                 }
             }
         }
@@ -127,6 +109,11 @@ namespace LD48
                 return cycleLength + currentDay * nightLengthGrowth;
             }
 
+            // if (dayTime == DayTime.DayComing || dayTime == DayTime.NightComing)
+            // {
+            //     return cycleLength / 2f;
+            // }
+
             return cycleLength;
         }
 
@@ -134,8 +121,11 @@ namespace LD48
         {
             cycleMessage.alpha = 0f;
             cycleMessage.text = GetCycleMessage(cycle);
+
             yield return cycleMessage.DOFade(1f, 0.5f);
+
             yield return new WaitForSeconds(5f);
+
             yield return cycleMessage.DOFade(0f, 0.5f);
         }
 
@@ -143,11 +133,11 @@ namespace LD48
         {
             switch (dayTime)
             {
-                case DayTime.Morning:
+                case DayTime.DayComing:
                     return "Day grows in power...";
                 case DayTime.Day:
                     return "Sunset approaches...";
-                case DayTime.Evening:
+                case DayTime.NightComing:
                     return "The Night arrived!\n Hide and cower, for its terrors are upon you!";
                 case DayTime.Night:
                     return $"Night has passed.\n Dawn of Day {currentDay}";
@@ -160,34 +150,23 @@ namespace LD48
         {
             return cycle switch
             {
-                DayTime.Night => DayTime.Morning,
-                DayTime.Evening => DayTime.Night,
-                DayTime.Day => DayTime.Evening,
-                DayTime.Morning => DayTime.Day,
+                DayTime.Night => DayTime.DayComing,
+                DayTime.DayComing => DayTime.Day,
+                DayTime.Day => DayTime.NightComing,
+                DayTime.NightComing => DayTime.Night,
                 _ => throw new ArgumentOutOfRangeException(nameof(cycle), currentCycle, null)
             };
         }
 
-        private void UpdateTargetLight()
+        private float GetTargetLightIntensity(DayTime time)
         {
-            switch (currentCycle)
+            switch (time)
             {
-                case DayTime.Morning:
-                    targetIntensity = morningIntensity;
-                    targetColor = morningColor;
-                    break;
                 case DayTime.Day:
-                    targetIntensity = dayIntensity;
-                    targetColor = dayColor;
-                    break;
-                case DayTime.Evening:
-                    targetIntensity = eveningIntensity;
-                    targetColor = eveningColor;
-                    break;
+                    return dayIntensity;
                 case DayTime.Night:
-                    targetIntensity = nightIntensity;
-                    targetColor = nightColor;
-                    break;
+                    return nightIntensity;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
