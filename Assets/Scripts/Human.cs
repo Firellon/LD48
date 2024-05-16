@@ -47,7 +47,7 @@ namespace LD48
         [SerializeField] private float shootAnimationLengthSeconds = 0.5f;
         private float timeToReload = 0f;
         private bool isReloading = false;
-        
+
 
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
@@ -175,14 +175,12 @@ namespace LD48
                 StopMovement();
                 return;
             }
+
             if (!body) return;
 
             humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveDirection.magnitude);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
-
-            // playerMotor2D.movementDir = moveDirection;
-            // characterController.MovePosition(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime);
 
             if (moveDirection.x != 0)
             {
@@ -243,7 +241,7 @@ namespace LD48
         private IEnumerator ShootCoroutine()
         {
             yield return new WaitForSeconds(shootAnimationLengthSeconds);
-            
+
             var bulletObject = prefabPool.Spawn(bulletPrefab, transform);
             var xDirection = spriteRenderer.flipX ? -1 : 1;
             var bullet = bulletObject.GetComponent<Bullet>();
@@ -258,6 +256,7 @@ namespace LD48
 
         private void StopMovement()
         {
+            body.velocity = Vector2.zero;
             characterController.MoveSpeed = 0;
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
         }
@@ -302,7 +301,7 @@ namespace LD48
 
         public void Hit()
         {
-            body.velocity = Vector2.zero;
+            StopMovement();
             if (!isHit && !isDead)
             {
                 isHit = true;
