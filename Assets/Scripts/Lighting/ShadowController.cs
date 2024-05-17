@@ -9,13 +9,14 @@ namespace Lighting
     public class ShadowController : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer ambientShadow;
-        [SerializeField] private List<SpriteRenderer> directionalShadows = new List<SpriteRenderer>();
+        [SerializeField] private List<SpriteRenderer> directionalShadows = new();
 
         [Inject] private IDayNightCycle dayNightCycle;
 
         private float shadowIntensity = 1f;
         
         private const double K_intensityEpsilon = 0.01f;
+
         void Update()
         {
             var newShadowIntensity = 1 - dayNightCycle.TargetIntensity;

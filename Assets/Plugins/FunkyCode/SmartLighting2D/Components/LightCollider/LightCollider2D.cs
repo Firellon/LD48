@@ -5,11 +5,12 @@ using FunkyCode.LightSettings;
 using FunkyCode.Utilities;
 using FunkyCode.LightingSettings;
 using FunkyCode.EventHandling;
+using Utilities.Prefabs;
 
 namespace FunkyCode
 {
 	[ExecuteInEditMode]
-	public class LightCollider2D : MonoBehaviour
+	public class LightCollider2D : MonoBehaviour, IPoolableResource
 	{
 		public enum ShadowType {None, SpritePhysicsShape, CompositeCollider2D, Collider2D, Collider3D, MeshRenderer, SkinnedMeshRenderer};
 		public enum MaskType {None, Sprite, BumpedSprite,  SpritePhysicsShape, CompositeCollider2D, Collider2D, Collider3D, MeshRenderer, BumpedMeshRenderer, SkinnedMeshRenderer};
@@ -314,6 +315,16 @@ namespace FunkyCode
 					UnityEngine.Gizmos.DrawIcon(pos, "circle_v2", true);
 				}
 			}
+		}
+
+		public void OnSpawn()
+		{
+			ForceUpdateAll();
+		}
+
+		public void OnDespawn()
+		{
+			
 		}
 	}
 }

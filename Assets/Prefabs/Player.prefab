@@ -132,13 +132,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2517725035491772571}
   humanAnimator: {fileID: 6324449375686134154}
   collider2d: {fileID: 8292827878907360640}
-  notReadyToShootSprite: {fileID: 21300000, guid: 7d3ac3d8e6f6647a4bc4df5e6cf11102, type: 3}
-  readyToShootSprite: {fileID: 21300000, guid: 9b347d41eda60415880a4432f6806594, type: 3}
-  hitSprite: {fileID: 21300000, guid: 156946bc1497f4f029b1c87557328f11, type: 3}
-  deadSprite: {fileID: 21300000, guid: 0cabfa839079f4cd6b94ef6968e51f54, type: 3}
-  restingSprite: {fileID: 21300000, guid: 2e91b81807222426d8fb21cccb4f78f0, type: 3}
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
+  shootAnimationLengthSeconds: 0.5
   baseTimeToRest: 3
   audio: {fileID: 4954182882433421130}
   hitSound: {fileID: 8300000, guid: c20288673c85147018343a8a5c36d2ee, type: 3}
@@ -579,7 +575,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5308231127222553892, guid: fa126ba8746751c4896797526b19aae3, type: 3}
       propertyPath: whenInsideCollider
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6780293997130228118, guid: fa126ba8746751c4896797526b19aae3, type: 3}
       propertyPath: m_Name

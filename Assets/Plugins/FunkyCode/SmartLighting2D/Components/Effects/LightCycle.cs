@@ -5,7 +5,7 @@ namespace FunkyCode
     [System.Serializable]
     public class LightCycleBuffer
     {
-        public Gradient gradient = new Gradient();
+        [GradientUsage(true)] public Gradient gradient = new Gradient();
     }
 
     [System.Serializable]
