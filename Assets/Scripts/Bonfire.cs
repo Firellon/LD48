@@ -12,7 +12,6 @@ namespace LD48
         [Inject] private IPrefabPool prefabPool;
         
         public float burnTimePerWood = 20f;
-        public GameObject fireParticlePrefab;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
         
         private float timeToBurn = 0f;
@@ -60,10 +59,6 @@ namespace LD48
         {
             if (Random.value > (1 - 0.025 * timeToBurn))
             {
-                var fireParticle = prefabPool.Spawn(fireParticlePrefab, transform);
-                fireParticle.transform.localPosition = new Vector2(Random.Range(-0.15f, 0.15f), 0.3f + Random.Range(-0.1f, 0.1f));
-                fireParticle.GetComponent<Rigidbody2D>().velocity = new Vector2(0, Random.Range(0.1f, 2f));
-                fireParticle.GetComponent<Temporary>().SetTimeToLive(0.1f + Random.Range(0f, 0.5f));
                 fireSound.Play();
             }
         }
