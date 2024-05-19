@@ -25,6 +25,8 @@ namespace FunkyCode
         [Range(0, 1)]
         public float time = 0;
 
+        public float maxDayLighting = 0.1f;
+
         public LightDayProperties dayProperties = new LightDayProperties();
 
         public LightCycleBuffer[] nightProperties = new LightCycleBuffer[1]; // lightmap
@@ -32,6 +34,8 @@ namespace FunkyCode
         public void SetTime(float setTime)
         {
             time = setTime;
+
+            UpdateGlobalDayLighting();
         }
 
         void LateUpdate()
@@ -42,14 +46,14 @@ namespace FunkyCode
             {
                 return;
             }
-        
+
             /*
             if (Input.GetMouseButton(0)&& Input.touchCount > 1) { // 
                 time += Time.deltaTime * 0.05f;
 
                 time = time % 1;
             }*/
-            
+
             float time360 = (time * 360);
 
             // Day Lighting Properties
@@ -70,15 +74,20 @@ namespace FunkyCode
             Lighting2D.DayLightingSettings.ShadowColor.a = alpha;
             Lighting2D.DayLightingSettings.direction = time360 + dayProperties.shadowOffset;
 
+            UpdateGlobalDayLighting();
+
             // Dynamic Properties
-            for(int i = 0; i < nightProperties.Length; i++) {
-                if (i >= lightmapPresets.list.Length) {
+            for (int i = 0; i < nightProperties.Length; i++)
+            {
+                if (i >= lightmapPresets.list.Length)
+                {
                     return;
                 }
 
                 LightCycleBuffer buffer = nightProperties[i];
 
-                if (buffer == null) {
+                if (buffer == null)
+                {
                     continue;
                 }
 
@@ -87,6 +96,11 @@ namespace FunkyCode
                 LightingSettings.LightmapPreset lightmapPreset = lightmapPresets.list[i];
                 lightmapPreset.darknessColor = color;
             }
+        }
+
+        private void UpdateGlobalDayLighting()
+        {
+            Shader.SetGlobalFloat("_DayLightGlobalLevel", Mathf.Max(maxDayLighting, time));
         }
     }
 }

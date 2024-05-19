@@ -49,6 +49,8 @@
                 float _FlipX;
                 float _FlipY;
 
+                float _DayLightGlobalLevel;
+
                 struct appdata_t
                 {
                     float4 vertex : POSITION;
@@ -114,7 +116,7 @@
 
                     output.rgb = (2 - lightmap * 2) * i.color.a * 2;
 
-                    output.rgb *= pointValue;
+                    output.rgb *= pointValue * _DayLightGlobalLevel;
 
                     output.rgb *= i.color;
 
