@@ -300,6 +300,11 @@ namespace LD48
                 LightAFire();
             }
         }
+        
+        public void Interact()
+        {
+            Debug.Log("OnInteract!");
+        }
 
         public void Hit()
         {
