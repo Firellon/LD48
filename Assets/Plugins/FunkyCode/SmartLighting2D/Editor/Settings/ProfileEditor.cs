@@ -592,6 +592,8 @@ namespace FunkyCode
 				lightmapPreset.darknessColor = EditorGUILayout.ColorField("Darkness Color", lightmapPreset.darknessColor);
 				lightmapPreset.darknessColor.a = EditorGUILayout.Slider("Darkness Alpha", lightmapPreset.darknessColor.a, 0, 1);
 				lightmapPreset.resolution = EditorGUILayout.Slider("Resolution", lightmapPreset.resolution, 0.25f, 1.0f);
+				
+				
 			}
 		}
 

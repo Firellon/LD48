@@ -59,6 +59,16 @@ namespace FunkyCode
             }
         }
 
+        public void SetTexture(string texName, Texture setTexture)
+        {
+            texture = setTexture;
+
+            if (material != null)
+            {
+                material.SetTexture(texName, setTexture);
+            }
+        }
+
         public Material Get()
         {
             if (!material)

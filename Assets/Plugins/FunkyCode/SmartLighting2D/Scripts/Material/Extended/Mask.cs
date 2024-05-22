@@ -15,7 +15,7 @@ namespace FunkyCode.Lighting2DMaterial
 			dayMask = null;
 			maskTranslucency = null;
 		}
-		
+
 		public Material GetMask()
 		{
 			if (mask == null || mask.Get() == null)
@@ -25,7 +25,7 @@ namespace FunkyCode.Lighting2DMaterial
 
 			return(mask.Get());
 		}
-				
+
 		public Material GetMaskTranslucency()
 		{
 			if (maskTranslucency == null || maskTranslucency.Get() == null)

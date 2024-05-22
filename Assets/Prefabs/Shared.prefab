@@ -308,8 +308,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
+      propertyPath: time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: maxDayLighting
-      value: 0.15
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
