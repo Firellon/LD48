@@ -17,7 +17,7 @@ namespace FunkyCode.Rendering.Light
             {
                 return;
             }
-                        
+
             Vector2 position = shape.transform2D.Position - light.transform2D.position;
             Vector2 pivotPosition = shape.GetPivotPoint() - light.transform2D.position;
 

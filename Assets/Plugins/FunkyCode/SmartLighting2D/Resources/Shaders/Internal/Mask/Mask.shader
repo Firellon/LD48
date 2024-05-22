@@ -7,7 +7,6 @@
 
 	SubShader
 	{
-
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -20,7 +19,7 @@
 			#pragma fragment frag
 	
 			#include "UnityCG.cginc"
-		
+
 			sampler2D _MainTex;
 
 			struct appdata_t
@@ -44,15 +43,17 @@
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
 				OUT.color = IN.color;
-		
+
 				return OUT;
 			}
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				float alpha = tex2D(_MainTex, IN.texcoord).a;
+				float grad = 1 - pow(distance(IN.texcoord.xy, half2(0.5, 0.5)), 2);
+				half color = (1 - IN.color.r);
 
-				return float4(1 - IN.color.r, 0, 0, alpha);
+				return fixed4(color * grad * alpha * 0.8, 0, 0, alpha);
 			}
 
 			ENDCG
