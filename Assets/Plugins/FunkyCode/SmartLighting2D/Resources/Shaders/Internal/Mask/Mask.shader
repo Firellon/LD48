@@ -43,7 +43,7 @@
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
 				OUT.color = IN.color;
-		
+
 				return OUT;
 			}
 

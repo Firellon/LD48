@@ -33,6 +33,8 @@ Shader "Light2D/Internal/LightSprite/Light"
 
 			sampler2D _MainTex;
 
+		    float _DayLightGlobalLevel;
+
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
@@ -78,7 +80,7 @@ Shader "Light2D/Internal/LightSprite/Light"
 				float4 color = tex2D (_MainTex, IN.texcoord);
 
 				color.rgb *= color.a * 2;
-		
+
 				// Mask Type
 				if (IN.data.z > 0)
 				{
@@ -88,11 +90,11 @@ Shader "Light2D/Internal/LightSprite/Light"
 						// 	color *= Blur(IN).a;
 						// #endif
 
-						return(color* IN.color * 1.5);
+						return(color* IN.color * 1.5 * _DayLightGlobalLevel);
 					}
 						else
 					{
-						return(color * IN.color * 1.5); //  tex2D (_MainTex, IN.texcoord).a
+						return(color * IN.color * 1.5 * _DayLightGlobalLevel); //  tex2D (_MainTex, IN.texcoord).a
 					}
 				// Light Type
 				}
@@ -103,12 +105,12 @@ Shader "Light2D/Internal/LightSprite/Light"
 						// #if !SHADER_API_METAL
 							// color *= Blur(IN);
 						// #endif
-						
-						return(color * IN.color * 1.5);
+
+						return(color * IN.color * _DayLightGlobalLevel);
 					}
 						else
 					{
-						return(color * IN.color * IN.color.a);
+						return(color * IN.color * IN.color.a * _DayLightGlobalLevel);
 					}
 				}
 				

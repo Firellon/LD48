@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 2517725035491772571}
   - component: {fileID: 6324449375686134154}
   - component: {fileID: 7758140054834948451}
+  - component: {fileID: 5089292304742948735}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -522,6 +523,44 @@ MonoBehaviour:
     maskType: 1
     maskPivot: 0
     transform: {fileID: 680576104052581553}
+--- !u!114 &5089292304742948735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571870125628846772}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62ac029b1017974ead8b6ad01623c82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightLayer: 0
+  type: 0
+  spriteMode: 1
+  sprite: {fileID: 223215843, guid: d1fc7be84d497c844a223a7f510f1e2a, type: 3}
+  color: {r: 0.7071067, g: 0.7071067, b: 0.7071067, a: 1}
+  flipX: 0
+  flipY: 0
+  lightSpriteTransform:
+    applyRotation: 1
+    scale: {x: 1, y: 1}
+    rotation: 0
+    position: {x: 0, y: 0}
+  lightSpriteShape:
+    update: 0
+  meshMode:
+    enable: 0
+    alpha: 0.5
+    shader: 0
+    materials:
+    - {fileID: 2100000, guid: 0130ff4d044742f4d996a5aaed942818, type: 2}
+    sortingLayer:
+      name: Lighting
+      Order: 0
+  glowMode:
+    enable: 0
+    glowRadius: 1
 --- !u!1 &9183629015102132643
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,6 +713,10 @@ PrefabInstance:
     - target: {fileID: 6780293997130228118, guid: fa126ba8746751c4896797526b19aae3, type: 3}
       propertyPath: m_Name
       value: Flashlight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780293997130228118, guid: fa126ba8746751c4896797526b19aae3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
