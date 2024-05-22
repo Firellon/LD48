@@ -66,6 +66,8 @@ namespace LD48
         private static readonly int IsAimingAnimation = Animator.StringToHash("IsAiming");
         private static readonly int IsHitAnimation = Animator.StringToHash("IsHit");
         private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead");
+        private static readonly int IsPickingUpAnimation = Animator.StringToHash("IsPickingUp");
+        private static readonly int IsInteractingAnimation = Animator.StringToHash("IsInteracting");
 
         private void Awake()
         {
