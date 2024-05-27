@@ -53,7 +53,7 @@ namespace LD48
         private float timeToRest = 3f;
         private bool isResting = false;
 
-        private List<Item> _interactableItems = new();
+        private readonly List<IInteractable> _interactableObjects = new();
 
         public new AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
@@ -166,14 +166,15 @@ namespace LD48
 
             if (other.gameObject.CompareTag("Item"))
             {
-                var item = other.gameObject.GetComponent<Item>();
-                if (item == null)
+                var interactable = other.gameObject.GetComponent<IInteractable>();
+                if (interactable == null)
                 {
-                    Debug.LogError($"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks Item component!");
+                    Debug.LogError(
+                        $"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks IInteractable component!");
                     return;
                 }
 
-                _interactableItems.Add(item);
+                _interactableObjects.Add(interactable);
             }
         }
 
@@ -181,14 +182,15 @@ namespace LD48
         {
             if (other.gameObject.CompareTag("Item"))
             {
-                var item = other.gameObject.GetComponent<Item>();
-                if (item == null)
+                var interactable = other.gameObject.GetComponent<IInteractable>();
+                if (interactable == null)
                 {
-                    Debug.LogError($"OnCollisionExit2D > {other.gameObject} has Item tag and lacks Item component!");
+                    Debug.LogError(
+                        $"OnCollisionExit2D > {other.gameObject} has Item tag and lacks IInteractable component!");
                     return;
                 }
 
-                _interactableItems.Remove(item);
+                _interactableObjects.Remove(interactable);
             }
         }
 
@@ -285,22 +287,22 @@ namespace LD48
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
         }
 
-        public void PickUp(Item item)
+        public void PickUp(IInteractable interactable)
         {
-            if (isHit || isDead) return;
+            if (isHit || isDead || !interactable.CanBePickedUp) return;
 
-            _interactableItems.Remove(item);
             humanAnimator.SetTrigger(IsPickingUpAnimation);
-
+            // TODO: Use inventory here instead
             // Debug.Log($"PickUp > {item.type}");
-            switch (item.type)
+            switch (interactable.Item.ItemType)
             {
                 case ItemType.Wood:
                     if (woodAmount < maxWoodAmount)
                     {
                         woodAmount++;
                         if (itemPickupSound) audio.PlayOneShot(itemPickupSound);
-                        Destroy(item.gameObject);
+                        _interactableObjects.Remove(interactable);
+                        Destroy(interactable.GameObject);
                     }
 
                     break;
@@ -329,10 +331,16 @@ namespace LD48
 
         public void Interact()
         {
-            Debug.Log("OnInteract!");
-            if (_interactableItems.Any())
+            if (_interactableObjects.Any())
             {
-                PickUp(_interactableItems.First());
+                var firstInteractableObject = _interactableObjects.First();
+                // TODO: Implement other ways to interact with objects
+                if (firstInteractableObject.CanBePickedUp)
+                    PickUp(firstInteractableObject);
+            }
+            else
+            {
+                // TODO: Check if has an item in his hand and can use it
             }
         }
 
@@ -412,11 +420,11 @@ namespace LD48
             return spriteRenderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
         }
 
-        public bool CanPickUp(out Item item)
+        public bool CanPickUp(out IInteractable item)
         {
-            item = _interactableItems.FirstOrDefault();
+            item = _interactableObjects.FirstOrDefault();
 
-            return _interactableItems.Any();
+            return item is {CanBePickedUp: true};
         }
     }
 }

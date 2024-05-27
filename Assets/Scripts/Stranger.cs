@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Day;
+using Inventory;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,24 +17,23 @@ namespace LD48
         Rob,
         Flee,
     }
-    
-    public class Stranger: MonoBehaviour
+
+    public class Stranger : MonoBehaviour
     {
         // How many enemies can I handle at once?
         public int bravery = 3;
+
         // How far can I see threats?
         public float threatRadius = 10f;
         public float bonfireRadius = 10f;
         public float gatherRadius = 15f;
-        
+
         private Human human;
         private DayNightCycle dayNightCycle;
         private TerrainGenerator terrainGenerator;
-        
-        [SerializeField]
-        private StrangerState state;
-        [SerializeField]
-        private Transform target;
+
+        [SerializeField] private StrangerState state;
+        [SerializeField] private Transform target;
 
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
@@ -49,14 +49,14 @@ namespace LD48
 
             human.woodAmount = Random.Range(1, 4);
         }
-        
+
         private void Update()
         {
             if (human.IsDead()) return;
             // Reduce amount of expensive calls
             if (Random.value > 0.9f)
             {
-                state = GetCurrentState();    
+                state = GetCurrentState();
             }
 
             switch (state)
@@ -87,10 +87,11 @@ namespace LD48
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         private StrangerState GetCurrentState()
         {
-            var closestThreats = Physics2D.OverlapCircleAll(transform.position, threatRadius, 1 << LayerMask.NameToLayer("Default"))
+            var closestThreats = Physics2D
+                .OverlapCircleAll(transform.position, threatRadius, 1 << LayerMask.NameToLayer("Default"))
                 .Select(collider => collider.gameObject)
                 .Where(threat =>
                 {
@@ -101,7 +102,9 @@ namespace LD48
                     if (otherHuman == null && hittable.IsThreat()) return true;
                     if (otherHuman == null) return false;
                     var humanVerticalDistance = Mathf.Abs(otherHuman.transform.position.y - transform.position.y);
-                    var isHumanCloseAndPointingAtMe = otherHuman.IsThreat() && otherHuman.IsFacingTowards(transform.position) && humanVerticalDistance < threatRadius / 3;
+                    var isHumanCloseAndPointingAtMe = otherHuman.IsThreat() &&
+                                                      otherHuman.IsFacingTowards(transform.position) &&
+                                                      humanVerticalDistance < threatRadius / 3;
                     // if (isHumanCloseAndPointingAtMe) Debug.Log($"Other Human {otherHuman.name} is trying to attack me!");
 
                     return isHumanCloseAndPointingAtMe;
@@ -117,7 +120,8 @@ namespace LD48
 
             if (human.woodAmount < minWoodToSurvive)
             {
-                var closestPeopleToRob = Physics2D.OverlapCircleAll(transform.position, threatRadius, 1 << LayerMask.NameToLayer("Default"))
+                var closestPeopleToRob = Physics2D.OverlapCircleAll(transform.position, threatRadius,
+                        1 << LayerMask.NameToLayer("Default"))
                     .Select(collider => collider.gameObject)
                     .Where(other =>
                     {
@@ -141,7 +145,8 @@ namespace LD48
             var currentCycle = dayNightCycle.GetCurrentCycle();
             if (currentCycle == DayTime.NightComing || currentCycle == DayTime.Night)
             {
-                var closestBonfires = Physics2D.OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
+                var closestBonfires = Physics2D
+                    .OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
                     .Select(collider => collider.gameObject.GetComponent<Bonfire>())
                     .Where(bonfire => bonfire != null && bonfire.IsBurning())
                     .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
@@ -154,20 +159,20 @@ namespace LD48
 
                 return human.woodAmount > 0 ? StrangerState.StartBonfire : StrangerState.Wander;
             }
-            
+
             if (human.woodAmount >= human.maxWoodAmount) return StrangerState.Wander;
 
-            var closestWood = Physics2D.OverlapCircleAll(transform.position, gatherRadius, 1 << LayerMask.NameToLayer("Item"))
-                .Select(collider => collider.gameObject.GetComponent<Item>())
-                .Where(wood => wood != null && wood.type == ItemType.Wood)
+            var closestWood = Physics2D
+                .OverlapCircleAll(transform.position, gatherRadius, 1 << LayerMask.NameToLayer("Item"))
+                .Select(collider => collider.gameObject.GetComponent<ItemController>())
+                .Where(wood => wood != null && wood.Item.ItemType == ItemType.Wood)
                 .OrderBy(wood => Vector2.Distance(transform.position, wood.transform.position))
                 .ToList();
 
             if (!closestWood.Any()) return StrangerState.Wander;
-            
+
             target = closestWood.First().transform;
             return StrangerState.Gather;
-
         }
 
         private bool DoesHumanHaveWoodILack(Human otherHuman)
@@ -178,17 +183,17 @@ namespace LD48
         private void SeekBonfire()
         {
             SetReadyToShoot(false);
-            
+
             var bonfireDistance = Vector2.Distance(target.transform.position, transform.position);
             if (bonfireDistance > human.fireTouchRadius)
             {
-                Vector2 bonfireDirection = target.transform.position - transform.position; 
+                Vector2 bonfireDirection = target.transform.position - transform.position;
                 human.Move(bonfireDirection.SkewDirection(5));
                 return;
             }
 
             if (human.woodAmount == 0) return;
-            
+
             var bonfire = target.GetComponent<Bonfire>();
             if (Random.Range(1, 10) > bonfire.GetTimeToBurn())
             {
@@ -199,7 +204,7 @@ namespace LD48
         private void Wander()
         {
             SetReadyToShoot(false);
-            
+
             if (timeToWander > 0f)
             {
                 human.Move(wanderDirection);
@@ -208,8 +213,8 @@ namespace LD48
             else
             {
                 timeToWander = baseTimeToWander;
-                wanderDirection = Random.value > 0.9f 
-                    ? new Vector2() 
+                wanderDirection = Random.value > 0.9f
+                    ? new Vector2()
                     : new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
                 var centerPosition = new Vector3(terrainGenerator.levelSize.x / 2f, terrainGenerator.levelSize.y / 2f);
                 var centerDirection = new Vector2(centerPosition.x - transform.position.x,
@@ -226,23 +231,23 @@ namespace LD48
                 return;
             }
 
-            var hittable = target.GetComponent<IHittable>(); 
+            var hittable = target.GetComponent<IHittable>();
             if (hittable == null || !hittable.IsThreat())
             {
                 state = StrangerState.Wander;
                 return;
             }
-            
+
             SetReadyToShoot(true);
-            
-            if (Mathf.Abs( target.position.y - transform.position.y) > 0.05f)
+
+            if (Mathf.Abs(target.position.y - transform.position.y) > 0.05f)
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
                 human.Move(new Vector2(
                     Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
                     Mathf.Sign(targetPosition.y - transformPosition.y)
-                    ));
+                ));
                 return;
             }
 
@@ -257,16 +262,16 @@ namespace LD48
                 return;
             }
 
-            var targetHuman = target.GetComponent<Human>(); 
+            var targetHuman = target.GetComponent<Human>();
             if (targetHuman == null || !DoesHumanHaveWoodILack(targetHuman))
             {
                 state = StrangerState.Wander;
                 return;
             }
-            
+
             SetReadyToShoot(true);
-            
-            if (Mathf.Abs( target.position.y - transform.position.y) > 0.05f)
+
+            if (Mathf.Abs(target.position.y - transform.position.y) > 0.05f)
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
@@ -289,9 +294,10 @@ namespace LD48
                 return;
             }
 
-            Vector2 gatherDirection = target.position - transform.position; 
+            Vector2 gatherDirection = target.position - transform.position;
             human.Move(gatherDirection.SkewDirection(5));
-            if (human.CanPickUp(out var item)) human.PickUp(item);
+            if (human.CanPickUp(out var item))
+                human.PickUp(item);
         }
 
         private void Flee()
