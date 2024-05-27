@@ -53,11 +53,15 @@ namespace LD48
         private float timeToRest = 3f;
         private bool isResting = false;
 
+        private List<Item> _interactableItems = new();
+
         public new AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        #region Animations
 
         private static readonly int MovementSpeedAnimation = Animator.StringToHash("MovementSpeed");
         private static readonly int IsRestingAnimation = Animator.StringToHash("IsResting");
@@ -68,6 +72,8 @@ namespace LD48
         private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead");
         private static readonly int IsPickingUpAnimation = Animator.StringToHash("IsPickingUp");
         private static readonly int IsInteractingAnimation = Animator.StringToHash("IsInteracting");
+
+        #endregion
 
         private void Awake()
         {
@@ -149,24 +155,40 @@ namespace LD48
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D hit)
+        private void OnCollisionEnter2D(Collision2D other)
         {
-            if (hit.gameObject.CompareTag("Wall"))
+            // FIXME: Do We need this at all?
+            if (other.gameObject.CompareTag("Wall"))
             {
                 if (!body) return;
                 body.velocity = Vector2.zero;
             }
 
-            if (hit.gameObject.CompareTag("Item"))
+            if (other.gameObject.CompareTag("Item"))
             {
-                var item = hit.gameObject.GetComponent<Item>();
+                var item = other.gameObject.GetComponent<Item>();
                 if (item == null)
                 {
-                    Debug.LogError($"OnCollisionEnter2D > {hit.gameObject} has Item tag and lacks Item component!");
+                    Debug.LogError($"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks Item component!");
                     return;
                 }
 
-                PickUp(item);
+                _interactableItems.Add(item);
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            if (other.gameObject.CompareTag("Item"))
+            {
+                var item = other.gameObject.GetComponent<Item>();
+                if (item == null)
+                {
+                    Debug.LogError($"OnCollisionExit2D > {other.gameObject} has Item tag and lacks Item component!");
+                    return;
+                }
+
+                _interactableItems.Remove(item);
             }
         }
 
@@ -263,9 +285,13 @@ namespace LD48
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
         }
 
-        private void PickUp(Item item)
+        public void PickUp(Item item)
         {
             if (isHit || isDead) return;
+
+            _interactableItems.Remove(item);
+            humanAnimator.SetTrigger(IsPickingUpAnimation);
+
             // Debug.Log($"PickUp > {item.type}");
             switch (item.type)
             {
@@ -300,10 +326,14 @@ namespace LD48
                 LightAFire();
             }
         }
-        
+
         public void Interact()
         {
             Debug.Log("OnInteract!");
+            if (_interactableItems.Any())
+            {
+                PickUp(_interactableItems.First());
+            }
         }
 
         public void Hit()
@@ -316,7 +346,7 @@ namespace LD48
                 humanAnimator.SetBool(IsHitAnimation, true);
                 timeToRecover = baseTimeToRecover;
                 DropItems();
-                // TODO: Update Collider on hit and on recover
+                // TODO: Update Collider on other and on recover
                 if (hitSound) audio.PlayOneShot(hitSound);
             }
             else
@@ -380,6 +410,13 @@ namespace LD48
         public bool IsFacingTowards(Vector3 position)
         {
             return spriteRenderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
+        }
+
+        public bool CanPickUp(out Item item)
+        {
+            item = _interactableItems.FirstOrDefault();
+
+            return _interactableItems.Any();
         }
     }
 }

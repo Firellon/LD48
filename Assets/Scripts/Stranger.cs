@@ -291,6 +291,7 @@ namespace LD48
 
             Vector2 gatherDirection = target.position - transform.position; 
             human.Move(gatherDirection.SkewDirection(5));
+            if (human.CanPickUp(out var item)) human.PickUp(item);
         }
 
         private void Flee()
