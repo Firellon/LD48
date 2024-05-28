@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
+  spriteRenderer: {fileID: 5667914319977949752}
 --- !u!1001 &3660833765370672364
 PrefabInstance:
   m_ObjectHideFlags: 0

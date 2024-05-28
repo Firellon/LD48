@@ -8,11 +8,15 @@ namespace Inventory
     {
         [SerializeField] private ItemType itemType;
         [SerializeField] private Sprite itemSprite;
+        [SerializeField] private GameObject itemPrefab;
         [SerializeField] private bool canBePickedUp;
+        [SerializeField] private bool canBeDropped;
 
         public ItemType ItemType => itemType;
         public Sprite ItemSprite => itemSprite;
+        public GameObject ItemPrefab => itemPrefab;
         public bool CanBePickedUp => canBePickedUp;
+        public bool CanBeDropped => canBeDropped;
 
         public bool Equals(Item item)
         {

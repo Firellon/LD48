@@ -1,4 +1,5 @@
 using System;
+using Human;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +13,7 @@ namespace LD48
         [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
 
         private PlayerControls playerInput;
-        private Human human;
+        private HumanController humanController;
 
         private float horizontal;
         private float vertical;
@@ -26,17 +27,17 @@ namespace LD48
         
         public void OnFire(InputAction.CallbackContext ctx)
         {
-            human.Act();
+            humanController.Act();
         }
         
         public void OnFire2(InputAction.CallbackContext ctx)
         {
-            human.ToggleIsAiming();
+            humanController.ToggleIsAiming();
         }
 
         public void OnInteract(InputAction.CallbackContext ctx)
         {
-            human.Interact();
+            humanController.Interact();
         }
 
         private void Awake()
@@ -70,7 +71,7 @@ namespace LD48
 
         private void Start()
         {
-            human = GetComponent<Human>();
+            humanController = GetComponent<HumanController>();
         }
 
         private void Update()
@@ -80,15 +81,15 @@ namespace LD48
 
             if (woodAmountText && tipMessageText)
             {
-                woodAmountText.text = $"Wood: {human.woodAmount} / {human.maxWoodAmount}";
-                tipMessageText.text = human.GetTipMessageText();   
+                woodAmountText.text = $"Wood: {humanController.Inventory.GetItemAmount(ItemType.Wood)} / {humanController.Inventory.ItemSlotCount}";
+                tipMessageText.text = humanController.GetTipMessageText();   
             }
         }
 
         private void FixedUpdate()
         {
             var moveVector = new Vector2(horizontal, vertical);
-            human.Move(moveVector);
+            humanController.Move(moveVector);
         }
     }
 }

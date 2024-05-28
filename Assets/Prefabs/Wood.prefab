@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 87f20f937e0baca4b87834e7eef0cb88, type: 2}
+  spriteRenderer: {fileID: 6275068490982164910}
 --- !u!1001 &5887935226952599244
 PrefabInstance:
   m_ObjectHideFlags: 0
