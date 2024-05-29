@@ -1,9 +1,12 @@
 using System;
 using Human;
+using Inventory;
+using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace LD48
 {
@@ -12,11 +15,14 @@ namespace LD48
         public TMP_Text woodAmountText;
         [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
 
-        private PlayerControls playerInput;
-        private HumanController humanController;
+        [Inject] private HumanController humanController;
+        [Inject] private IItemContainer humanInventory;
 
+        private PlayerControls playerInput;
         private float horizontal;
         private float vertical;
+
+        public IItemContainer Inventory => humanInventory;
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
@@ -24,12 +30,12 @@ namespace LD48
             horizontal = moveAmount.x;
             vertical = moveAmount.y;
         }
-        
+
         public void OnFire(InputAction.CallbackContext ctx)
         {
             humanController.Act();
         }
-        
+
         public void OnFire2(InputAction.CallbackContext ctx)
         {
             humanController.ToggleIsAiming();
@@ -40,38 +46,42 @@ namespace LD48
             humanController.Interact();
         }
 
+        public void OnInventory(InputAction.CallbackContext ctx)
+        {
+            SignalsHub.DispatchAsync(new ToggleInventoryCommand());
+        }
+
         private void Awake()
         {
             playerInput = new PlayerControls();
             playerInput.HumanPlayer.Enable();
-            
+
             playerInput.HumanPlayer.Move.performed += OnMove;
             playerInput.HumanPlayer.Move.canceled += OnMove;
-            
+
             playerInput.HumanPlayer.Fire.performed += OnFire;
-            
+
             playerInput.HumanPlayer.Fire2.performed += OnFire2;
-            
+
             playerInput.HumanPlayer.Interact.performed += OnInteract;
+
+            playerInput.HumanPlayer.Inventory.performed += OnInventory;
         }
 
         private void OnDestroy()
         {
             playerInput.HumanPlayer.Disable();
-            
+
             playerInput.HumanPlayer.Move.performed -= OnMove;
             playerInput.HumanPlayer.Move.canceled -= OnMove;
-            
-            playerInput.HumanPlayer.Fire.performed -= OnFire;
-            
-            playerInput.HumanPlayer.Fire2.performed -= OnFire2;
-            
-            playerInput.HumanPlayer.Interact.performed -= OnInteract;
-        }
 
-        private void Start()
-        {
-            humanController = GetComponent<HumanController>();
+            playerInput.HumanPlayer.Fire.performed -= OnFire;
+
+            playerInput.HumanPlayer.Fire2.performed -= OnFire2;
+
+            playerInput.HumanPlayer.Interact.performed -= OnInteract;
+
+            playerInput.HumanPlayer.Inventory.performed -= OnInventory;
         }
 
         private void Update()
@@ -81,8 +91,9 @@ namespace LD48
 
             if (woodAmountText && tipMessageText)
             {
-                woodAmountText.text = $"Wood: {humanController.Inventory.GetItemAmount(ItemType.Wood)} / {humanController.Inventory.ItemSlotCount}";
-                tipMessageText.text = humanController.GetTipMessageText();   
+                woodAmountText.text =
+                    $"Wood: {humanController.Inventory.GetItemAmount(ItemType.Wood)} / {humanController.Inventory.ItemSlotCount}";
+                tipMessageText.text = humanController.GetTipMessageText();
             }
         }
 
