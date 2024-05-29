@@ -1,12 +1,10 @@
-﻿using System;
-using Inventory.UI;
+﻿using Inventory.Signals;
 using Signals;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Inventory
+namespace Inventory.UI
 {
     public class InventoryButtonController : MonoBehaviour
     {
@@ -20,7 +18,7 @@ namespace Inventory
             SignalsHub.AddListener<ToggleInventoryCommand>(OnToggleInventoryCommand);
         }
 
-        private void OnToggleInventoryCommand(ToggleInventoryCommand obj)
+        private void OnToggleInventoryCommand(ToggleInventoryCommand command)
         {
             ToggleInventory();
         }
@@ -42,9 +40,5 @@ namespace Inventory
                 inventoryPanelController.Show();
             }
         }
-    }
-
-    public class ToggleInventoryCommand
-    {
     }
 }

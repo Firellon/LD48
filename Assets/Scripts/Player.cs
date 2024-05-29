@@ -1,6 +1,7 @@
 using System;
 using Human;
 using Inventory;
+using Inventory.Signals;
 using Signals;
 using TMPro;
 using UnityEngine;

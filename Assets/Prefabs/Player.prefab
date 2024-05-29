@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8461734601757475555}
   - component: {fileID: 2036147488874963323}
   - component: {fileID: 1203980886353906568}
-  - component: {fileID: 6083015523143139960}
+  - component: {fileID: 7616418845256627543}
   - component: {fileID: 7728028073607266964}
   - component: {fileID: 2741517134356461659}
   - component: {fileID: 8931530567984793119}
@@ -143,7 +143,7 @@ MonoBehaviour:
   deadSound: {fileID: 8300000, guid: 23200821771e6461a9df439095a2a334, type: 3}
   shootSound: {fileID: 8300000, guid: 95bcece98efbc4409a01497097e481e6, type: 3}
   itemPickupSound: {fileID: 8300000, guid: 0b14a9b74f6e943669f6796c8b8fcdfd, type: 3}
---- !u!114 &6083015523143139960
+--- !u!114 &7616418845256627543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5133988400910477835}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbcd7119f20a47beabd6076d61c16b58, type: 3}
+  m_Script: {fileID: 11500000, guid: e9eb76e758ac4a2ba55fd589eae7053e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemSlotCount: 10
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5b1cf1482c43059772eb82e25a72ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 6083015523143139960}
+  inventory: {fileID: 7616418845256627543}
   humanController: {fileID: 1203980886353906568}
 --- !u!114 &8931530567984793119
 MonoBehaviour:
