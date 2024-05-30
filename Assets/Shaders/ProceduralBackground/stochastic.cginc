@@ -8,6 +8,11 @@ inline fixed hash2D2D(float2 s)
         sin(fmod(fixed2(dot(s, fixed2(127.1, 311.7)), dot(s, fixed2(269.5, 183.3))), 3.14159265359)) * 43758.5453);
 }
 
+float random (float2 uv)
+{
+    return frac(sin(dot(uv,float2(12.9898,78.233)))*43758.5453123);
+}
+
 inline float3x3 uv_triplanar(fixed3 pos,fixed3 normal,fixed3 scale)
 {
     fixed3 bf = normalize(abs(normal));
