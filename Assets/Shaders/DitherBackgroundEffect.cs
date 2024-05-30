@@ -53,6 +53,7 @@ namespace VolFx
 
             material.SetVector("_DitherMad", ditherMad);
             material.SetVector("_PatternData", patternData);
+            material.SetTexture("_DitherTex", ditherTex);
 
             EditorUtility.SetDirty(material);
         }

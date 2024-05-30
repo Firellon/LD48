@@ -41,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MeasureTex:
-        m_Texture: {fileID: 2800000, guid: 5a44411007e4a444eaee0d04f6a2b12b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6bd9c0707f56a9d4da940527145f23b8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
@@ -53,11 +53,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PaletteTex:
-        m_Texture: {fileID: 2800000, guid: 99d41135d3406f24f93c1493af908219, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5942dd72e9f1d9042a0d113fd7cb2baf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _QuantTex:
-        m_Texture: {fileID: 2800000, guid: e9680b94821c91d4ca8afc4e11dbe9c6, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3f4d12e631bf263408543166f4b903b3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture0:
@@ -67,7 +67,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
-    - _Dither: 1
+    - _Dither: 0.2
     - _DitherScale: 70
     - _Float0: 0
     - _Float1: 0.3
@@ -78,13 +78,13 @@ Material:
     - _PixelSize: 96
     - _Pixelate: 1
     - _ReducePalette: 0
-    - _StepA: 0.3
-    - _StepB: 0.6
-    - _Weight: 0.8
+    - _StepA: 0.4
+    - _StepB: 0.52
+    - _Weight: 1
     m_Colors:
-    - _DarkColor: {r: 0.12941177, g: 0.44313726, b: 0, a: 1}
-    - _DitherMad: {r: 100, g: 100, b: 0.25, a: 0}
+    - _DarkColor: {r: 0.3615367, g: 0.8773585, b: 0.18682297, a: 1}
+    - _DitherMad: {r: 100, g: 100, b: 0.25, a: 0.75}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _LightColor: {r: 0.22745098, g: 0.49019608, b: 0.1764706, a: 1}
+    - _LightColor: {r: 0.46383432, g: 0.6320754, b: 0.2955932, a: 1}
     - _PatternData: {r: 400, g: 400, b: 0.33333334, a: 3}
   m_BuildTextureStacks: []

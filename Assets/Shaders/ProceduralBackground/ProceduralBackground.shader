@@ -8,8 +8,8 @@
         _QuantTex("_QuantTex", 2D) = "black" {}
         _MeasureTex("_MeasureTex", 2D) = "black" {}
 
-	    _Dither("_Dither", Range(0, 1)) = 0
-        _Weight("_Weight", Range(0, 1)) = 0
+	    _Dither("Power", Range(0, 1)) = 0
+        _Weight("Impact", Range(0, 1)) = 0
 
 	    _PatternData("_PatternData", Vector) = (0,0,0,0)
         _DitherMad("_DitherMad", Vector) = (0,0,0,0)
@@ -47,8 +47,8 @@
             // #include "Assets/Shaders/ProceduralBackground/Fbm.cginc"
             #include "Assets/Shaders/ProceduralBackground/stochastic.cginc"
 
-            #define LUT_SIZE 16.
-            #define LUT_SIZE_MINUS (16. - 1.)
+            #define LUT_SIZE 64.
+            #define LUT_SIZE_MINUS (64. - 1.)
 
             struct appdata
             {
