@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5667914319977949753}
   - component: {fileID: -572411631985468027}
   - component: {fileID: 4191005214743361497}
+  - component: {fileID: 2398295906508628994}
   m_Layer: 7
   m_Name: Bonfire
   m_TagString: Wall
@@ -259,6 +260,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2398295906508628994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd86b41233fd47768d14ff7f5d2a31d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
+  spriteRenderer: {fileID: 5667914319977949752}
 --- !u!1001 &3660833765370672364
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -62,6 +62,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f627a4c-4272-4795-bb39-104d15b141d3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -306,6 +315,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Fire2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6b8ddbf-3551-4d06-9bb2-06753b33a43f"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -318,6 +338,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_HumanPlayer_Fire = m_HumanPlayer.FindAction("Fire", throwIfNotFound: true);
         m_HumanPlayer_Fire2 = m_HumanPlayer.FindAction("Fire2", throwIfNotFound: true);
         m_HumanPlayer_Interact = m_HumanPlayer.FindAction("Interact", throwIfNotFound: true);
+        m_HumanPlayer_Inventory = m_HumanPlayer.FindAction("Inventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -383,6 +404,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_HumanPlayer_Fire;
     private readonly InputAction m_HumanPlayer_Fire2;
     private readonly InputAction m_HumanPlayer_Interact;
+    private readonly InputAction m_HumanPlayer_Inventory;
     public struct HumanPlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -391,6 +413,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_HumanPlayer_Fire;
         public InputAction @Fire2 => m_Wrapper.m_HumanPlayer_Fire2;
         public InputAction @Interact => m_Wrapper.m_HumanPlayer_Interact;
+        public InputAction @Inventory => m_Wrapper.m_HumanPlayer_Inventory;
         public InputActionMap Get() { return m_Wrapper.m_HumanPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -412,6 +435,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Inventory.started += instance.OnInventory;
+            @Inventory.performed += instance.OnInventory;
+            @Inventory.canceled += instance.OnInventory;
         }
 
         private void UnregisterCallbacks(IHumanPlayerActions instance)
@@ -428,6 +454,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Inventory.started -= instance.OnInventory;
+            @Inventory.performed -= instance.OnInventory;
+            @Inventory.canceled -= instance.OnInventory;
         }
 
         public void RemoveCallbacks(IHumanPlayerActions instance)
@@ -451,5 +480,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnFire2(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

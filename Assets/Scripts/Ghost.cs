@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Human;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -138,10 +139,10 @@ namespace LD48
                 }
                 else
                 {
-                    var human = target.gameObject.GetComponent<Human>();
+                    var human = target.gameObject.GetComponent<HumanController>();
                     if (!human)
                     {
-                        Debug.LogError("Ghost > Attack > no Human component found in target!");
+                        Debug.LogError("Ghost > Attack > no HumanController component found in target!");
                     }
                     human.Hit();
                     audio.PlayOneShot(attackSound);
@@ -178,7 +179,7 @@ namespace LD48
             }
             
             var closestHumans = Physics2D.OverlapCircleAll(transform.position, detectionRadius, 1 << LayerMask.NameToLayer("Default"))
-                .Select(collider => collider.gameObject.GetComponent<Human>())
+                .Select(collider => collider.gameObject.GetComponent<HumanController>())
                 .Where(human => human != null && !human.IsDead())
                 .OrderBy(human => Vector2.Distance(transform.position, human.transform.position))
                 .ToList();

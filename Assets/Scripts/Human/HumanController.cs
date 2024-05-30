@@ -2,29 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Day;
+using Inventory;
 using JetBrains.Annotations;
+using LD48;
 using LD48.CharacterController2D;
 using UnityEngine;
 using Utilities.Prefabs;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace LD48
+namespace Human
 {
     [RequireComponent(typeof(PlayerMovement2D))]
-    public class Human : MonoBehaviour, IHittable
+    public class HumanController : MonoBehaviour, IHittable
     {
         [Inject] private IPrefabPool prefabPool;
+        [Inject] private IItemContainer inventory;
+
+        public IItemContainer Inventory => inventory;
 
         private PlayerMovement2D characterController;
 
         private Rigidbody2D body;
         private TerrainGenerator terrainGenerator;
         private DayNightCycle dayNightCycle;
-        private Vector2 levelSize = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
-
-        public int woodAmount = 0;
-        public int maxWoodAmount = 10;
+        private Vector2 levelSize = new(float.PositiveInfinity, float.PositiveInfinity);
+        
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
@@ -53,7 +56,7 @@ namespace LD48
         private float timeToRest = 3f;
         private bool isResting = false;
 
-        private List<Item> _interactableItems = new();
+        private readonly List<IInteractable> interactableObjects = new();
 
         public new AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
@@ -166,14 +169,15 @@ namespace LD48
 
             if (other.gameObject.CompareTag("Item"))
             {
-                var item = other.gameObject.GetComponent<Item>();
-                if (item == null)
+                var interactable = other.gameObject.GetComponent<IInteractable>();
+                if (interactable == null)
                 {
-                    Debug.LogError($"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks Item component!");
+                    Debug.LogError(
+                        $"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks IInteractable component!");
                     return;
                 }
 
-                _interactableItems.Add(item);
+                interactableObjects.Add(interactable);
             }
         }
 
@@ -181,14 +185,15 @@ namespace LD48
         {
             if (other.gameObject.CompareTag("Item"))
             {
-                var item = other.gameObject.GetComponent<Item>();
-                if (item == null)
+                var interactable = other.gameObject.GetComponent<IInteractable>();
+                if (interactable == null)
                 {
-                    Debug.LogError($"OnCollisionExit2D > {other.gameObject} has Item tag and lacks Item component!");
+                    Debug.LogError(
+                        $"OnCollisionExit2D > {other.gameObject} has Item tag and lacks IInteractable component!");
                     return;
                 }
 
-                _interactableItems.Remove(item);
+                interactableObjects.Remove(interactable);
             }
         }
 
@@ -216,7 +221,7 @@ namespace LD48
         {
             if (isHit || isDead) return;
 
-            if (woodAmount == 0)
+            if (!inventory.GetItem(ItemType.Wood, out var woodItem))
             {
                 // TODO: Show a proper message
                 Debug.Log("No Wood to burn!");
@@ -224,14 +229,13 @@ namespace LD48
             }
 
             var bonfires = GetClosestBonfires();
+            inventory.RemoveItem(woodItem);
             if (bonfires.Any())
             {
-                woodAmount--;
                 bonfires.First().AddWood();
             }
             else
             {
-                woodAmount--;
                 CreateBonfire();
             }
         }
@@ -285,26 +289,20 @@ namespace LD48
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
         }
 
-        public void PickUp(Item item)
+        public void PickUp(IInteractable interactable)
         {
-            if (isHit || isDead) return;
+            if (isHit || isDead || !interactable.CanBePickedUp) return;
 
-            _interactableItems.Remove(item);
             humanAnimator.SetTrigger(IsPickingUpAnimation);
 
-            // Debug.Log($"PickUp > {item.type}");
-            switch (item.type)
-            {
-                case ItemType.Wood:
-                    if (woodAmount < maxWoodAmount)
-                    {
-                        woodAmount++;
-                        if (itemPickupSound) audio.PlayOneShot(itemPickupSound);
-                        Destroy(item.gameObject);
-                    }
-
-                    break;
-            }
+            if (!inventory.CanAddItem()) return;
+            
+            if (itemPickupSound) 
+                audio.PlayOneShot(itemPickupSound);
+                        
+            inventory.AddItem(interactable.Item);
+            interactableObjects.Remove(interactable);
+            Destroy(interactable.GameObject);
         }
 
         public void ToggleIsAiming()
@@ -329,10 +327,16 @@ namespace LD48
 
         public void Interact()
         {
-            Debug.Log("OnInteract!");
-            if (_interactableItems.Any())
+            if (interactableObjects.Any())
             {
-                PickUp(_interactableItems.First());
+                var firstInteractableObject = interactableObjects.First();
+                // TODO: Implement other ways to interact with objects
+                if (firstInteractableObject.CanBePickedUp)
+                    PickUp(firstInteractableObject);
+            }
+            else
+            {
+                // TODO: Check if has an item in his hand and can use it
             }
         }
 
@@ -361,11 +365,18 @@ namespace LD48
 
         private void DropItems()
         {
-            while (woodAmount > 0)
+            while (inventory.Items.Any())
             {
-                woodAmount--;
-                prefabPool.Spawn(woodPrefab, transform.position + new Vector3(Random.value, Random.value),
+                var lastItem = inventory.Items.Last();
+                inventory.Items.Remove(lastItem);
+                if (!lastItem.CanBeDropped)
+                {
+                    continue;
+                }
+                
+                var itemObject = prefabPool.Spawn(lastItem.ItemPrefab, transform.position + new Vector3(Random.value, Random.value),
                     Quaternion.identity);
+                itemObject.GetComponent<ItemController>().SetItem(lastItem);
             }
         }
 
@@ -392,7 +403,7 @@ namespace LD48
                 return "Press LMB to Shoot";
             }
 
-            if (woodAmount <= 0) return "Gather some Wood to survive through the Night";
+            if (!inventory.HasItem(ItemType.Wood)) return "Gather some Wood to survive through the Night";
             var bonfires = GetClosestBonfires();
             return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
         }
@@ -412,11 +423,11 @@ namespace LD48
             return spriteRenderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;
         }
 
-        public bool CanPickUp(out Item item)
+        public bool CanPickUp(out IInteractable item)
         {
-            item = _interactableItems.FirstOrDefault();
+            item = interactableObjects.FirstOrDefault();
 
-            return _interactableItems.Any();
+            return item is {CanBePickedUp: true};
         }
     }
 }

@@ -82,7 +82,7 @@ SpriteRenderer:
   m_Size: {x: 0.4375, y: 0.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!95 &4777048309013230726
@@ -120,6 +120,9 @@ GameObject:
   - component: {fileID: -7433266038967853080}
   - component: {fileID: 1203980886353906568}
   - component: {fileID: 2968753310703807543}
+  - component: {fileID: 5139208764900496796}
+  - component: {fileID: 5330428087649667961}
+  - component: {fileID: 3672825779305286988}
   - component: {fileID: -7590158872547758650}
   - component: {fileID: 3861742083327022146}
   - component: {fileID: -6989974726756519790}
@@ -244,8 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbf388b9417448cb2efa3e222e34e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodAmount: 1
-  maxWoodAmount: 10
   moveSpeed: 2
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
@@ -255,13 +256,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3471607891558574174}
   humanAnimator: {fileID: 4777048309013230726}
   collider2d: {fileID: 5133988400910477832}
-  notReadyToShootSprite: {fileID: 21300000, guid: 7d3ac3d8e6f6647a4bc4df5e6cf11102, type: 3}
-  readyToShootSprite: {fileID: 21300000, guid: 9b347d41eda60415880a4432f6806594, type: 3}
-  hitSprite: {fileID: 21300000, guid: 156946bc1497f4f029b1c87557328f11, type: 3}
-  deadSprite: {fileID: 21300000, guid: 0cabfa839079f4cd6b94ef6968e51f54, type: 3}
-  restingSprite: {fileID: 21300000, guid: 2e91b81807222426d8fb21cccb4f78f0, type: 3}
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
+  shootAnimationLengthSeconds: 0.5
   baseTimeToRest: 3
   audio: {fileID: 3861742083327022146}
   hitSound: {fileID: 8300000, guid: c20288673c85147018343a8a5c36d2ee, type: 3}
@@ -288,6 +285,51 @@ MonoBehaviour:
   target: {fileID: 0}
   baseTimeToWander: 3
   minWoodToSurvive: 3
+--- !u!114 &5139208764900496796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbcd7119f20a47beabd6076d61c16b58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSlotCount: 10
+--- !u!114 &5330428087649667961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 3672825779305286988}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &3672825779305286988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5b1cf1482c43059772eb82e25a72ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory: {fileID: 5139208764900496796}
+  humanController: {fileID: 1203980886353906568}
 --- !u!114 &-7590158872547758650
 MonoBehaviour:
   m_ObjectHideFlags: 0
