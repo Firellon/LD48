@@ -24,15 +24,13 @@
 	    _StepA("StepA", Float) = 0.0
 	    _StepB("StepB", Float) = 1.0
 
-	    _DitherScale("DitherScale", Float) = 70.0
-
-	    _PixelSize("PixelSize", Float) = 96.0
+        _PixelSize("PixelSize", Float) = 96.0
 
 	    [Toggle] _Pixelate("Pixelate", Int) = 1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque"}
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"}
         LOD 100
 
         Pass
@@ -43,9 +41,11 @@
             // make fog work
             #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
+            // #include "UnityCG.cginc"
             // #include "Assets/Shaders/ProceduralBackground/Fbm.cginc"
             #include "Assets/Shaders/ProceduralBackground/stochastic.cginc"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
             #define LUT_SIZE 64.
             #define LUT_SIZE_MINUS (64. - 1.)
@@ -59,11 +59,9 @@
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
+                // UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 float4 worldPos : TEXCOORD1;
-                // float4 ditherMad : TEXCOORD2;
-                // float4 patternData : TEXCOORD3;
             };
 
             sampler2D _MainTex;
@@ -92,7 +90,6 @@
             uniform float4 _DitherMad;
             uniform float4 _PatternData;
 
-            float _DitherScale;
             float _PixelSize;
 
             bool _Pixelate;
@@ -106,6 +103,10 @@
                 uv.x = uvw.x * (LUT_SIZE_MINUS / (LUT_SIZE * LUT_SIZE)) + .5 * (1. / (LUT_SIZE * LUT_SIZE)) + floor(uvw.z * LUT_SIZE) / LUT_SIZE;    
 
                 float4 lutColor = tex2D(tex, uv);
+
+#if !defined(UNITY_COLORSPACE_GAMMA)
+                lutColor = float4(SRGBToLinear(lutColor.xyz), lutColor.w);
+#endif
 
                 return lutColor;
             }
@@ -122,33 +123,9 @@
             v2f vert (appdata v)
             {
                 v2f o;
-
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-
-                // float ditherWidth = _DitherTex_TexelSize.z;
-                // float ditherHeight = _DitherTex_TexelSize.w;
-                //
-                // float patternDepth = ditherWidth / ditherHeight;
-                // float step = ditherWidth / patternDepth;
-
-                // // float aspect = patternDepth;
-                // float aspect = 16.0/9.0;
-                //
-                // o.ditherMad = fixed4(
-                //     _DitherScale * aspect,
-                //     _DitherScale,
-                //     round(random(o.uv) * step) / step,
-                //     round(random(o.uv) * step) / step
-                // );
-                //
-                // o.patternData = fixed4(
-                //     o.ditherMad.x * (ditherWidth / patternDepth),
-                //     o.ditherMad.y * ditherHeight,
-                //     1.0 / patternDepth,
-                //     patternDepth
-                // );
 
                 return o;
             }
@@ -176,7 +153,12 @@
                 noiseBackground = lerp(_LightColor, _DarkColor, smoothstep(_StepA, _StepB, noiseBackground.r));
 
                 fixed4 col = noiseBackground;
-                float3 uvw = noiseBackground.xyz;
+
+#if !defined(UNITY_COLORSPACE_GAMMA)
+                float3 uvw = LinearToSRGB(noiseBackground);
+#else
+                float3 uvw = noiseBackground;
+#endif
 
                 float measure = lut_sample(uvw, _MeasureTex);
                 float grade   = 1 - saturate(pow(1 - measure / _Dither, 4) + .001); // can be customized and remaped via curve (dither pattern sample)
