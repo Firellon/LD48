@@ -78,8 +78,8 @@ Material:
     - _PixelSize: 256
     - _Pixelate: 1
     - _ReducePalette: 0
-    - _StepA: 0.4
-    - _StepB: 0.52
+    - _StepA: 0.45
+    - _StepB: 0.55
     - _Weight: 1
     m_Colors:
     - _DarkColor: {r: 0.1488129, g: 0.38, b: 0.0684, a: 1}
