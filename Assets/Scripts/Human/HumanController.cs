@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
 using UnityEngine;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -20,6 +21,7 @@ namespace Human
         [Inject] private IItemContainer inventory;
 
         public IItemContainer Inventory => inventory;
+        public IMaybe<Item> HandItem => handItem;
 
         private PlayerMovement2D characterController;
 
@@ -55,14 +57,19 @@ namespace Human
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
         private bool isResting = false;
-
+        
+        private IMaybe<Item> handItem = Maybe.Empty<Item>();
         private readonly List<IInteractable> interactableObjects = new();
+
+        #region Audio
 
         public new AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        #endregion
 
         #region Animations
 
@@ -365,19 +372,27 @@ namespace Human
 
         private void DropItems()
         {
+            handItem.IfPresent(item =>
+            {
+                TryDropItem(item);
+                handItem = Maybe.Empty<Item>();
+            });
+            
             while (inventory.Items.Any())
             {
-                var lastItem = inventory.Items.Last();
-                inventory.Items.Remove(lastItem);
-                if (!lastItem.CanBeDropped)
-                {
-                    continue;
-                }
-                
-                var itemObject = prefabPool.Spawn(lastItem.ItemPrefab, transform.position + new Vector3(Random.value, Random.value),
-                    Quaternion.identity);
-                itemObject.GetComponent<ItemController>().SetItem(lastItem);
+                var firstItem = inventory.Items.First();
+                inventory.RemoveItem(firstItem);
+                TryDropItem(firstItem);
             }
+        }
+        
+        private void TryDropItem(Item item)
+        {
+            if (!item.CanBeDropped) return;
+
+            var itemObject = prefabPool.Spawn(item.ItemPrefab, transform.position + new Vector3(Random.value, Random.value),
+                Quaternion.identity);
+            itemObject.GetComponent<ItemController>().SetItem(item);
         }
 
         public string GetTipMessageText()

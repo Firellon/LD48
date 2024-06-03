@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Utilities.Monads;
 using Zenject;
 
 namespace LD48
@@ -24,6 +25,7 @@ namespace LD48
         private float vertical;
 
         public IItemContainer Inventory => humanInventory;
+        public IMaybe<Item> HandItem => humanController.HandItem;
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
