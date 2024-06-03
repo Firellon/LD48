@@ -28,7 +28,7 @@ namespace Map
         // TODO: use prefab provider
         [SerializeField] private GameObject treePrefab;
         [SerializeField] private Transform treeParent;
-        [SerializeField] private Vector2Int treeDensity = new Vector2Int(2, 2);
+        [SerializeField] private Vector2Int treeDensity = new(2, 2);
         [SerializeField] private float treeSpawnProbability = 0.5f;
 
         #endregion

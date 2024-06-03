@@ -49,7 +49,6 @@ public class TerrainGenerator : MonoBehaviour
     private GameObject playerObject;
     public List<ObjectFollower> playerFollowers;
     public TMP_Text tipMessageText;
-    public TMP_Text woodAmountText;
 
     #endregion
 
@@ -161,7 +160,6 @@ public class TerrainGenerator : MonoBehaviour
         playerObject = prefabPool.Spawn(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
         var player = playerObject.GetComponent<Player>();
         player.tipMessageText = tipMessageText;
-        player.woodAmountText = woodAmountText;
         
         cinemachineCam.Follow = player.transform;
 

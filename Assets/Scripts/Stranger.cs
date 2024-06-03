@@ -23,6 +23,8 @@ namespace LD48
     public class Stranger : MonoBehaviour
     {
         [Inject] private IItemContainer inventory;
+        [Inject] private IItemRegistry itemRegistry;
+        
         // How many enemies can I handle at once?
         public int bravery = 3;
 
@@ -50,8 +52,15 @@ namespace LD48
             dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
 
-            // TODO: Set up random inventory?
-            // humanController.woodAmount = Random.Range(1, 4);
+            // TODO: Set up a random inventory?
+            var initialWoodAmount = Random.Range(1, 4);
+            itemRegistry.GetItem(ItemType.Wood).IfPresent(woodItem =>
+            {
+                for (var i = 0; i < initialWoodAmount; i++)
+                {
+                    humanController.Inventory.AddItem(woodItem);
+                }
+            });
         }
 
         private void Update()
