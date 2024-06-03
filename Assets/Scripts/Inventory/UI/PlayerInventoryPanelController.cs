@@ -69,7 +69,7 @@ namespace Inventory.UI
                 {
                     var itemSlotView = prefabPool.Spawn(inventorySlotPrefab, inventoryPanel.transform)
                         .GetComponent<InventoryItemView>();
-                    itemSlotView.SetUp(player.Inventory.Items.GetElementByIndexOrEmpty(i));
+                    itemSlotView.SetUp(player.Inventory.Items.GetElementByIndexOrEmpty(i), player);
                 }
             });
         }
