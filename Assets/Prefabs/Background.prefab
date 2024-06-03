@@ -115,7 +115,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 62520def54104434d94da60cf1ab0340, type: 2}
   scaleValue: 1
   minScale: 1
-  maxScale: 100
+  maxScale: 150
   ditherTex: {fileID: 2800000, guid: a7ad2a875f5fcf442a267169bae8f2bb, type: 3}
-  ditherMad: {x: 100, y: 100, z: 0.25, w: 0}
-  patternData: {x: 400, y: 400, z: 0.33333334, w: 3}
+  ditherMad: {x: 150, y: 150, z: 0.75, w: 0.5}
+  patternData: {x: 600, y: 600, z: 0.33333334, w: 3}
