@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Inventory;
-using Inventory.Signals;
 using LD48;
-using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Utilities.Monads;
 
 namespace Human
 {
@@ -13,10 +12,27 @@ namespace Human
     {
         [SerializeField] private int itemSlotCount;
         [ShowInInspector, ReadOnly] private List<Item> items = new();
+        [ShowInInspector, ReadOnly] private IMaybe<Item> handItem = Maybe.Empty<Item>();
 
         public int ItemSlotCount => itemSlotCount;
         public List<Item> Items => items;
-        
+        public IMaybe<Item> HandItem => handItem;
+
+        public virtual bool SetHandItem(IMaybe<Item> maybeItem)
+        {
+            return maybeItem.Match(item =>
+            {
+                if (!item.CanUse) return false;
+
+                handItem = maybeItem;
+                return true;
+            }, () =>
+            {
+                handItem = Maybe.Empty<Item>();
+                return true;
+            });
+        }
+
         public virtual bool CanAddItem()
         {
             return Items.Count < ItemSlotCount;
@@ -28,7 +44,7 @@ namespace Human
                 return false;
 
             Items.Add(item);
-            
+
             return true;
         }
 
@@ -45,7 +61,7 @@ namespace Human
         {
             return Items.Find(inventoryItem => inventoryItem.Equals(item));
         }
-        
+
         public virtual bool HasItem(ItemType itemType)
         {
             return Items.Find(inventoryItem => inventoryItem.ItemType == itemType);

@@ -12,6 +12,7 @@ namespace Inventory
         [SerializeField] private GameObject itemPrefab;
         [SerializeField] private bool canBePickedUp;
         [SerializeField] private bool canBeDropped;
+        [SerializeField] private bool canUse;
 
         public ItemType ItemType => itemType;
         public Sprite ItemSprite => itemSprite;
@@ -19,6 +20,7 @@ namespace Inventory
         public GameObject ItemPrefab => itemPrefab;
         public bool CanBePickedUp => canBePickedUp;
         public bool CanBeDropped => canBeDropped;
+        public bool CanUse => canUse;
 
         public bool Equals(Item item)
         {

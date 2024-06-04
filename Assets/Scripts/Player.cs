@@ -1,4 +1,3 @@
-using System;
 using Human;
 using Inventory;
 using Inventory.Signals;
@@ -7,13 +6,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Utilities.Monads;
 using Zenject;
 
 namespace LD48
 {
     public class Player : MonoBehaviour
     {
-        public TMP_Text woodAmountText;
         [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
 
         [Inject] private HumanController humanController;
@@ -24,6 +23,7 @@ namespace LD48
         private float vertical;
 
         public IItemContainer Inventory => humanInventory;
+        public IMaybe<Item> HandItem => humanController.HandItem;
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
@@ -90,10 +90,8 @@ namespace LD48
             // horizontal = Input.GetAxisRaw("Horizontal");
             // vertical = Input.GetAxisRaw("Vertical");
 
-            if (woodAmountText && tipMessageText)
+            if (tipMessageText)
             {
-                woodAmountText.text =
-                    $"Wood: {humanController.Inventory.GetItemAmount(ItemType.Wood)} / {humanController.Inventory.ItemSlotCount}";
                 tipMessageText.text = humanController.GetTipMessageText();
             }
         }

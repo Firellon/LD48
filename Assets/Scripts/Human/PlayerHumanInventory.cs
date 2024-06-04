@@ -1,11 +1,23 @@
 using Inventory;
 using Inventory.Signals;
 using Signals;
+using Utilities.Monads;
 
 namespace Human
 {
     public class PlayerHumanInventory : HumanInventory
     {
+        public override bool SetHandItem(IMaybe<Item> maybeItem)
+        {
+            var itemSet = base.SetHandItem(maybeItem);
+            if (itemSet)
+            {
+                SignalsHub.DispatchAsync(new PlayerHandItemUpdatedEvent(maybeItem));
+            }
+
+            return itemSet;
+        }
+
         public override bool AddItem(Item item)
         {
             var itemAdded = base.AddItem(item);

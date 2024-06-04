@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using LD48;
+using Utilities.Monads;
 
 namespace Inventory
 {
     public interface IItemContainer
     {
-        public int ItemSlotCount { get; }
-        public List<Item> Items { get; }
+        int ItemSlotCount { get; }
+        List<Item> Items { get; }
+        IMaybe<Item> HandItem { get; }
 
-        public bool CanAddItem();
-        public bool AddItem(Item item);
-        public bool RemoveItem(Item item);
-        public bool HasItem(Item item);
-        public bool HasItem(ItemType itemType);
-        public bool GetItem(ItemType itemType, out Item item);
-        public int GetItemAmount(ItemType itemType);
+        bool SetHandItem(IMaybe<Item> maybeItem);
+
+        bool CanAddItem();
+        bool AddItem(Item item);
+        bool RemoveItem(Item item);
+        bool HasItem(Item item);
+        bool HasItem(ItemType itemType);
+        bool GetItem(ItemType itemType, out Item item);
+        int GetItemAmount(ItemType itemType);
     }
 }

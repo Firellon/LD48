@@ -134,6 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae03937c36a340bd9829ae57a9609a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemBackground: {fileID: 5306077161152442202}
+  focusedBackgroundSprite: {fileID: 21300000, guid: 308abaf159602ab46982b8d498bfc071, type: 3}
+  unfocusedBackgroundSprite: {fileID: 21300000, guid: e6da26d9818c4a84db9e438d48c4c2d5, type: 3}
   itemIcon: {fileID: 1160825842887288889}
   itemIconImage: {fileID: 6511922568345913139}
 --- !u!114 &5306077161152442202

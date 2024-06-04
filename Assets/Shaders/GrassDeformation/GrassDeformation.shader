@@ -12,6 +12,8 @@ Shader "Nebulate.me/GrassDeformation"
         _DistortionPower("_DistortionPower", Range(0, 1)) = 1.0
 
         _Noise("Noise", 2D) = "black" {}
+
+        _PixelSize("PixelSize", Float) = 128
     }
     SubShader
     {
@@ -63,6 +65,8 @@ Shader "Nebulate.me/GrassDeformation"
             half _WindScale;
             half _DistortionPower;
 
+            half _PixelSize;
+
             inline float gradient(float x)
 			{
 				//(-(2x-1)^2+1)
@@ -76,16 +80,8 @@ Shader "Nebulate.me/GrassDeformation"
             v2f vert (appdata v)
             {
                 v2f o;
-
-                // if (v.vertex.y > 0.1)
-                // {
-                //     v.vertex.x += _Value; // * _SinTime.w
-                // }
-
                 o.vertex = UnityObjectToClipPos(v.vertex);
-
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 
                 return o;
@@ -93,24 +89,18 @@ Shader "Nebulate.me/GrassDeformation"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed2 noiseOffset = _WindDirection * _Time.y * _WindSpeed;
-
-                fixed2 noiseValue = (tex2D(_Noise, i.worldPos * _WindScale + noiseOffset) - 0.5) * 2 * fixed2(sin(_Time.w + i.worldPos.x), 0);//_WindDirection;
+                fixed2 noiseOffset = _WindDirection * _WindSpeed * _Time.y;
+                fixed2 noiseValue = ((tex2D(_Noise, i.worldPos * _WindScale) - 0.5) * 2) * fixed2(sin(_Time.y - i.worldPos.x * 10 - i.worldPos.y * 10), 0);
 
                 fixed2 grad = clamp(0, 1, pow(abs(i.uv.y), 2));
 
-                fixed4 col = tex2D(_MainTex, i.uv + noiseValue.xy * grad * _DistortionPower);
+                fixed2 uv = i.uv;
+                fixed2 distortionUV = noiseValue.xy * grad * _DistortionPower;
+
+                fixed4 col = tex2D(_MainTex, uv + distortionUV);
                 col.rgb *= col.a;
 
                 return col;
-
-                // fixed2 pix = fixed2(600, 600);
-                // fixed2 uv = fixed2(floor((i.uv.x) * pix.x) / pix.x, floor((i.uv.y) * pix.y) / pix.y);
-                //
-                // fixed4 col = tex2D(_MainTex, i.uv);
-                // col.rgb *= col.a;
-                //
-                // return col;
             }
             ENDCG
         }

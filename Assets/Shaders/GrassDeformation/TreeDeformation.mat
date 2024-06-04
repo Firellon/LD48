@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GrassDeformation
+  m_Name: TreeDeformation
   m_Shader: {fileID: 4800000, guid: a12df7099505d7a4e9625bd466471fb8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -34,11 +34,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Angle: 0
-    - _DistortionPower: 0.2
-    - _PixelSize: 64
+    - _DistortionPower: 0.1
     - _Value: 0.2
-    - _WindScale: 0.1
-    - _WindSpeed: 1
+    - _WindScale: 0.01
+    - _WindSpeed: 0.02
     m_Colors:
     - _WindDirection: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
