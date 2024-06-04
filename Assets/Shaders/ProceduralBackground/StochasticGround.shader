@@ -8,11 +8,7 @@ Shader "Nebulate.me/StochasticGround"
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
 		[ASEBegin]_NoiseTex("NoiseTex", 2D) = "white" {}
 		_NoiseScale("NoiseScale", Float) = 1
-		_LightColor("LightColor", Color) = (0,0,0,0)
-		_DarkColor("DarkColor", Color) = (0,0,0,0)
-		_PixelSize("PixelSize", Float) = 0
-		_Float0("Float 0", Float) = 0
-		[ASEEnd]_Float1("Float 1", Float) = 0
+		[ASEEnd][Toggle(_KEYWORD0_ON)] _Keyword0("Keyword 0", Float) = 0
 
 	}
 
@@ -61,16 +57,12 @@ Shader "Nebulate.me/StochasticGround"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			
+			#pragma shader_feature_local _KEYWORD0_ON
+
 
 			sampler2D _NoiseTex;
 			CBUFFER_START( UnityPerMaterial )
-			float4 _LightColor;
-			float4 _DarkColor;
-			float _Float0;
-			float _Float1;
 			float _NoiseScale;
-			float _PixelSize;
 			CBUFFER_END
 
 
@@ -181,7 +173,8 @@ Shader "Nebulate.me/StochasticGround"
 
 				float localStochasticTiling2_g1 = ( 0.0 );
 				float3 ase_worldPos = IN.ase_texcoord2.xyz;
-				float2 Input_UV145_g1 = ( round( ( ( ase_worldPos * ( 1.0 / _NoiseScale ) ) * _PixelSize ) ) / _PixelSize ).xy;
+				float3 temp_output_26_0 = ( ase_worldPos * ( 1.0 / _NoiseScale ) );
+				float2 Input_UV145_g1 = temp_output_26_0.xy;
 				float2 UV2_g1 = Input_UV145_g1;
 				float2 UV12_g1 = float2( 0,0 );
 				float2 UV22_g1 = float2( 0,0 );
@@ -193,11 +186,13 @@ Shader "Nebulate.me/StochasticGround"
 				float2 temp_output_10_0_g1 = ddx( Input_UV145_g1 );
 				float2 temp_output_12_0_g1 = ddy( Input_UV145_g1 );
 				float4 Output_2D293_g1 = ( ( tex2D( _NoiseTex, UV12_g1, temp_output_10_0_g1, temp_output_12_0_g1 ) * W12_g1 ) + ( tex2D( _NoiseTex, UV22_g1, temp_output_10_0_g1, temp_output_12_0_g1 ) * W22_g1 ) + ( tex2D( _NoiseTex, UV32_g1, temp_output_10_0_g1, temp_output_12_0_g1 ) * W32_g1 ) );
-				float4 break31_g1 = Output_2D293_g1;
-				float smoothstepResult38 = smoothstep( _Float0 , _Float1 , break31_g1.r);
-				float4 lerpResult30 = lerp( _LightColor , _DarkColor , smoothstepResult38);
+				#ifdef _KEYWORD0_ON
+				float4 staticSwitch42 = tex2D( _NoiseTex, temp_output_26_0.xy );
+				#else
+				float4 staticSwitch42 = Output_2D293_g1;
+				#endif
 				
-				float4 Color = lerpResult30;
+				float4 Color = staticSwitch42;
 
 				#if ETC1_EXTERNAL_ALPHA
 					float4 alpha = SAMPLE_TEXTURE2D( _AlphaTex, sampler_AlphaTex, IN.texCoord0.xy );
@@ -218,40 +213,45 @@ Shader "Nebulate.me/StochasticGround"
 }
 /*ASEBEGIN
 Version=18900
-0;71;1512;835;295.7913;342.4531;1;True;True
-Node;AmplifyShaderEditor.RangedFloatNode;25;-938.5881,179.3151;Inherit;False;Property;_NoiseScale;NoiseScale;1;0;Create;True;0;0;0;False;0;False;1;5;0;0;0;1;FLOAT;0
+706;92;1512;835;1863.114;1183.318;3.483699;True;True
+Node;AmplifyShaderEditor.RangedFloatNode;25;-938.5881,179.3151;Inherit;False;Property;_NoiseScale;NoiseScale;1;0;Create;True;0;0;0;False;0;False;1;-46.6;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.WorldPosInputsNode;2;-817.245,-11.0905;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.SimpleDivideOpNode;27;-739.7754,162.0847;Inherit;False;2;0;FLOAT;1;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;26;-567.5419,62.02699;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;34;-612.7913,291.5469;Inherit;False;Property;_PixelSize;PixelSize;4;0;Create;True;0;0;0;False;0;False;0;64;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;-364.7913,109.5469;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RoundOpNode;36;-219.7913,121.5469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleDivideOpNode;37;-116.7913,215.5469;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.TexturePropertyNode;22;-202.4401,-109.2471;Inherit;True;Property;_NoiseTex;NoiseTex;0;0;Create;True;0;0;0;False;0;False;None;ca03ebe1656b94828ac87e0ade452d96;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;26;-567.5419,62.02699;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.FunctionNode;24;268.01,-38.95221;Inherit;False;Procedural Sample;-1;;1;f5379ff72769e2b4495e5ce2f004d8d4;2,157,0,315,0;7;82;SAMPLER2D;0;False;158;SAMPLER2DARRAY;0;False;183;FLOAT;0;False;5;FLOAT2;0,0;False;80;FLOAT3;0,0,0;False;104;FLOAT2;1,0;False;74;SAMPLERSTATE;0;False;5;COLOR;0;FLOAT;32;FLOAT;33;FLOAT;34;FLOAT;35
-Node;AmplifyShaderEditor.RangedFloatNode;40;640.2087,276.5469;Inherit;False;Property;_Float1;Float 1;6;0;Create;True;0;0;0;False;0;False;0;1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;39;444.2087,179.5469;Inherit;False;Property;_Float0;Float 0;5;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;29;131.2378,-228.6329;Inherit;False;Property;_DarkColor;DarkColor;3;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.1151785,0,0.003337481,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SmoothstepOpNode;38;529.2087,28.54691;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;41;177.147,146.3495;Inherit;True;Property;_TextureSample24;Texture Sample 24;7;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;28;129.3562,-435.6077;Inherit;False;Property;_LightColor;LightColor;2;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.245841,0.4150943,0.1311855,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;29;131.2378,-228.6329;Inherit;False;Property;_DarkColor;DarkColor;3;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.1151785,0,0.003337481,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.StaticSwitch;42;776.6361,-156.0359;Inherit;False;Property;_Keyword0;Keyword 0;7;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RoundOpNode;36;-219.7913,121.5469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;38;603.2087,106.5469;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;-364.7913,109.5469;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;34;-612.7913,291.5469;Inherit;False;Property;_PixelSize;PixelSize;4;0;Create;True;0;0;0;False;0;False;0;64;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleDivideOpNode;37;-116.7913,215.5469;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;39;444.2087,179.5469;Inherit;False;Property;_Float0;Float 0;5;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;30;564.0032,-196.6459;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode;40;640.2087,276.5469;Inherit;False;Property;_Float1;Float 1;6;0;Create;True;0;0;0;False;0;False;0;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;853.6193,-0.2426825;Float;False;True;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;12;Nebulate.me/StochasticGround;cf964e524c8e69742b1d21fbe2ebcc4a;True;Unlit;0;0;Unlit;3;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Transparent=RenderType;Queue=Transparent=Queue=0;True;0;0;False;True;2;5;False;-1;10;False;-1;3;1;False;-1;10;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;0;False;0;Hidden/InternalErrorShader;0;0;Standard;1;Vertex Position;1;0;1;True;False;;False;0
 WireConnection;27;1;25;0
 WireConnection;26;0;2;0
 WireConnection;26;1;27;0
-WireConnection;35;0;26;0
-WireConnection;35;1;34;0
-WireConnection;36;0;35;0
-WireConnection;37;0;36;0
-WireConnection;37;1;34;0
 WireConnection;24;82;22;0
-WireConnection;24;5;37;0
-WireConnection;38;0;24;32
+WireConnection;24;5;26;0
+WireConnection;41;0;22;0
+WireConnection;41;1;26;0
+WireConnection;42;1;24;0
+WireConnection;42;0;41;0
+WireConnection;36;0;35;0
 WireConnection;38;1;39;0
 WireConnection;38;2;40;0
+WireConnection;35;0;26;0
+WireConnection;35;1;34;0
+WireConnection;37;0;36;0
+WireConnection;37;1;34;0
 WireConnection;30;0;28;0
 WireConnection;30;1;29;0
 WireConnection;30;2;38;0
-WireConnection;0;1;30;0
+WireConnection;0;1;42;0
 ASEEND*/
-//CHKSM=C5AAA7F580520F0EE40E616C0EBC4D3A18A6C80E
+//CHKSM=2777711290D67E0DEFE677EF820B350A055E7864

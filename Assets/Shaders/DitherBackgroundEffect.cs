@@ -12,8 +12,6 @@ namespace VolFx
     [ExecuteAlways]
     public class DitherBackgroundEffect : MonoBehaviour
     {
-        [SerializeField] private Material material;
-
         [SerializeField, Range(0f, 1f)] private float scaleValue;
 
         [SerializeField] private float minScale = 1f;
@@ -28,6 +26,10 @@ namespace VolFx
         [Button("Generate")]
         private void Generate()
         {
+            var renderer = GetComponent<Renderer>();
+
+            var material = renderer.sharedMaterial;
+
             var scale = Mathf.Lerp(minScale, maxScale, scaleValue);
 
             var patternDepth = (float)(ditherTex.width / ditherTex.height);

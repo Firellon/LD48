@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProceduralBackground
+  m_Name: ProceduralBackground3
   m_Shader: {fileID: 4800000, guid: 812e361fdbc245e1820183a7dad2785a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: ca03ebe1656b94828ac87e0ade452d96, type: 3}
+        m_Texture: {fileID: 2800000, guid: 94f8024f46c6f4f48bdc3f0d2689a882, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Palette1:
@@ -78,8 +78,8 @@ Material:
     - _PixelSize: 256
     - _Pixelate: 1
     - _ReducePalette: 0
-    - _StepA: 0.45
-    - _StepB: 0.55
+    - _StepA: 0.35
+    - _StepB: 0.5
     - _Weight: 1
     m_Colors:
     - _DarkColor: {r: 0.1488129, g: 0.38, b: 0.0684, a: 1}
