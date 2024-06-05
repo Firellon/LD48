@@ -21,31 +21,38 @@
 
 	    _NoiseScale("NoiseScale", Float) = 1.0
 
-	    _StepA("StepA", Float) = 0.0
-	    _StepB("StepB", Float) = 1.0
+	    _StepA("StepA", Range(0, 1)) = 0.0
+	    _StepB("StepB", Range(0, 1)) = 1.0
 
-        _PixelSize("PixelSize", Float) = 96.0
+        // _PixelSize("PixelSize", Float) = 96.0
 
 	    [Toggle] _Pixelate("Pixelate", Int) = 1
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"}
-        LOD 100
+		LOD 0
+		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" }
+
+		Cull Off
+		HLSLINCLUDE
+		#pragma target 2.0
+		ENDHLSL
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
-            // #include "UnityCG.cginc"
-            // #include "Assets/Shaders/ProceduralBackground/Fbm.cginc"
-            #include "Assets/Shaders/ProceduralBackground/stochastic.cginc"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+            #pragma prefer_hlslcc gles
+			#pragma exclude_renderers d3d11_9x
+
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
+			// #include "Assets/Shaders/ProceduralBackground/stochastic.cginc"
+			#include "Assets/Shaders/ProceduralBackground/stochastic.hlsl"
 
             #define LUT_SIZE 64.
             #define LUT_SIZE_MINUS (64. - 1.)
@@ -90,8 +97,6 @@
             uniform float4 _DitherMad;
             uniform float4 _PatternData;
 
-            float _PixelSize;
-
             bool _Pixelate;
 
             float4 lut_sample(in float3 uvw, const sampler2D tex)
@@ -123,22 +128,24 @@
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = GetVertexPositionInputs(v.vertex.xyz).positionCS;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
+                // return tex2d_stochastic_float(_NoiseTex, i.worldPos.xy * (1.0 / _NoiseScale));
+
                 float4 patternData =  _PatternData; //i.patternData;
                 float4 ditherMad =  _DitherMad; //i.ditherMad;
 
                 float2 pix = float2(patternData.x, patternData.y);
-                fixed2 worldUV = i.worldPos * (1.0 / _NoiseScale);
+                float2 worldUV = i.worldPos.xy * (1.0 / _NoiseScale);
 
-                fixed2 pixelatedWorldUV;
+                float2 pixelatedWorldUV;
 
                 if (_Pixelate)
                 {
@@ -146,30 +153,30 @@
                 }
                 else
                 {
-                    pixelatedWorldUV = round(worldUV * _PixelSize) / _PixelSize;
+                    pixelatedWorldUV = worldUV;
                 }
 
-                fixed4 noiseBackground = tex2D_stochastic(_NoiseTex, pixelatedWorldUV);
+                float4 noiseBackground = tex2d_stochastic_float(_NoiseTex, pixelatedWorldUV);
                 noiseBackground = lerp(_LightColor, _DarkColor, smoothstep(_StepA, _StepB, noiseBackground.r));
 
-                fixed4 col = noiseBackground;
+                float4 col = noiseBackground;
 
 #if !defined(UNITY_COLORSPACE_GAMMA)
-                float3 uvw = LinearToSRGB(noiseBackground);
+                float3 uvw = LinearToSRGB(noiseBackground).xyz;
 #else
-                float3 uvw = noiseBackground;
+                float3 uvw = noiseBackground.xyz;
 #endif
 
                 float measure = lut_sample(uvw, _MeasureTex);
                 float grade   = 1 - saturate(pow(1 - measure / _Dither, 4) + .001); // can be customized and remaped via curve (dither pattern sample)
                 float noise   = grad_sample(frac(mad(worldUV, ditherMad.xy, ditherMad.zw)), grade, _DitherTex).r;
 
-                half4 result = lerp(lut_sample(uvw, _PaletteTex), lut_sample(uvw, _QuantTex), step(measure, noise * _Dither));
+                float4 result = lerp(lut_sample(uvw, _PaletteTex), lut_sample(uvw, _QuantTex), step(measure, noise * _Dither));
                 result.a *= col.a;
 
                 return lerp(col, result, _Weight);
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

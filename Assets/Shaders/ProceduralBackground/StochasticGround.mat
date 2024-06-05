@@ -34,12 +34,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
-    - _Float0: 0.2
-    - _Float1: 0.95
-    - _NoiseScale: 5
-    - _PixelSize: 96
+    - _Float0: 0
+    - _Float1: 1
+    - _Keyword0: 0
+    - _NoiseScale: -46.6
+    - _PixelSize: 64
     m_Colors:
-    - _DarkColor: {r: 0.17196111, g: 0.2924528, b: 0.08690815, a: 1}
+    - _DarkColor: {r: 0.1151785, g: 0, b: 0.003337481, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _LightColor: {r: 0.245841, g: 0.41509432, b: 0.13118546, a: 1}
+    - _LightColor: {r: 0.245841, g: 0.4150943, b: 0.1311855, a: 1}
   m_BuildTextureStacks: []
