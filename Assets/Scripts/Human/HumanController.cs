@@ -328,7 +328,7 @@ namespace Human
             }
             else
             {
-                LightAFire();
+                // LightAFire();
             }
         }
 

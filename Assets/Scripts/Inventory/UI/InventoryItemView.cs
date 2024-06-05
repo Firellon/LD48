@@ -37,7 +37,7 @@ namespace Inventory.UI
         {
             _maybeItem.IfPresent(item =>
             {
-                if (item.CanUse)
+                if (item.IsHandItem)
                 {
                     HighlightItem(true);
                 }
@@ -58,7 +58,7 @@ namespace Inventory.UI
         {
             _maybeItem.IfPresent(item =>
             {
-                if (item.CanUse)
+                if (item.IsHandItem)
                 {
                     _player.HandItem.IfPresent((handItem) =>
                     {

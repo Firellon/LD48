@@ -22,7 +22,7 @@ namespace Human
         {
             return maybeItem.Match(item =>
             {
-                if (!item.CanUse) return false;
+                if (!item.IsHandItem) return false;
 
                 handItem = maybeItem;
                 return true;
@@ -57,6 +57,21 @@ namespace Human
             return true;
         }
 
+        public virtual bool RemoveItem(ItemType itemType, int itemAmountToRemove)
+        {
+            if (!GetItem(itemType, out var itemToRemove))
+            {
+                return false;
+            }
+            
+            for (var i = 0; i < itemAmountToRemove; i++)
+            {
+                if (!RemoveItem(itemToRemove)) return false;
+            }
+
+            return true;
+        }
+
         public virtual bool HasItem(Item item)
         {
             return Items.Find(inventoryItem => inventoryItem.Equals(item));
@@ -65,6 +80,11 @@ namespace Human
         public virtual bool HasItem(ItemType itemType)
         {
             return Items.Find(inventoryItem => inventoryItem.ItemType == itemType);
+        }
+
+        public virtual bool HasItem(ItemType itemType, int requiredItemAmount)
+        {
+            return Items.Count(item => item.ItemType == itemType) >= requiredItemAmount;
         }
 
         public virtual bool GetItem(ItemType itemType, out Item item)

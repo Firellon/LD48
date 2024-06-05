@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using LD48;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Inventory
 {
@@ -12,7 +15,9 @@ namespace Inventory
         [SerializeField] private GameObject itemPrefab;
         [SerializeField] private bool canBePickedUp;
         [SerializeField] private bool canBeDropped;
-        [SerializeField] private bool canUse;
+        [FormerlySerializedAs("isUsable")] [FormerlySerializedAs("canUse")] [SerializeField] private bool isHandItem;
+        [SerializeField] private bool isCraftable;
+        [SerializeField] private ItemTypeToIntSerializedDictionary craftingRequirements = new ();
 
         public ItemType ItemType => itemType;
         public Sprite ItemSprite => itemSprite;
@@ -20,11 +25,18 @@ namespace Inventory
         public GameObject ItemPrefab => itemPrefab;
         public bool CanBePickedUp => canBePickedUp;
         public bool CanBeDropped => canBeDropped;
-        public bool CanUse => canUse;
+        public bool IsHandItem => isHandItem;
+        public bool IsCraftable => isCraftable;
+        public IReadOnlyDictionary<ItemType, int> CraftingRequirements => craftingRequirements;
 
         public bool Equals(Item item)
         {
             return item.ItemType == itemType;
+        }
+
+        public bool CanBeCraftedWith(IItemContainer inventory)
+        {
+            return CraftingRequirements.All(requirement => inventory.HasItem(requirement.Key, requirement.Value));
         }
     }
 }

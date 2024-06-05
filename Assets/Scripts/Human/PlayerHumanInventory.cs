@@ -1,5 +1,6 @@
 using Inventory;
 using Inventory.Signals;
+using LD48;
 using Signals;
 using Utilities.Monads;
 
@@ -38,6 +39,21 @@ namespace Human
             }
             
             return itemRemoved;
+        }
+        
+        public override bool RemoveItem(ItemType itemType, int itemAmountToRemove)
+        {
+            if (!GetItem(itemType, out var itemToRemove))
+            {
+                return false;
+            }
+            
+            for (var i = 0; i < itemAmountToRemove; i++)
+            {
+                if (!RemoveItem(itemToRemove)) return false;
+            }
+
+            return true;
         }
     }
 }
