@@ -34,7 +34,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Angle: 0
-    - _DistortionPower: 0.1
+    - _DistortionPower: 0.01
+    - _GradScale: 1
+    - _Multiply: 2
+    - _Subtract: -0.5
     - _Value: 0.2
     - _WindScale: 0.01
     - _WindSpeed: 0.02
