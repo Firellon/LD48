@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -10,10 +9,12 @@ namespace LD48
     public class Bonfire : MonoBehaviour
     {
         [Inject] private IPrefabPool prefabPool;
-        
+
         public float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
-        
+        [SerializeField] private List<GameObject> visualEffects = new();
+        [SerializeField] private ParticleSystem fireEffect;
+
         private float timeToBurn = 0f;
         private bool isBurning;
 
@@ -26,10 +27,10 @@ namespace LD48
         {
             return timeToBurn;
         }
-        
+
         void Start()
         {
-            timeToBurn += burnTimePerWood / 2;
+            timeToBurn += burnTimePerWood;
             isBurning = true;
             fireSound.Play();
         }
@@ -41,19 +42,22 @@ namespace LD48
             {
                 isBurning = true;
                 timeToBurn -= Time.deltaTime;
+                SetFireStrength();
                 Burn();
             }
             else
             {
                 isBurning = false;
+                SetFireStrength();
                 fireSound.Stop();
             }
         }
+
         public void AddWood()
-       {
-           timeToBurn += burnTimePerWood;
-           isBurning = true;
-       }
+        {
+            timeToBurn += burnTimePerWood;
+            isBurning = true;
+        }
 
         private void Burn()
         {
@@ -61,6 +65,13 @@ namespace LD48
             {
                 fireSound.Play();
             }
+        }
+
+        private void SetFireStrength()
+        {
+            visualEffects.ForEach(effect => effect.SetActive(isBurning));
+            var fireEmission = fireEffect.emission;
+            fireEmission.rateOverTime = timeToBurn * 4;
         }
     }
 }

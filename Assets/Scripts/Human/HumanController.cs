@@ -227,9 +227,10 @@ namespace Human
         
         private void UseItem(Item item)
         {
-           switch (item.ItemType)
+            switch (item.ItemType)
            {
                case ItemType.Wood:
+                   AddToFire(item);
                    return;
                case ItemType.Bonfire:
                    LightAFire(item);
@@ -237,6 +238,18 @@ namespace Human
                default:
                    throw new ArgumentOutOfRangeException();
            }
+        }
+
+        public void AddToFire(Item burnableItem)
+        {
+            if (isHit || isDead) return;
+            
+            var bonfires = GetClosestBonfires();
+            if (bonfires.Any())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                bonfires.First().AddWood();
+            }
         }
 
         public void LightAFire(Item bonfireItem)
@@ -249,15 +262,6 @@ namespace Human
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
             }
-            
-            // if (bonfires.Any())
-            // {
-            //     bonfires.First().AddWood();
-            // }
-            // else
-            // {
-                // CreateBonfire();
-            // }
         }
 
         private IList<Bonfire> GetClosestBonfires()
