@@ -278,7 +278,7 @@ namespace Human
         private void Shoot()
         {
             if (isReloading || isHit || isDead) return;
-            Debug.Log("Shoot");
+            
             StopMovement();
             isReloading = true;
             timeToReload = baseTimeToReload;
