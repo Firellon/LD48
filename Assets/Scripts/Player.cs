@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using Human;
 using Inventory;
 using Inventory.Signals;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Utilities.Monads;
@@ -21,19 +24,27 @@ namespace LD48
         private PlayerControls playerInput;
         private float horizontal;
         private float vertical;
+        
+        [SerializeField] protected InputActionReference pointerPositionInput;
+        private PointerEventData clickData;
+        private List<RaycastResult> clickResults = new();
 
         public IItemContainer Inventory => humanInventory;
         public IMaybe<Item> HandItem => humanController.HandItem;
+        
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
-            var moveAmount = ctx.ReadValue<Vector2>();
+            var moveAmount = ctx.ReadValue<Vector2>(); 
             horizontal = moveAmount.x;
             vertical = moveAmount.y;
         }
 
         public void OnFire(InputAction.CallbackContext ctx)
         {
+            if (IsPointerOverUIElement())
+                return;
+            
             humanController.Act();
         }
 
@@ -51,9 +62,23 @@ namespace LD48
         {
             SignalsHub.DispatchAsync(new ToggleInventoryCommand());
         }
+        
+        private bool IsPointerOverUIElement()
+        {
+            clickData.position = pointerPositionInput.action.ReadValue<Vector2>();
+            clickResults.Clear();
+
+            EventSystem.current.RaycastAll(clickData, clickResults);
+
+            var isPointerOverUIElement = clickResults.Count > 0 &&
+                                         clickResults.Any(it => it.gameObject.layer == LayerMask.NameToLayer("UI"));
+            return isPointerOverUIElement;
+        }
 
         private void Awake()
         {
+            clickData = new PointerEventData(EventSystem.current);
+            
             playerInput = new PlayerControls();
             playerInput.HumanPlayer.Enable();
 

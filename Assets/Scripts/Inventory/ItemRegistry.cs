@@ -13,5 +13,7 @@ namespace Inventory
         {
             return items.FirstOrEmpty(item => item.ItemType == itemType);
         }
+
+        public IReadOnlyList<Item> Items => items;
     }
 }

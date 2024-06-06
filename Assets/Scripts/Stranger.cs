@@ -24,7 +24,7 @@ namespace LD48
     {
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
-        
+
         // How many enemies can I handle at once?
         public int bravery = 3;
 
@@ -81,8 +81,12 @@ namespace LD48
                     SeekBonfire();
                     break;
                 case StrangerState.StartBonfire:
-                    humanController.LightAFire();
-                    state = GetCurrentState();
+                    var maybeBonfireItem = itemRegistry.GetItem(ItemType.Bonfire);
+                    maybeBonfireItem.IfPresent(bonfireItem =>
+                    {
+                        humanController.LightAFire(bonfireItem);
+                        state = GetCurrentState();
+                    });
                     break;
                 case StrangerState.Fight:
                     Fight();
@@ -191,7 +195,8 @@ namespace LD48
         private bool DoesHumanHaveWoodILack(HumanController otherHumanController)
         {
             var currentWoodAmount = inventory.GetItemAmount(ItemType.Wood);
-            return currentWoodAmount < minWoodToSurvive && otherHumanController.Inventory.GetItemAmount(ItemType.Wood) > currentWoodAmount + 2;
+            return currentWoodAmount < minWoodToSurvive &&
+                   otherHumanController.Inventory.GetItemAmount(ItemType.Wood) > currentWoodAmount + 2;
         }
 
         private void SeekBonfire()

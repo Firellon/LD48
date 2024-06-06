@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb01107ec51b949c3b81ff152eec2ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodAmountText: {fileID: 0}
   tipMessageText: {fileID: 0}
+  pointerPositionInput: {fileID: -5546266567474852310, guid: 0075e90841b352443ab31869889e216d, type: 3}
 --- !u!114 &2036147488874963323
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,14 +10,13 @@ using Zenject;
 
 namespace Inventory.UI
 {
-    public class InventoryHandItemController : MonoBehaviour
+    public class InventoryHandItemController : MonoBehaviour, IPointerClickHandler
     {
-        [SerializeField] private GameObject itemIconObject;
         [SerializeField] private Image itemIcon;
         [SerializeField] private Sprite emptyHandSprite;
-        
+
         [Inject] private IMapActorRegistry mapActorRegistry;
-        
+
         private IMaybe<Item> currentHandItem = Maybe.Empty<Item>();
 
 
@@ -38,24 +37,27 @@ namespace Inventory.UI
 
         private void Start()
         {
-            mapActorRegistry.Player.IfPresent(player =>
-            {
-                SetHandItem(player.HandItem);
-            }).IfNotPresent(() =>
-            {
-                SetHandItem(Maybe.Empty<Item>());
-            });
+            mapActorRegistry.Player.IfPresent(player => { SetHandItem(player.HandItem); })
+                .IfNotPresent(() => { SetHandItem(Maybe.Empty<Item>()); });
         }
 
         private void SetHandItem(IMaybe<Item> maybeItem)
         {
             currentHandItem = maybeItem;
-            currentHandItem.IfPresent(item =>
+            currentHandItem.IfPresent(item => { itemIcon.sprite = item.InventoryItemSprite; })
+                .IfNotPresent(() => { itemIcon.sprite = emptyHandSprite; });
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            currentHandItem.IfPresent(handItem =>
             {
-                itemIcon.sprite = item.InventoryItemSprite;
-            }).IfNotPresent(() =>
-            {
-                itemIcon.sprite = emptyHandSprite;
+                mapActorRegistry.Player.IfPresent(player =>
+                {
+                    player.Inventory.AddItem(handItem);
+                    SetHandItem(Maybe.Empty<Item>());
+                    player.Inventory.SetHandItem(Maybe.Empty<Item>());
+                });
             });
         }
     }

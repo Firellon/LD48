@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -223,28 +224,40 @@ namespace Human
                 spriteRenderer.flipX = moveDirection.x < 0;
             }
         }
+        
+        private void UseItem(Item item)
+        {
+           switch (item.ItemType)
+           {
+               case ItemType.Wood:
+                   return;
+               case ItemType.Bonfire:
+                   LightAFire(item);
+                   return;
+               default:
+                   throw new ArgumentOutOfRangeException();
+           }
+        }
 
-        public void LightAFire()
+        public void LightAFire(Item bonfireItem)
         {
             if (isHit || isDead) return;
 
-            if (!inventory.GetItem(ItemType.Wood, out var woodItem))
-            {
-                // TODO: Show a proper message
-                Debug.Log("No Wood to burn!");
-                return;
-            }
-
             var bonfires = GetClosestBonfires();
-            inventory.RemoveItem(woodItem);
-            if (bonfires.Any())
+            if (bonfires.None())
             {
-                bonfires.First().AddWood();
-            }
-            else
-            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
             }
+            
+            // if (bonfires.Any())
+            // {
+            //     bonfires.First().AddWood();
+            // }
+            // else
+            // {
+                // CreateBonfire();
+            // }
         }
 
         private IList<Bonfire> GetClosestBonfires()
@@ -328,7 +341,10 @@ namespace Human
             }
             else
             {
-                LightAFire();
+                inventory.HandItem.IfPresent(item =>
+                {
+                    UseItem(item);
+                });
             }
         }
 
