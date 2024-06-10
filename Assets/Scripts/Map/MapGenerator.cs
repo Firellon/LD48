@@ -32,6 +32,16 @@ namespace Map
         [SerializeField] private float treeSpawnProbability = 0.5f;
 
         #endregion
+        
+        #region Grass
+        
+        // TODO: use prefab provider
+        [SerializeField] private GameObject grassPrefab;
+        [SerializeField] private Transform grassParent;
+        [SerializeField] private Vector2Int grassDensity = new(2, 2);
+        [SerializeField] private float grassSpawnProbability = 0.5f;
+        
+        #endregion
 
         private void Awake()
         {
