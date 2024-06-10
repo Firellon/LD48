@@ -56,6 +56,7 @@ namespace LD48
         public void AddWood()
         {
             timeToBurn += burnTimePerWood;
+            Debug.Log($"AddWood > timeToBurn {timeToBurn}");
             isBurning = true;
         }
 

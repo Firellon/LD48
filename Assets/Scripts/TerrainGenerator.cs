@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using Day;
+using Inventory;
 using LD48;
 using Map;
 using TMPro;
 using UnityEngine;
 using Utilities.Prefabs;
+using Utilities.RandomService;
 using Random = UnityEngine.Random;
 using Zenject;
 
@@ -14,19 +16,22 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Inject] private IMapActorRegistry mapActorRegistry;
     [Inject] private IPrefabPool prefabPool;
+    [Inject] private IItemRegistry itemRegistry;
+    [Inject] private IRandomService randomService;
 
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
 
     #region Items
 
-    public GameObject woodPrefab;
     public Transform itemParent;
-    public Vector2Int itemDensity = new Vector2Int(2, 2);
+    public Vector2Int itemDensity = new(2, 2);
     public float itemSpawnProbability = 0.1f;
-
-    private List<Vector2> itemPositions = new List<Vector2>();
-    private readonly List<GameObject> items = new List<GameObject>();
+    [SerializeField] private ItemTypeToIntSerializedDictionary itemTypeToSpawnProbabilityMap = new();
+    private List<ItemType> itemSpawnSet = new();
+    
+    private List<Vector2> itemPositions = new();
+    private readonly List<GameObject> items = new();
 
     #endregion
 
@@ -34,10 +39,10 @@ public class TerrainGenerator : MonoBehaviour
 
     public List<GameObject> strangerPrefabs;
     public Transform strangerParent;
-    public Vector2Int strangerDensity = new Vector2Int(5, 5);
+    public Vector2Int strangerDensity = new(5, 5);
     public float strangerSpawnProbability = 0.2f;
 
-    private readonly List<GameObject> strangers = new List<GameObject>();
+    private readonly List<GameObject> strangers = new();
 
     #endregion
 
@@ -82,17 +87,13 @@ public class TerrainGenerator : MonoBehaviour
     void Start()
     {
         dayNightCycle = GetComponent<DayNightCycle>();
+        itemSpawnSet = itemTypeToSpawnProbabilityMap.SelectMany(pair =>
+            Enumerable.Range(1, pair.Value).Select(_ => pair.Key).Take(pair.Value)).ToList();
 
-        // GenerateTrees();
         GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
         GenerateDead();
         GeneratePlayer();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     private void DeleteItems()
@@ -107,7 +108,14 @@ public class TerrainGenerator : MonoBehaviour
 
     public void GenerateItems(float spawnProbability)
     {
-        itemPositions = new List<Vector2>();
+        DeleteItems();
+
+        if (itemSpawnSet.None())
+        {
+            Debug.LogWarning("GenerateItems > itemSpawnSet is empty, no items to generate!");
+            return;
+        }
+        
         for (var itemX = itemDensity.x / 2; itemX < levelSize.x; itemX += itemDensity.x)
         {
             for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
@@ -116,9 +124,11 @@ public class TerrainGenerator : MonoBehaviour
                 var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x),
                     itemY + Random.Range(0f, itemDensity.y));
                 itemPositions.Add(itemPosition);
-                var wood = prefabPool.Spawn(woodPrefab, itemParent);
-                wood.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
-                items.Add(wood);
+                var itemType = randomService.Sample(itemSpawnSet);
+                var itemPrefab = itemRegistry.GetItem(itemType).ItemPrefab;
+                var itemObject = prefabPool.Spawn(itemPrefab, itemParent);
+                itemObject.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
+                items.Add(itemObject);
             }
         }
     }

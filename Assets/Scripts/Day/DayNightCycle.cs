@@ -91,7 +91,7 @@ namespace Day
                 if (currentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
-                    terrainGenerator.GenerateItems(0.05f);
+                    // terrainGenerator.GenerateItems(0.05f); // TODO: Only generate renewable items here
                     terrainGenerator.GenerateStrangers(0.05f);
                 }
             }
