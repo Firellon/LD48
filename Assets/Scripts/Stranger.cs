@@ -54,7 +54,7 @@ namespace LD48
 
             // TODO: Set up a random inventory?
             var initialWoodAmount = Random.Range(1, 4);
-            itemRegistry.GetItem(ItemType.Wood).IfPresent(woodItem =>
+            itemRegistry.GetItemOrEmpty(ItemType.Wood).IfPresent(woodItem =>
             {
                 for (var i = 0; i < initialWoodAmount; i++)
                 {
@@ -81,7 +81,7 @@ namespace LD48
                     SeekBonfire();
                     break;
                 case StrangerState.StartBonfire:
-                    var maybeBonfireItem = itemRegistry.GetItem(ItemType.Bonfire);
+                    var maybeBonfireItem = itemRegistry.GetItemOrEmpty(ItemType.Bonfire);
                     maybeBonfireItem.IfPresent(bonfireItem =>
                     {
                         humanController.LightAFire(bonfireItem);

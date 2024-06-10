@@ -6,7 +6,8 @@ namespace Inventory
 {
     public interface IItemRegistry
     {
-        IMaybe<Item> GetItem(ItemType itemType);
+        IMaybe<Item> GetItemOrEmpty(ItemType itemType);
+        Item GetItem(ItemType itemType);
         IReadOnlyList<Item> Items { get; }
     }
 }

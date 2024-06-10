@@ -26,11 +26,12 @@ namespace LD48
         private float vertical;
         
         [SerializeField] protected InputActionReference pointerPositionInput;
+            
         private PointerEventData clickData;
         private List<RaycastResult> clickResults = new();
 
         public IItemContainer Inventory => humanInventory;
-        public IMaybe<Item> HandItem => humanController.HandItem;
+        public IMaybe<Item> HandItem => humanInventory.HandItem;
         
 
         public void OnMove(InputAction.CallbackContext ctx)
@@ -65,7 +66,8 @@ namespace LD48
         
         private bool IsPointerOverUIElement()
         {
-            clickData.position = pointerPositionInput.action.ReadValue<Vector2>();
+            var mousePosition = Mouse.current.position;
+            clickData.position = new Vector2(mousePosition.x.value, mousePosition.y.value); // pointerPositionInput.action.ReadValue<Vector2>();
             clickResults.Clear();
 
             EventSystem.current.RaycastAll(clickData, clickResults);

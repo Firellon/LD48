@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 6044243139618322021}
   - component: {fileID: 8182106981811250855}
   - component: {fileID: 6709141404472214743}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: InventoryPreviousCraftingButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -783,7 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd7360a083f4be2a552e58fc43b1ba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemIconObject: {fileID: 5254279723933507190}
   itemIcon: {fileID: 6900221613564931191}
   emptyHandSprite: {fileID: 21300000, guid: 6b77e39132c146d44b5abd10719b3864, type: 3}
 --- !u!222 &5233644392836534568
@@ -836,7 +835,7 @@ GameObject:
   - component: {fileID: 1385416592416266322}
   - component: {fileID: 9048929669477377509}
   - component: {fileID: 7842036589180197854}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: InventoryNextCraftingButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
