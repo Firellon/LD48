@@ -20,9 +20,9 @@ namespace Human
     {
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IItemContainer inventory;
+        [Inject] private IItemRegistry itemRegistry;
 
         public IItemContainer Inventory => inventory;
-        public IMaybe<Item> HandItem => handItem;
 
         private PlayerMovement2D characterController;
 
@@ -35,8 +35,6 @@ namespace Human
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
         public float fireTouchRadius = 2f;
-        public GameObject bonfirePrefab;
-        public GameObject woodPrefab;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator humanAnimator;
@@ -59,7 +57,6 @@ namespace Human
         private float timeToRest = 3f;
         private bool isResting = false;
         
-        private IMaybe<Item> handItem = Maybe.Empty<Item>();
         private readonly List<IInteractable> interactableObjects = new();
 
         #region Audio
@@ -227,9 +224,10 @@ namespace Human
         
         private void UseItem(Item item)
         {
-           switch (item.ItemType)
+            switch (item.ItemType)
            {
                case ItemType.Wood:
+                   AddToFire(item);
                    return;
                case ItemType.Bonfire:
                    LightAFire(item);
@@ -237,6 +235,18 @@ namespace Human
                default:
                    throw new ArgumentOutOfRangeException();
            }
+        }
+
+        public void AddToFire(Item burnableItem)
+        {
+            if (isHit || isDead) return;
+            
+            var bonfires = GetClosestBonfires();
+            if (bonfires.Any())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                bonfires.First().AddWood();
+            }
         }
 
         public void LightAFire(Item bonfireItem)
@@ -249,15 +259,6 @@ namespace Human
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
             }
-            
-            // if (bonfires.Any())
-            // {
-            //     bonfires.First().AddWood();
-            // }
-            // else
-            // {
-                // CreateBonfire();
-            // }
         }
 
         private IList<Bonfire> GetClosestBonfires()
@@ -271,6 +272,7 @@ namespace Human
 
         private void CreateBonfire()
         {
+            var bonfirePrefab = itemRegistry.GetItem(ItemType.Bonfire).ItemPrefab;
             var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f,
                 Quaternion.identity);
         }
@@ -278,7 +280,7 @@ namespace Human
         private void Shoot()
         {
             if (isReloading || isHit || isDead) return;
-            Debug.Log("Shoot");
+            
             StopMovement();
             isReloading = true;
             timeToReload = baseTimeToReload;
@@ -341,10 +343,7 @@ namespace Human
             }
             else
             {
-                inventory.HandItem.IfPresent(item =>
-                {
-                    UseItem(item);
-                });
+                inventory.HandItem.IfPresent(UseItem);
             }
         }
 
@@ -388,10 +387,10 @@ namespace Human
 
         private void DropItems()
         {
-            handItem.IfPresent(item =>
+            inventory.HandItem.IfPresent(item =>
             {
                 TryDropItem(item);
-                handItem = Maybe.Empty<Item>();
+                inventory.SetHandItem(Maybe.Empty<Item>());
             });
             
             while (inventory.Items.Any())
