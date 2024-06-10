@@ -48,7 +48,7 @@ Material:
     - _DistortionScale: 10
     - _DistortionValue: 1
     - _EffectValue: 0
-    - _NoiseScale: 10
+    - _NoiseScale: 15
     - _Step: 0.258
     - _StepA: 0.23
     - _StepB: 1
