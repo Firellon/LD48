@@ -8,6 +8,7 @@ using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
+using Random = System.Random;
 
 namespace Map
 {
@@ -102,7 +103,7 @@ namespace Map
         private List<GameObject> GenerateTrees(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
             var trees = new List<GameObject>();
-            var treePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Tree);
+            var treeMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Tree);
             for (var treeX = topLeftCorner.x; treeX < bottomRightCorner.x; treeX += treeDensity.x)
             {
                 for (var treeY = topLeftCorner.y; treeY < bottomRightCorner.y; treeY += treeDensity.y)
@@ -110,7 +111,8 @@ namespace Map
                     if (randomService.Float() > treeSpawnProbability) continue;
                     var treePosition = new Vector2(treeX + randomService.Float(0f, treeDensity.x),
                         treeY + randomService.Float(0f, treeDensity.y));
-                    var tree = prefabPool.Spawn(treePrefab.Prefab, treeParent);
+                    var tree = prefabPool.Spawn(treeMapObject.Prefab, treeParent);
+                    tree.GetComponent<MapObjectController>().SetMapObject(treeMapObject);
                     tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
                     trees.Add(tree);
                 }
@@ -121,19 +123,23 @@ namespace Map
 
         private List<GameObject> GenerateGrass(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
-            // TODO: Spawn grass in circles
             var grassObjects = new List<GameObject>();
-            var grassPrefab = mapObjectRegistry.GetMapObject(MapObjectType.Grass);
+            var grassMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Grass);
             for (var grassX = topLeftCorner.x; grassX < bottomRightCorner.x; grassX += grassDensity.x)
             {
                 for (var grassY = topLeftCorner.y; grassY < bottomRightCorner.y; grassY += grassDensity.y)
                 {
                     if (randomService.Float() > grassSpawnProbability) continue;
-                    var grassPosition = new Vector2(grassX + randomService.Float(0f, grassDensity.x),
+                    var baseGrassPosition = new Vector2(grassX + randomService.Float(0f, grassDensity.x),
                         grassY + randomService.Float(0f, grassDensity.y));
-                    var grass = prefabPool.Spawn(grassPrefab.Prefab, grassParent);
-                    grass.transform.position += new Vector3(grassPosition.x, grassPosition.y, 0);
-                    grassObjects.Add(grass);
+                    var grassAmount = randomService.Int(1, 9);
+                    for (int i = 0; i < grassAmount; i++)
+                    {
+                        var grass = prefabPool.Spawn(grassMapObject.Prefab, grassParent);
+                        grass.GetComponent<MapObjectController>().SetMapObject(grassMapObject);
+                        grass.transform.position += new Vector3(baseGrassPosition.x + randomService.Float(-2, 2), baseGrassPosition.y + randomService.Float(-2, 2), 0);
+                        grassObjects.Add(grass);    
+                    }
                 }
             }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
@@ -7,8 +8,10 @@ namespace Map
     {
         [SerializeField] private GameObject prefab;
         [SerializeField] private MapObjectType mapObjectType;
+        [SerializeField] private List<Sprite> sprites = new();
 
         public GameObject Prefab => prefab;
         public MapObjectType ObjectType => mapObjectType;
+        public IList<Sprite> Sprites => sprites;
     }
 }
