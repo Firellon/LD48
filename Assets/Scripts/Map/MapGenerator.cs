@@ -16,6 +16,7 @@ namespace Map
         [Inject] private IMapActorRegistry mapActorRegistry;
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IRandomService randomService;
+        [Inject] private IMapObjectRegistry mapObjectRegistry;
 
         [SerializeField] private Vector2Int mapSegmentSize = new(10, 10);
 
@@ -24,9 +25,7 @@ namespace Map
         [ShowInInspector, ReadOnly] private List<Vector2Int> _adjacentSegments = new(); // TODO: Remove
 
         #region Trees
-
-        // TODO: use prefab provider
-        [SerializeField] private GameObject treePrefab;
+        
         [SerializeField] private Transform treeParent;
         [SerializeField] private Vector2Int treeDensity = new(2, 2);
         [SerializeField] private float treeSpawnProbability = 0.5f;
@@ -36,7 +35,6 @@ namespace Map
         #region Grass
         
         // TODO: use prefab provider
-        [SerializeField] private GameObject grassPrefab;
         [SerializeField] private Transform grassParent;
         [SerializeField] private Vector2Int grassDensity = new(2, 2);
         [SerializeField] private float grassSpawnProbability = 0.5f;
@@ -91,16 +89,20 @@ namespace Map
         {
             var topLeftCorner = adjacentSegmentCoordinates * mapSegmentSize;
             var bottomRightCorner = topLeftCorner + mapSegmentSize;
+            var trees = GenerateTrees(topLeftCorner, bottomRightCorner);
+            var grass = GenerateGrass(topLeftCorner, bottomRightCorner);
+            
             return new MapSegment
             {
                 Coordinates = adjacentSegmentCoordinates,
-                StaticObjects = GenerateTrees(topLeftCorner, bottomRightCorner)
+                StaticObjects = trees.Union(grass).ToList()
             };
         }
 
         private List<GameObject> GenerateTrees(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
             var trees = new List<GameObject>();
+            var treePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Tree);
             for (var treeX = topLeftCorner.x; treeX < bottomRightCorner.x; treeX += treeDensity.x)
             {
                 for (var treeY = topLeftCorner.y; treeY < bottomRightCorner.y; treeY += treeDensity.y)
@@ -108,13 +110,34 @@ namespace Map
                     if (randomService.Float() > treeSpawnProbability) continue;
                     var treePosition = new Vector2(treeX + randomService.Float(0f, treeDensity.x),
                         treeY + randomService.Float(0f, treeDensity.y));
-                    var tree = prefabPool.Spawn(treePrefab, treeParent);
+                    var tree = prefabPool.Spawn(treePrefab.Prefab, treeParent);
                     tree.transform.position += new Vector3(treePosition.x, treePosition.y, 0);
                     trees.Add(tree);
                 }
             }
 
             return trees;
+        }
+
+        private List<GameObject> GenerateGrass(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            // TODO: Spawn grass in circles
+            var grassObjects = new List<GameObject>();
+            var grassPrefab = mapObjectRegistry.GetMapObject(MapObjectType.Grass);
+            for (var grassX = topLeftCorner.x; grassX < bottomRightCorner.x; grassX += grassDensity.x)
+            {
+                for (var grassY = topLeftCorner.y; grassY < bottomRightCorner.y; grassY += grassDensity.y)
+                {
+                    if (randomService.Float() > grassSpawnProbability) continue;
+                    var grassPosition = new Vector2(grassX + randomService.Float(0f, grassDensity.x),
+                        grassY + randomService.Float(0f, grassDensity.y));
+                    var grass = prefabPool.Spawn(grassPrefab.Prefab, grassParent);
+                    grass.transform.position += new Vector3(grassPosition.x, grassPosition.y, 0);
+                    grassObjects.Add(grass);
+                }
+            }
+
+            return grassObjects;
         }
 
         private void HideNonAdjacentSegments(List<Vector2Int> adjacentSegments)
