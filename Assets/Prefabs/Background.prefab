@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: 50, y: 50, z: 0}
   m_LocalScale: {x: 40, y: 40, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3564402577033981368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3358102387583146483
@@ -73,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1721818357
-  m_SortingLayer: -2
+  m_SortingLayer: -3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -112,10 +113,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55fbea1a4d66483d911171242b9e27b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 62520def54104434d94da60cf1ab0340, type: 2}
   scaleValue: 1
   minScale: 1
   maxScale: 150
   ditherTex: {fileID: 2800000, guid: a7ad2a875f5fcf442a267169bae8f2bb, type: 3}
   ditherMad: {x: 150, y: 150, z: 0.75, w: 0.5}
   patternData: {x: 600, y: 600, z: 0.33333334, w: 3}
+--- !u!1001 &1170028899577893741
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2825640975134977357}
+    m_Modifications:
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4157704735305877574, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+      propertyPath: m_Name
+      value: WindEffect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+--- !u!4 &3564402577033981368 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2399163335067107029, guid: 670726c7c94bfb74abdc3556594fd909, type: 3}
+  m_PrefabInstance: {fileID: 1170028899577893741}
+  m_PrefabAsset: {fileID: 0}
