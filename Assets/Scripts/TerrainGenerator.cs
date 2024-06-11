@@ -22,7 +22,7 @@ public class TerrainGenerator : MonoBehaviour
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
 
-    #region Items
+    #region MapObjects
 
     public Transform itemParent;
     public Vector2Int itemDensity = new(2, 2);

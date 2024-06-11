@@ -16,6 +16,7 @@ namespace DI
     {
         [SerializeField] private PrefabPool prefabPool;
         [SerializeField] private MapActorRegistry mapActorRegistry;
+        [SerializeField] private MapObjectRegistry mapObjectRegistry;
         [SerializeField] private ItemRegistry itemRegistry;
         [SerializeField] private DayNightCycle dayNightCycle;
 
@@ -36,6 +37,7 @@ namespace DI
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
 
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
+            Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();
             Container.BindInterfacesTo<ItemRegistry>().FromInstance(itemRegistry).AsSingle();
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
         }

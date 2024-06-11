@@ -73,11 +73,66 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 20c83e56-b505-4f92-af2e-70a6e26e4045
     m_ActionName: HumanPlayer/Fire2[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f627a4c-4272-4795-bb39-104d15b141d3
+    m_ActionName: HumanPlayer/Inventory[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8fa7e07b-262c-41e7-ada5-44be7618b17f
+    m_ActionName: UI/Point[/Mouse/position,/Pen/position]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: HumanPlayer
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!1 &907787990498726626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2086277358901509390}
+  - component: {fileID: 1512119536165743883}
+  m_Layer: 0
+  m_Name: MapObjectRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2086277358901509390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907787990498726626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214609521494742059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1512119536165743883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907787990498726626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f470a595b9047fb98e9399d6f6c019c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapObjects:
+  - {fileID: 11400000, guid: 39ad7743842c92840a05cdd5e5cc5f87, type: 2}
+  - {fileID: 11400000, guid: 80777e677492838489423ae68f56243f, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,6 +170,7 @@ Transform:
   - {fileID: 8741651611340858111}
   - {fileID: 1855672342244292304}
   - {fileID: 189813373295199125}
+  - {fileID: 2086277358901509390}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4516522281272598058
@@ -303,6 +359,10 @@ MonoBehaviour:
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
+  grassPrefab: {fileID: 0}
+  grassParent: {fileID: 0}
+  grassDensity: {x: 2, y: 2}
+  grassSpawnProbability: 0.5
 --- !u!1 &6175899444449373084
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabPool: {fileID: 189264895322273740}
   mapActorRegistry: {fileID: 2528578677819702300}
+  mapObjectRegistry: {fileID: 1512119536165743883}
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
 --- !u!114 &1887026448949627522
