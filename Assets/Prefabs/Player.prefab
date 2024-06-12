@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipMessageText: {fileID: 0}
+  initialInventoryItems:
+  - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
   pointerPositionInput: {fileID: -5546266567474852310, guid: 0075e90841b352443ab31869889e216d, type: 3}
 --- !u!114 &2036147488874963323
 MonoBehaviour:
@@ -129,8 +131,6 @@ MonoBehaviour:
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
   fireTouchRadius: 1
-  bonfirePrefab: {fileID: 5667914319977949734, guid: 73bd7954e27114120a48a889595954e3, type: 3}
-  woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   spriteRenderer: {fileID: 2517725035491772571}
   humanAnimator: {fileID: 6324449375686134154}
   collider2d: {fileID: 8292827878907360640}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Human;
@@ -20,6 +21,8 @@ namespace LD48
 
         [Inject] private HumanController humanController;
         [Inject] private IItemContainer humanInventory;
+
+        [SerializeField] private List<Item> initialInventoryItems = new();
 
         private PlayerControls playerInput;
         private float horizontal;
@@ -51,7 +54,7 @@ namespace LD48
 
         public void OnFire2(InputAction.CallbackContext ctx)
         {
-            humanController.ToggleIsAiming();
+            // humanController.ToggleIsAiming();
         }
 
         public void OnInteract(InputAction.CallbackContext ctx)
@@ -96,6 +99,14 @@ namespace LD48
             playerInput.HumanPlayer.Inventory.performed += OnInventory;
         }
 
+        private void Start()
+        {
+            foreach (var item in initialInventoryItems)
+            {
+                humanInventory.AddItem(item);
+            }
+        }
+
         private void OnDestroy()
         {
             playerInput.HumanPlayer.Disable();
@@ -127,6 +138,27 @@ namespace LD48
         {
             var moveVector = new Vector2(horizontal, vertical);
             humanController.Move(moveVector);
+        }
+        
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<PlayerHandItemUpdatedEvent>(OnHandItemUpdated);
+        }
+        
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<PlayerHandItemUpdatedEvent>(OnHandItemUpdated);
+        }
+
+        private void OnHandItemUpdated(PlayerHandItemUpdatedEvent evt)
+        {
+            evt.MaybeItem.IfPresent(item =>
+            {
+                humanController.SetIsAiming(item.ItemType == ItemType.Pistol); // TODO: Check for firearms instead?
+            }).IfNotPresent(() =>
+            {
+                humanController.SetIsAiming(false);
+            });
         }
     }
 }
