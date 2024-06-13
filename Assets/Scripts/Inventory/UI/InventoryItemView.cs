@@ -1,4 +1,4 @@
-using LD48;
+using Player;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,9 +17,9 @@ namespace Inventory.UI
 
 
         private IMaybe<Item> _maybeItem = Maybe.Empty<Item>();
-        private Player _player;
+        private PlayerController _player;
 
-        public void SetUp(IMaybe<Item> maybeItem, Player player)
+        public void SetUp(IMaybe<Item> maybeItem, PlayerController player)
         {
             _maybeItem = maybeItem;
             _player = player;

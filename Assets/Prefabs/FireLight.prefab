@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightType: 1
   lightPresetId: 0
-  eventPresetId: 0
+  eventPresetId: 1
   lightLayer: 0
   occlusionLayer: 0
   translucentLayer: 0

@@ -477,7 +477,7 @@ namespace FunkyCode
 
 			EditorGUI.BeginDisabledGroup(light2D.lightType == Light2D.LightType.FreeForm);
 
-			size.floatValue = EditorGUILayout.Slider("Size", size.floatValue, 0.1f, Lighting2D.ProjectSettings.MaxLightSize);
+			size.floatValue = EditorGUILayout.Slider("Size", size.floatValue, 0.001f, Lighting2D.ProjectSettings.MaxLightSize);
 
 			EditorGUI.EndDisabledGroup();
 

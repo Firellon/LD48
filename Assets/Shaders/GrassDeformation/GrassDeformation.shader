@@ -20,6 +20,7 @@ Shader "Nebulate.me/GrassDeformation"
     {
         Tags
         {
+            "RenderPipeline"="UniversalPipeline"
             "Queue"="Transparent"
             "IgnoreProjector"="True"
             "RenderType"="Transparent"
@@ -34,6 +35,13 @@ Shader "Nebulate.me/GrassDeformation"
 
         Pass
         {
+            Stencil
+		    {
+			    Ref 0
+			    Comp always
+		        Pass replace
+		    }
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -95,6 +103,9 @@ Shader "Nebulate.me/GrassDeformation"
 
                 fixed4 col = tex2D(_MainTex, uv + distortionUV);
                 col.rgb *= col.a;
+
+                if (col.a < 0.001)
+                    discard;
 
                 return col;
             }

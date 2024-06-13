@@ -5,6 +5,7 @@ using Day;
 using Inventory;
 using LD48;
 using Map;
+using Player;
 using TMPro;
 using UnityEngine;
 using Utilities.Prefabs;
@@ -46,7 +47,7 @@ public class TerrainGenerator : MonoBehaviour
 
     #endregion
 
-    #region Player
+    #region PlayerController
 
     public GameObject playerPrefab;
     private GameObject player;
@@ -168,7 +169,7 @@ public class TerrainGenerator : MonoBehaviour
     private void GeneratePlayer()
     {
         playerObject = prefabPool.Spawn(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
-        var player = playerObject.GetComponent<Player>();
+        var player = playerObject.GetComponent<PlayerController>();
         player.tipMessageText = tipMessageText;
         
         cinemachineCam.Follow = player.transform;

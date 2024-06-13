@@ -7,6 +7,7 @@ using Inventory;
 using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
+using Player;
 using UnityEngine;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -23,9 +24,10 @@ namespace Human
         [Inject] private IItemRegistry itemRegistry;
 
         public IItemContainer Inventory => inventory;
+        public HumanState State => state;
 
+        private readonly HumanState state = new();
         private PlayerMovement2D characterController;
-
         private Rigidbody2D body;
         private TerrainGenerator terrainGenerator;
         private DayNightCycle dayNightCycle;

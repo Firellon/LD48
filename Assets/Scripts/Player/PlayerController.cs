@@ -3,6 +3,7 @@ using System.Linq;
 using Human;
 using Inventory;
 using Inventory.Signals;
+using LD48;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -12,9 +13,9 @@ using UnityEngine.Serialization;
 using Utilities.Monads;
 using Zenject;
 
-namespace LD48
+namespace Player
 {
-    public class Player : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
 

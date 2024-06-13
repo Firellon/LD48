@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2036147488874963323}
   - component: {fileID: 1203980886353906568}
   - component: {fileID: 7616418845256627543}
+  - component: {fileID: 2481792673743664482}
   - component: {fileID: 7728028073607266964}
   - component: {fileID: 2741517134356461659}
   - component: {fileID: 8931530567984793119}
@@ -156,6 +157,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSlotCount: 10
+--- !u!114 &2481792673743664482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed692ee5899f4818a5df6536cb8a211f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightEventListener: {fileID: 864053131003387875}
+  sanityLossInterval: 3
+  darknessVisibilityThreshold: 0.75
 --- !u!114 &7728028073607266964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +451,7 @@ GameObject:
   - component: {fileID: 680576104052581553}
   - component: {fileID: 2517725035491772571}
   - component: {fileID: 6324449375686134154}
+  - component: {fileID: 864053131003387875}
   - component: {fileID: 7758140054834948451}
   - component: {fileID: 5089292304742948735}
   m_Layer: 0
@@ -532,6 +549,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &864053131003387875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571870125628846772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10005d7ce600784e93451bdcd95fa31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useDistance: 0
+  visability: 0
 --- !u!114 &7758140054834948451
 MonoBehaviour:
   m_ObjectHideFlags: 0
