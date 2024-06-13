@@ -30,7 +30,7 @@ namespace Human
         private TerrainGenerator terrainGenerator;
         private DayNightCycle dayNightCycle;
         private Vector2 levelSize = new(float.PositiveInfinity, float.PositiveInfinity);
-        
+
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
@@ -56,7 +56,7 @@ namespace Human
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
         private bool isResting = false;
-        
+
         private readonly List<IInteractable> interactableObjects = new();
 
         #region Audio
@@ -221,26 +221,29 @@ namespace Human
                 spriteRenderer.flipX = moveDirection.x < 0;
             }
         }
-        
+
         private void UseItem(Item item)
         {
             switch (item.ItemType)
-           {
-               case ItemType.Wood:
-                   AddToFire(item);
-                   return;
-               case ItemType.Bonfire:
-                   LightAFire(item);
-                   return;
-               default:
-                   throw new ArgumentOutOfRangeException();
-           }
+            {
+                case ItemType.Wood:
+                    AddToFire(item);
+                    return;
+                case ItemType.Bonfire:
+                    LightAFire(item);
+                    return;
+                case ItemType.Pistol:
+                    Shoot(item);
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void AddToFire(Item burnableItem)
         {
             if (isHit || isDead) return;
-            
+
             var bonfires = GetClosestBonfires();
             if (bonfires.Any())
             {
@@ -277,10 +280,10 @@ namespace Human
                 Quaternion.identity);
         }
 
-        private void Shoot()
+        private void Shoot(Item item)
         {
             if (isReloading || isHit || isDead) return;
-            
+
             StopMovement();
             isReloading = true;
             timeToReload = baseTimeToReload;
@@ -318,10 +321,10 @@ namespace Human
             humanAnimator.SetTrigger(IsPickingUpAnimation);
 
             if (!inventory.CanAddItem()) return;
-            
-            if (itemPickupSound) 
+
+            if (itemPickupSound)
                 audio.PlayOneShot(itemPickupSound);
-                        
+
             inventory.AddItem(interactable.Item);
             interactableObjects.Remove(interactable);
             Destroy(interactable.GameObject);
@@ -333,18 +336,19 @@ namespace Human
             isAiming = !isAiming;
             humanAnimator.SetBool(IsAimingAnimation, isAiming);
         }
+        
+        public void SetIsAiming(bool newIsAiming)
+        {
+            if (isHit || isDead) return;
+            isAiming = newIsAiming;
+            humanAnimator.SetBool(IsAimingAnimation, isAiming);
+        }
 
         public void Act()
         {
             if (isHit || isDead) return;
-            if (isAiming)
-            {
-                Shoot();
-            }
-            else
-            {
-                inventory.HandItem.IfPresent(UseItem);
-            }
+            
+            inventory.HandItem.IfPresent(UseItem);
         }
 
         public void Interact()
@@ -392,7 +396,7 @@ namespace Human
                 TryDropItem(item);
                 inventory.SetHandItem(Maybe.Empty<Item>());
             });
-            
+
             while (inventory.Items.Any())
             {
                 var firstItem = inventory.Items.First();
@@ -400,12 +404,13 @@ namespace Human
                 TryDropItem(firstItem);
             }
         }
-        
+
         private void TryDropItem(Item item)
         {
             if (!item.CanBeDropped) return;
 
-            var itemObject = prefabPool.Spawn(item.ItemPrefab, transform.position + new Vector3(Random.value, Random.value),
+            var itemObject = prefabPool.Spawn(item.ItemPrefab,
+                transform.position + new Vector3(Random.value, Random.value),
                 Quaternion.identity);
             itemObject.GetComponent<ItemController>().SetItem(item);
         }

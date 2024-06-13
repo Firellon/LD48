@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipMessageText: {fileID: 0}
+  initialInventoryItems:
+  - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
   pointerPositionInput: {fileID: -5546266567474852310, guid: 0075e90841b352443ab31869889e216d, type: 3}
 --- !u!114 &2036147488874963323
 MonoBehaviour:
