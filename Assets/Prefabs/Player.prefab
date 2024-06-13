@@ -129,8 +129,6 @@ MonoBehaviour:
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
   fireTouchRadius: 1
-  bonfirePrefab: {fileID: 5667914319977949734, guid: 73bd7954e27114120a48a889595954e3, type: 3}
-  woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   spriteRenderer: {fileID: 2517725035491772571}
   humanAnimator: {fileID: 6324449375686134154}
   collider2d: {fileID: 8292827878907360640}
@@ -377,7 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightType: 1
   lightPresetId: 0
-  eventPresetId: 0
+  eventPresetId: 1
   lightLayer: 0
   occlusionLayer: 0
   translucentLayer: 0
