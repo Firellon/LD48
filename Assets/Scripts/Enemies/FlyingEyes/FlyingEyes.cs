@@ -9,12 +9,14 @@ namespace LD48.Enemies
 {
     public class FlyingEyes : MonoBehaviour
     {
+        [SerializeField] private LightEventListener lightEventListener;
+
         [SerializeField] private List<Light2D> eyes;
 
         [SerializeField,ColorUsageAttribute(true, true)] private Color normalColor;
         [SerializeField,ColorUsageAttribute(true, true)] private Color blinkColor;
 
-        private void Start()
+        private void OnEnable()
         {
             StartCoroutine(nameof(BlinkProcess));
         }
@@ -23,6 +25,14 @@ namespace LD48.Enemies
         {
             while (true)
             {
+                while (lightEventListener.visability > 0.2f)
+                {
+                    SetEyesColorImmediately(blinkColor);
+                    yield return null;
+                }
+
+                SetEyesColorImmediately(normalColor);
+
                 yield return new WaitForSeconds(Random.Range(2f, 5f));
 
                 var blinkCounts = 1;
@@ -51,6 +61,14 @@ namespace LD48.Enemies
             }
 
             yield return new WaitForSeconds(time);
+        }
+
+        private void SetEyesColorImmediately(Color color)
+        {
+            foreach (var light2D in eyes)
+            {
+                light2D.color = color;
+            }
         }
     }
 }
