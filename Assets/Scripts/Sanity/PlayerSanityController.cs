@@ -1,5 +1,4 @@
-﻿using System;
-using Day;
+﻿using Day;
 using FunkyCode;
 using Human;
 using Signals;
@@ -15,10 +14,10 @@ namespace Sanity
 
         [SerializeField] private LightEventListener lightEventListener;
         [SerializeField] private float sanityLossInterval = 5f;
+        [SerializeField] private int sanityLoss = 2;
         [SerializeField] private double darknessVisibilityThreshold = 0.5f;
 
         private float timeInDarkness;
-
 
         private void Update()
         {
@@ -27,8 +26,10 @@ namespace Sanity
                 if (timeInDarkness >= sanityLossInterval)
                 {
                     timeInDarkness -= sanityLossInterval;
-                    humanController.State.Sanity -= 1;
+                    humanController.State.Sanity -= sanityLoss;
                     SignalsHub.DispatchAsync(new PlayerSanityUpdatedEvent(humanController.State.Sanity));
+
+                    CheckSanityDeath();
                 }
                 else
                 {
@@ -42,6 +43,14 @@ namespace Sanity
                         timeInDarkness += Time.deltaTime;
                     }
                 }
+            }
+        }
+
+        private void CheckSanityDeath()
+        {
+            if (humanController.State.Sanity <= HumanState.K_MinSanity && !humanController.State.IsDead)
+            {
+                humanController.Die();
             }
         }
     }

@@ -180,7 +180,7 @@ namespace LD48
             
             var closestHumans = Physics2D.OverlapCircleAll(transform.position, detectionRadius, 1 << LayerMask.NameToLayer("Default"))
                 .Select(collider => collider.gameObject.GetComponent<HumanController>())
-                .Where(human => human != null && !human.IsDead())
+                .Where(human => human != null && !human.IsDead)
                 .OrderBy(human => Vector2.Distance(transform.position, human.transform.position))
                 .ToList();
             if (closestHumans.Any())

@@ -7,7 +7,6 @@ using Inventory;
 using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
-using Player;
 using UnityEngine;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -24,9 +23,8 @@ namespace Human
         [Inject] private IItemRegistry itemRegistry;
 
         public IItemContainer Inventory => inventory;
-        public HumanState State => state;
+        public HumanState State { get; } = new();
 
-        private readonly HumanState state = new();
         private PlayerMovement2D characterController;
         private Rigidbody2D body;
         private TerrainGenerator terrainGenerator;
@@ -43,7 +41,6 @@ namespace Human
         [SerializeField] private Collider2D collider2d;
 
         private bool isHit = false;
-        private bool isDead = false;
         private bool isAiming = false;
 
         public float baseTimeToRecover = 5f;
@@ -90,14 +87,16 @@ namespace Human
             characterController = GetComponent<PlayerMovement2D>();
         }
 
-        public bool IsDead()
+        public bool IsDead => State.IsDead;
+
+        bool IHittable.IsDead()
         {
-            return isDead;
+            return IsDead;
         }
 
         public bool IsThreat()
         {
-            return !isHit && !isDead && isAiming;
+            return !isHit && !IsDead && isAiming;
         }
 
         private void Start()
@@ -124,7 +123,7 @@ namespace Human
                 }
             }
 
-            if (isHit && !isDead)
+            if (isHit && !IsDead)
             {
                 if (timeToRecover > 0f)
                 {
@@ -137,7 +136,7 @@ namespace Human
                 }
             }
 
-            if (!isAiming && !characterController.IsMoving && !isHit && !isDead)
+            if (!isAiming && !characterController.IsMoving && !isHit && !IsDead)
             {
                 if (!isResting)
                 {
@@ -206,7 +205,7 @@ namespace Human
 
         public void Move(Vector2 moveDirection)
         {
-            if (isHit || isDead || isReloading)
+            if (isHit || IsDead || isReloading)
             {
                 StopMovement();
                 return;
@@ -244,7 +243,7 @@ namespace Human
 
         public void AddToFire(Item burnableItem)
         {
-            if (isHit || isDead) return;
+            if (isHit || IsDead) return;
 
             var bonfires = GetClosestBonfires();
             if (bonfires.Any())
@@ -256,7 +255,7 @@ namespace Human
 
         public void LightAFire(Item bonfireItem)
         {
-            if (isHit || isDead) return;
+            if (isHit || IsDead) return;
 
             var bonfires = GetClosestBonfires();
             if (bonfires.None())
@@ -284,7 +283,7 @@ namespace Human
 
         private void Shoot(Item item)
         {
-            if (isReloading || isHit || isDead) return;
+            if (isReloading || isHit || IsDead) return;
 
             StopMovement();
             isReloading = true;
@@ -318,7 +317,7 @@ namespace Human
 
         public void PickUp(IInteractable interactable)
         {
-            if (isHit || isDead || !interactable.CanBePickedUp) return;
+            if (isHit || IsDead || !interactable.CanBePickedUp) return;
 
             humanAnimator.SetTrigger(IsPickingUpAnimation);
 
@@ -334,22 +333,22 @@ namespace Human
 
         public void ToggleIsAiming()
         {
-            if (isHit || isDead) return;
+            if (isHit || IsDead) return;
             isAiming = !isAiming;
             humanAnimator.SetBool(IsAimingAnimation, isAiming);
         }
-        
+
         public void SetIsAiming(bool newIsAiming)
         {
-            if (isHit || isDead) return;
+            if (isHit || IsDead) return;
             isAiming = newIsAiming;
             humanAnimator.SetBool(IsAimingAnimation, isAiming);
         }
 
         public void Act()
         {
-            if (isHit || isDead) return;
-            
+            if (isHit || IsDead) return;
+
             inventory.HandItem.IfPresent(UseItem);
         }
 
@@ -371,7 +370,7 @@ namespace Human
         public void Hit()
         {
             StopMovement();
-            if (!isHit && !isDead)
+            if (!isHit && !IsDead)
             {
                 isHit = true;
                 isAiming = false;
@@ -383,12 +382,18 @@ namespace Human
             }
             else
             {
-                isDead = true;
-                humanAnimator.SetBool(IsDeadAnimation, true);
-                collider2d.enabled = false;
-                terrainGenerator.AddDead(transform);
-                if (deadSound) audio.PlayOneShot(deadSound);
+                Die();
             }
+        }
+
+        public void Die()
+        {
+            StopMovement();
+            State.Die();
+            humanAnimator.SetBool(IsDeadAnimation, true);
+            collider2d.enabled = false;
+            terrainGenerator.AddDead(transform);
+            if (deadSound) audio.PlayOneShot(deadSound);
         }
 
         private void DropItems()
@@ -419,7 +424,7 @@ namespace Human
 
         public string GetTipMessageText()
         {
-            if (isDead)
+            if (IsDead)
             {
                 return
                     $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";

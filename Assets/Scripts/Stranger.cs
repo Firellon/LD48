@@ -65,7 +65,7 @@ namespace LD48
 
         private void Update()
         {
-            if (humanController.IsDead()) return;
+            if (humanController.IsDead) return;
             // Reduce amount of expensive calls
             if (Random.value > 0.9f)
             {

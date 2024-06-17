@@ -170,7 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightEventListener: {fileID: 864053131003387875}
-  sanityLossInterval: 3
+  sanityLossInterval: 1
+  sanityLoss: 2
   darknessVisibilityThreshold: 0.75
 --- !u!114 &7728028073607266964
 MonoBehaviour:
