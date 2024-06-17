@@ -1,6 +1,7 @@
 ﻿using Day;
 using FunkyCode;
 using Human;
+using LD48;
 using Signals;
 using UnityEngine;
 using Zenject;
@@ -15,13 +16,15 @@ namespace Sanity
         [SerializeField] private LightEventListener lightEventListener;
         [SerializeField] private float sanityLossInterval = 5f;
         [SerializeField] private int sanityLoss = 2;
+        [SerializeField] private int sanityGain = 1;
         [SerializeField] private double darknessVisibilityThreshold = 0.5f;
 
         private float timeInDarkness;
+        private float timeSpentReading;
 
         private void Update()
         {
-            if (lightEventListener)
+            if (lightEventListener != null)
             {
                 if (timeInDarkness >= sanityLossInterval)
                 {
@@ -36,6 +39,7 @@ namespace Sanity
                     if (dayNightCycle.GetCurrentCycle() != DayTime.Night || lightEventListener.visability > darknessVisibilityThreshold)
                     {
                         timeInDarkness = 0;
+                        CheckSanityRestoration();
                     }
                     else
                     {
@@ -44,6 +48,25 @@ namespace Sanity
                     }
                 }
             }
+        }
+
+        private void CheckSanityRestoration()
+        {
+            if (!humanController.IsResting) return;
+            if (timeSpentReading < sanityLossInterval)
+            {
+                timeSpentReading += Time.deltaTime;
+                return;
+            }
+            humanController.Inventory.HandItem.IfPresent(item =>
+            {
+                if (item.ItemType == ItemType.Book)
+                {
+                    humanController.State.Sanity += sanityGain;
+                    SignalsHub.DispatchAsync(new PlayerSanityUpdatedEvent(humanController.State.Sanity));
+                    timeSpentReading -= sanityLossInterval;
+                }
+            });
         }
 
         private void CheckSanityDeath()

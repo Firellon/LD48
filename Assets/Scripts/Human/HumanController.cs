@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Day;
 using Inventory;
+using Inventory.Signals;
 using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
+using Signals;
 using UnityEngine;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -54,7 +56,9 @@ namespace Human
 
         public float baseTimeToRest = 3f;
         private float timeToRest = 3f;
+        
         private bool isResting = false;
+        public bool IsResting => isResting;
 
         private readonly List<IInteractable> interactableObjects = new();
 
@@ -79,8 +83,26 @@ namespace Human
         private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead");
         private static readonly int IsPickingUpAnimation = Animator.StringToHash("IsPickingUp");
         private static readonly int IsInteractingAnimation = Animator.StringToHash("IsInteracting");
+        private static readonly int HasBookAnimation = Animator.StringToHash("HasBook");
 
         #endregion
+
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
+        }
+
+        private void OnPlayerItemUpdated(PlayerHandItemUpdatedEvent evt)
+        {
+            evt.MaybeItem
+                .IfPresent(item => { humanAnimator.SetBool(HasBookAnimation, item.ItemType == ItemType.Book); })
+                .IfNotPresent(() => { humanAnimator.SetBool(HasBookAnimation, false); });
+        }
 
         private void Awake()
         {
@@ -235,6 +257,9 @@ namespace Human
                     return;
                 case ItemType.Pistol:
                     Shoot(item);
+                    return;
+                case ItemType.Book:
+                    AddToFire(item);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();
