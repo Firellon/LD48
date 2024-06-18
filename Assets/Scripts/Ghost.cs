@@ -19,9 +19,7 @@ namespace LD48
         private Rigidbody2D body;
         private AudioSource audio;
         
-        public Sprite walkSprite;
-        public Sprite attackSprite;
-        public Sprite deadSprite;
+        [SerializeField] private Animator ghostAnimator;
 
         public AudioClip spawnSound;
         public AudioClip attackSound;
@@ -43,6 +41,9 @@ namespace LD48
         private float baseTimeToIdle = 2f;
         private float timeToIdle = 0f;
         private Vector2 idleDirection;
+        
+        private static readonly int IsAttackingAnimation = Animator.StringToHash("IsAttacking");
+        private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead");
 
         public bool IsDead()
         {
@@ -136,6 +137,7 @@ namespace LD48
                 if (timeToReload > 0f)
                 {
                     timeToReload -= Time.deltaTime;
+                    Hit();
                 }
                 else
                 {
@@ -146,13 +148,13 @@ namespace LD48
                     }
                     human.Hit();
                     audio.PlayOneShot(attackSound);
-                    renderer.sprite = attackSprite;
+                    ghostAnimator.SetBool(IsAttackingAnimation, true);
                     timeToReload = baseTimeToReload;
                 }
             }
             else
             {
-                renderer.sprite = walkSprite;
+                ghostAnimator.SetBool(IsAttackingAnimation, false);
                 Vector2 targetDirection = ((target.position - transform.position).normalized);
                 Move(targetDirection.SkewDirection(5));
             }
@@ -160,7 +162,7 @@ namespace LD48
 
         private void Flee()
         {
-            renderer.sprite = walkSprite;
+            ghostAnimator.SetBool(IsAttackingAnimation, false);
             Vector2 fleeDirection = (transform.position - target.position).normalized;
             Move(fleeDirection.SkewDirection(10));
         }
@@ -195,7 +197,8 @@ namespace LD48
         public void Hit()
         {
             isDead = true;
-            renderer.sprite = deadSprite;
+            ghostAnimator.SetBool(IsAttackingAnimation, false);
+            ghostAnimator.SetBool(IsDeadAnimation, true);
             timeToDie = baseTimeToDie;
             body.velocity = Vector2.zero;
             GetComponent<Collider2D>().enabled = false;

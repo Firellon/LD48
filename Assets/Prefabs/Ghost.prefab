@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1459106415129008020}
   - component: {fileID: 6906525308276692148}
   - component: {fileID: 624288654748277825}
+  - component: {fileID: -632248359319453760}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -81,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: db243739772d54b23a3f8ec3a2a4dd86, type: 3}
+  m_Sprite: {fileID: -1970274407, guid: 63350bcbd5415f242a6639b4e98dc055, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -140,7 +141,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.5, y: 0.9375}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.4375, y: 0.9375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -188,13 +189,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e7395e00b240e4ba85aef3cc183e7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSprite: {fileID: 21300000, guid: db243739772d54b23a3f8ec3a2a4dd86, type: 3}
-  attackSprite: {fileID: 21300000, guid: 819f82dcf7cd446dc8d4202762c6f13d, type: 3}
-  deadSprite: {fileID: 21300000, guid: a9ed60df842364bd0b463ad6a87d01f5, type: 3}
+  ghostAnimator: {fileID: -632248359319453760}
   spawnSound: {fileID: 8300000, guid: ae8ef10a09cbe4e7497570448fdb63da, type: 3}
   attackSound: {fileID: 8300000, guid: 76ab55545ced3419f89aa334d3e5013e, type: 3}
   walkSpeed: 2
-  baseTimeToReload: 1
+  baseTimeToReload: 2
   attackDistance: 0.5
   baseTimeToDie: 10
   detectionRadius: 10
@@ -306,6 +305,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-632248359319453760
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0b8f0ec74c2bb984a93ac96dc47410a0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6281792709375077079
 GameObject:
   m_ObjectHideFlags: 0
