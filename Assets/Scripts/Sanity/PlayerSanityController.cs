@@ -1,4 +1,5 @@
-﻿using Day;
+﻿using System;
+using Day;
 using FunkyCode;
 using Human;
 using LD48;
@@ -22,6 +23,11 @@ namespace Sanity
         private float timeInDarkness;
         private float timeSpentReading;
 
+        private void Start()
+        {
+            SignalsHub.DispatchAsync(new PlayerSanityUpdatedEvent(humanController.State.Sanity));
+        }
+
         private void Update()
         {
             if (lightEventListener != null)
@@ -36,7 +42,8 @@ namespace Sanity
                 }
                 else
                 {
-                    if (dayNightCycle.GetCurrentCycle() != DayTime.Night || lightEventListener.visability > darknessVisibilityThreshold)
+                    if (dayNightCycle.GetCurrentCycle() != DayTime.Night ||
+                        lightEventListener.visability > darknessVisibilityThreshold)
                     {
                         timeInDarkness = 0;
                         CheckSanityRestoration();
@@ -58,6 +65,7 @@ namespace Sanity
                 timeSpentReading += Time.deltaTime;
                 return;
             }
+
             humanController.Inventory.HandItem.IfPresent(item =>
             {
                 if (item.ItemType == ItemType.Book)

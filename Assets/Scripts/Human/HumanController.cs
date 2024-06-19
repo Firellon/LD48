@@ -365,7 +365,11 @@ namespace Human
 
         public void SetIsAiming(bool newIsAiming)
         {
-            if (isHit || IsDead) return;
+            if (isHit || IsDead)
+            {
+                humanAnimator.SetBool(IsAimingAnimation, false);
+                return;
+            }
             isAiming = newIsAiming;
             humanAnimator.SetBool(IsAimingAnimation, isAiming);
         }
@@ -427,6 +431,7 @@ namespace Human
             {
                 TryDropItem(item);
                 inventory.SetHandItem(Maybe.Empty<Item>());
+                
             });
 
             while (inventory.Items.Any())

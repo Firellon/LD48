@@ -173,6 +173,7 @@ MonoBehaviour:
   lightEventListener: {fileID: 864053131003387875}
   sanityLossInterval: 1
   sanityLoss: 2
+  sanityGain: 1
   darknessVisibilityThreshold: 0.75
 --- !u!114 &7728028073607266964
 MonoBehaviour:
