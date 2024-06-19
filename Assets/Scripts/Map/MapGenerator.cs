@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using Sirenix.OdinInspector;
 using UnityEngine;

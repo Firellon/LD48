@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Map
 {
-    [CreateAssetMenu(menuName = "Create MapObject SO", fileName = "MapObject", order = 0)]
+    [CreateAssetMenu(menuName = "LD48/Create MapObject SO", fileName = "New MapObject", order = 0)]
     public class MapObject : ScriptableObject
     {
         [SerializeField] private GameObject prefab;

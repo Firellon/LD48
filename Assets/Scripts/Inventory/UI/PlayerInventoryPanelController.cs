@@ -4,6 +4,7 @@ using Human;
 using Inventory.Signals;
 using LD48;
 using Map;
+using Map.Actor;
 using Signals;
 using UnityEngine;
 using Utilities;

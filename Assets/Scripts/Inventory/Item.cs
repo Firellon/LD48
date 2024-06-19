@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace Inventory
 {
-    [CreateAssetMenu(menuName = "Create Item SO", fileName = "New Item", order = 0)]
+    [CreateAssetMenu(menuName = "LD48/Create Item SO", fileName = "New Item", order = 0)]
     public class Item : ScriptableObject
     {
         [SerializeField] private ItemType itemType;

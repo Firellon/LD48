@@ -4,7 +4,7 @@ using Cinemachine;
 using Day;
 using Inventory;
 using LD48;
-using Map;
+using Map.Actor;
 using Player;
 using TMPro;
 using UnityEngine;
@@ -30,7 +30,7 @@ public class TerrainGenerator : MonoBehaviour
     public float itemSpawnProbability = 0.1f;
     [SerializeField] private ItemTypeToIntSerializedDictionary itemTypeToSpawnProbabilityMap = new();
     private List<ItemType> itemSpawnSet = new();
-    
+
     private List<Vector2> itemPositions = new();
     private readonly List<GameObject> items = new();
 
@@ -38,7 +38,6 @@ public class TerrainGenerator : MonoBehaviour
 
     #region Strangers
 
-    public List<GameObject> strangerPrefabs;
     public Transform strangerParent;
     public Vector2Int strangerDensity = new(5, 5);
     public float strangerSpawnProbability = 0.2f;
@@ -49,10 +48,8 @@ public class TerrainGenerator : MonoBehaviour
 
     #region PlayerController
 
-    public GameObject playerPrefab;
     private GameObject player;
     private CinemachineVirtualCamera cinemachineCam;
-    private GameObject playerObject;
     public List<ObjectFollower> playerFollowers;
     public TMP_Text tipMessageText;
 
@@ -71,7 +68,6 @@ public class TerrainGenerator : MonoBehaviour
 
     #region Ghosts
 
-    public GameObject ghostPrefab;
     public Transform ghostParent;
     public float ghostSpawnProbability = 0.2f;
     private List<GameObject> ghosts = new List<GameObject>();
@@ -116,7 +112,7 @@ public class TerrainGenerator : MonoBehaviour
             Debug.LogWarning("GenerateItems > itemSpawnSet is empty, no items to generate!");
             return;
         }
-        
+
         for (var itemX = itemDensity.x / 2; itemX < levelSize.x; itemX += itemDensity.x)
         {
             for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
@@ -136,6 +132,7 @@ public class TerrainGenerator : MonoBehaviour
 
     public void GenerateStrangers(float spawnProbability)
     {
+        var strangerMapActor = mapActorRegistry.GetMapActor(MapActorType.Stranger);
         for (var strangerX = strangerDensity.x / 2; strangerX < levelSize.x; strangerX += strangerDensity.x)
         {
             for (var strangerY = strangerDensity.y / 2; strangerY < levelSize.y; strangerY += strangerDensity.y)
@@ -143,7 +140,8 @@ public class TerrainGenerator : MonoBehaviour
                 if (Random.value > spawnProbability) continue;
                 var strangerPosition = new Vector2(strangerX + Random.Range(0f, strangerDensity.x),
                     strangerY + Random.Range(0f, strangerDensity.y));
-                var stranger = prefabPool.Spawn(strangerPrefabs[Random.Range(0, strangerPrefabs.Count)], strangerParent);
+                var strangerPrefab = strangerMapActor.GetRandomPrefab();
+                var stranger = prefabPool.Spawn(strangerPrefab, strangerParent);
                 stranger.transform.position += new Vector3(strangerPosition.x, strangerPosition.y, 0);
                 strangers.Add(stranger);
             }
@@ -168,26 +166,29 @@ public class TerrainGenerator : MonoBehaviour
 
     private void GeneratePlayer()
     {
-        playerObject = prefabPool.Spawn(playerPrefab, new Vector2(levelSize.x / 2, levelSize.y / 2), Quaternion.identity);
-        var player = playerObject.GetComponent<PlayerController>();
-        player.tipMessageText = tipMessageText;
-        
-        cinemachineCam.Follow = player.transform;
+        var playerMapActor = mapActorRegistry.GetMapActor(MapActorType.Player);
+        var playerObject = prefabPool.Spawn(playerMapActor.Prefab, new Vector2(levelSize.x / 2, levelSize.y / 2),
+            Quaternion.identity);
+        var playerController = playerObject.GetComponent<PlayerController>();
+        playerController.tipMessageText = tipMessageText;
+
+        cinemachineCam.Follow = playerController.transform;
 
         foreach (var playerFollower in playerFollowers)
         {
             playerFollower.SetTarget(playerObject.transform);
         }
 
-        mapActorRegistry.SetPlayer(player);
+        mapActorRegistry.SetPlayer(playerController);
     }
 
     public void GenerateGhosts()
     {
+        var ghostMapActor = mapActorRegistry.GetMapActor(MapActorType.Ghost);
         foreach (var dead in deads)
         {
             if (Random.value > ghostSpawnProbability + dayNightCycle.GetCurrentDay() * 0.1f) continue;
-            var ghost = prefabPool.Spawn(ghostPrefab, dead.position, dead.rotation);
+            var ghost = prefabPool.Spawn(ghostMapActor.Prefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;
             ghosts.Add(ghost);
         }

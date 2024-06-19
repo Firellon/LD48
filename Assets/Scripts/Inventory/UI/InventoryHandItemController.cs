@@ -1,6 +1,7 @@
 using System;
 using Inventory.Signals;
 using Map;
+using Map.Actor;
 using Signals;
 using UnityEngine;
 using UnityEngine.EventSystems;

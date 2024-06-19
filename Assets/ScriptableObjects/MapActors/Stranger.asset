@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261ef0568b55402cb910ea7b2abd426f, type: 3}
+  m_Name: Stranger
+  m_EditorClassIdentifier: 
+  mapActorType: 2
+  prefabs:
+  - {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
+  - {fileID: 4454069631617825706, guid: 185ceffcb9cee47fc95b3701a7b9a6b3, type: 3}

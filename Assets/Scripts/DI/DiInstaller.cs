@@ -3,6 +3,7 @@ using Day;
 using DITools;
 using Inventory;
 using Map;
+using Map.Actor;
 using Signals;
 using UnityEngine;
 using Utilities.Prefabs;

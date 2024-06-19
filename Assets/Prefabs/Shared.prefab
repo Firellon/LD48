@@ -355,11 +355,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSegmentSize: {x: 15, y: 10}
-  treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
-  grassPrefab: {fileID: 0}
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
@@ -407,6 +405,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dad0c68611db4450b838145595a216c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapActors:
+  - {fileID: 11400000, guid: 5e7b0c347f0391442a8071a69893a705, type: 2}
+  - {fileID: 11400000, guid: 71a00950ed472724d95311cb3d3511d8, type: 2}
+  - {fileID: 11400000, guid: c132342410a202f4184af7309a958e90, type: 2}
 --- !u!1 &6924954415958716150
 GameObject:
   m_ObjectHideFlags: 0

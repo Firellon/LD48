@@ -2,6 +2,7 @@
 using System.Linq;
 using Inventory.Signals;
 using Map;
+using Map.Actor;
 using ModestTree;
 using Signals;
 using Sirenix.OdinInspector;
