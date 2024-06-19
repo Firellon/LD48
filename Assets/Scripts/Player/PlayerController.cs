@@ -35,6 +35,7 @@ namespace Player
 
         public IItemContainer Inventory => humanInventory;
         public IMaybe<Item> HandItem => humanInventory.HandItem;
+        public HumanState State => humanController.State;
         
 
         public void OnMove(InputAction.CallbackContext ctx)

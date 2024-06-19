@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using Day;
+using Human;
 using Inventory;
 using LD48;
 using Map.Actor;
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Random = UnityEngine.Random;
@@ -69,8 +72,8 @@ public class TerrainGenerator : MonoBehaviour
     #region Ghosts
 
     public Transform ghostParent;
-    public float ghostSpawnProbability = 0.2f;
-    private List<GameObject> ghosts = new List<GameObject>();
+    [SerializeField] private int baseGhostSpawnProbability = 4;
+    private List<GameObject> ghosts = new();
 
     #endregion
 
@@ -184,10 +187,13 @@ public class TerrainGenerator : MonoBehaviour
 
     public void GenerateGhosts()
     {
+        var playerState = mapActorRegistry.Player.Match(player => player.State.ToMaybe(), Maybe.Empty<HumanState>());
+        var playerSanity = playerState.Match(state => (float) state.Sanity / (state.MaxSanity - state.MinSanity), 1f);
         var ghostMapActor = mapActorRegistry.GetMapActor(MapActorType.Ghost);
+        var ghostSpawnProbability = (1 - playerSanity) * (float) dayNightCycle.GetCurrentDay() / (baseGhostSpawnProbability + dayNightCycle.GetCurrentDay());
         foreach (var dead in deads)
         {
-            if (Random.value > ghostSpawnProbability + dayNightCycle.GetCurrentDay() * 0.1f) continue;
+            if (Random.value > ghostSpawnProbability) continue;
             var ghost = prefabPool.Spawn(ghostMapActor.Prefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;
             ghosts.Add(ghost);
