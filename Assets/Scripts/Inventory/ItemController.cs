@@ -32,7 +32,7 @@ namespace Inventory
 
         public void SetHighlight(bool isLit = true)
         {
-            spriteRenderer.sharedMaterial = isLit ? highlightShader : regularShader;
+            spriteRenderer.material = isLit ? highlightShader : regularShader;
         }
     }
 }

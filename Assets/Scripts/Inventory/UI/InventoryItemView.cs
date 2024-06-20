@@ -62,8 +62,8 @@ namespace Inventory.UI
                 {
                     _player.HandItem.IfPresent((handItem) =>
                     {
-                        _player.Inventory.AddItem(handItem);
                         _player.Inventory.RemoveItem(item);
+                        _player.Inventory.AddItem(handItem);
                         _player.Inventory.SetHandItem(item.ToMaybe());
                     }).IfNotPresent(() =>
                     {
