@@ -63,7 +63,7 @@ PrefabInstance:
     - target: {fileID: 3471607891558574174, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: d01f232a1c2f64ce0a6e3c34b93c88db, type: 3}
+      objectReference: {fileID: -1969008778, guid: fee1a89699f990b4985ab8f7a75d4763, type: 3}
     - target: {fileID: 3861742083327022146, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: MaxDistance
       value: 5
@@ -75,7 +75,7 @@ PrefabInstance:
     - target: {fileID: 4777048309013230726, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 56ce1cf858544db4fb3fcafaa11aed04, type: 2}
+      objectReference: {fileID: 9100000, guid: a3e6ec5cf2f053c458c75f3dba54f909, type: 2}
     - target: {fileID: 5133988400910477832, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
       value: 0
@@ -138,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: d01f232a1c2f64ce0a6e3c34b93c88db, type: 3}
     - target: {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_Name
-      value: Stranger2
+      value: stranger_female
       objectReference: {fileID: 0}
     - target: {fileID: 6281792709375077079, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
       propertyPath: m_Layer
