@@ -194,7 +194,10 @@ namespace Human
                 if (!body) return;
                 body.velocity = Vector2.zero;
             }
+        }
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
             if (other.gameObject.CompareTag("Item"))
             {
                 var interactable = other.gameObject.GetComponent<IInteractable>();
@@ -205,11 +208,12 @@ namespace Human
                     return;
                 }
 
+                interactable.SetHighlight(true);
                 interactableObjects.Add(interactable);
             }
         }
 
-        private void OnCollisionExit2D(Collision2D other)
+        private void OnTriggerExit2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("Item"))
             {
@@ -220,7 +224,7 @@ namespace Human
                         $"OnCollisionExit2D > {other.gameObject} has Item tag and lacks IInteractable component!");
                     return;
                 }
-
+                interactable.SetHighlight(false);
                 interactableObjects.Remove(interactable);
             }
         }

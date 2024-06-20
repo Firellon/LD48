@@ -7,6 +7,8 @@ namespace Inventory
     {
         [SerializeField] private Item item;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private Material regularShader;
+        [SerializeField] private Material highlightShader;
 
         public bool CanBePickedUp => item.CanBePickedUp;
         public Item Item => item;
@@ -26,6 +28,11 @@ namespace Inventory
         {
             item = newItem;
             UpdateSprite();
+        }
+
+        public void SetHighlight(bool isLit = true)
+        {
+            spriteRenderer.sharedMaterial = isLit ? highlightShader : regularShader;
         }
     }
 }

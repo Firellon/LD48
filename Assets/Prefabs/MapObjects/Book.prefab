@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4421137656749023614}
   - component: {fileID: 6275068490982164910}
-  - component: {fileID: 6866079127286880016}
   - component: {fileID: 3377169528709387781}
+  - component: {fileID: 5620597721176516072}
   m_Layer: 3
   m_Name: Book
   m_TagString: Item
@@ -87,8 +87,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!61 &6866079127286880016
-BoxCollider2D:
+--- !u!114 &3377169528709387781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4934778073541862276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd86b41233fd47768d14ff7f5d2a31d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
+  spriteRenderer: {fileID: 6275068490982164910}
+  regularShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  highlightShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
+--- !u!70 &5620597721176516072
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -116,36 +132,12 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.078125}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 0.375, y: 0.15625}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.375, y: 0.15625}
-  m_EdgeRadius: 0
---- !u!114 &3377169528709387781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934778073541862276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd86b41233fd47768d14ff7f5d2a31d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
-  spriteRenderer: {fileID: 6275068490982164910}
+  m_Offset: {x: 0, y: -0.15}
+  m_Size: {x: 1.5, y: 0.75}
+  m_Direction: 1
 --- !u!1001 &5887935226952599244
 PrefabInstance:
   m_ObjectHideFlags: 0

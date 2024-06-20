@@ -8,6 +8,7 @@ namespace LD48
         bool CanBePickedUp { get; }
         Item Item { get; }
         
-        GameObject GameObject { get; } 
+        GameObject GameObject { get; }
+        void SetHighlight(bool isLit);
     }
 }
