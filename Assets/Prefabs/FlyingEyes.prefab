@@ -249,6 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b68459288c04ad3abd69fb3941d17cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeBetweenBlinks: 1
+  lightingThresholdValue: 0.1
+  maxDistanceToCharacter: 4
   lightEventListener: {fileID: 4849430734310306062}
   eyes:
   - {fileID: 5816255043144406375}
@@ -349,6 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d10005d7ce600784e93451bdcd95fa31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  addDayLight: 1
   useDistance: 1
   visability: 0
 --- !u!114 &1337791818317333887

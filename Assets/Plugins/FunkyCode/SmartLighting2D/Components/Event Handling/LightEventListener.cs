@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using FunkyCode.Utilities;
+using Zenject;
 
 namespace FunkyCode
 {
     [ExecuteInEditMode]
     public class LightEventListener : MonoBehaviour
     {
+        public bool addDayLight = true;
+
         public bool useDistance = false;
 
         public float visability = 0;
@@ -13,6 +16,8 @@ namespace FunkyCode
         public LightCollision2D? CollisionInfo = null;
 
         private LightCollider2D lightCollider;
+
+        [Inject] private ILightCycle lightCycle;
 
         private void OnEnable()
         {
@@ -62,6 +67,10 @@ namespace FunkyCode
 
             if (CollisionInfo == null)
             {
+                if (addDayLight)
+                {
+                    visability = 1f - lightCycle.Time;
+                }
                 return;
             }
 
@@ -97,7 +106,12 @@ namespace FunkyCode
                     }
                 }
             }
-        
+
+            if (addDayLight)
+            {
+                visability = Mathf.Max(visability, 1f - lightCycle.Time);
+            }
+
             CollisionInfo = null;
         }
     }

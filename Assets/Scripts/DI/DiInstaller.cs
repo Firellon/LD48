@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Day;
 using DITools;
+using FunkyCode;
 using Inventory;
 using Map;
-using Signals;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
@@ -19,6 +19,7 @@ namespace DI
         [SerializeField] private MapObjectRegistry mapObjectRegistry;
         [SerializeField] private ItemRegistry itemRegistry;
         [SerializeField] private DayNightCycle dayNightCycle;
+        [SerializeField] private LightCycle lightCycle;
 
         protected virtual void ConfigureServices()
         {
@@ -40,6 +41,8 @@ namespace DI
             Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();
             Container.BindInterfacesTo<ItemRegistry>().FromInstance(itemRegistry).AsSingle();
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
+
+            Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();
         }
 
         private void OnDisable()

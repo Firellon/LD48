@@ -171,8 +171,100 @@ Transform:
   - {fileID: 1855672342244292304}
   - {fileID: 189813373295199125}
   - {fileID: 2086277358901509390}
+  - {fileID: 5615235357629526986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2201146596934307437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5615235357629526986}
+  - component: {fileID: 7715562318320808741}
+  m_Layer: 0
+  m_Name: FlyingEyesController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5615235357629526986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2201146596934307437}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214609521494742059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7715562318320808741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2201146596934307437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4347169bb302454b84d06ad484050a4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay:
+    Min: 10
+    Max: 15
+  flyingEyesPrefab: {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.17675069
+      outSlope: 0.17675069
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.38004643
+    - serializedVersion: 3
+      time: 0.26336193
+      value: 0.38383782
+      inSlope: 1.1919122
+      outSlope: 1.1919122
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6566384
+      value: 0.58123374
+      inSlope: 1.3181528
+      outSlope: 1.3181528
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.13777086
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  moveSpeed: 0.8
 --- !u!1 &4516522281272598058
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,11 +447,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSegmentSize: {x: 15, y: 10}
-  treePrefab: {fileID: 2110516460938890563, guid: 6761a38866022460bad70757c85d49c5, type: 3}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
-  grassPrefab: {fileID: 0}
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
@@ -457,6 +547,7 @@ MonoBehaviour:
   mapObjectRegistry: {fileID: 1512119536165743883}
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
+  lightCycle: {fileID: 6385964874880517366}
 --- !u!114 &1887026448949627522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -559,3 +650,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4055629775191229703, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
   m_PrefabInstance: {fileID: 1757466782984979916}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6385964874880517366 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
+  m_PrefabInstance: {fileID: 1757466782984979916}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d0351ec349c6c45a0e7188d4259140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
