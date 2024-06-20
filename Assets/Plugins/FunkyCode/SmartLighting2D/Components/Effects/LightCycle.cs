@@ -19,11 +19,17 @@ namespace FunkyCode
         public AnimationCurve shadowAlpha = new AnimationCurve();  
     }
 
+    public interface ILightCycle
+    {
+        public float Time { get; }
+    }
+
     [ExecuteInEditMode]
-    public class LightCycle : MonoBehaviour
+    public class LightCycle : MonoBehaviour, ILightCycle
     {
         [Range(0, 1)]
-        public float time = 0;
+        [SerializeField] private float time = 0;
+        public float Time => time;
 
         public float maxDayLighting = 0.1f;
 

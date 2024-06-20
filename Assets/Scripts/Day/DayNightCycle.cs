@@ -52,7 +52,7 @@ namespace Day
 
         public float GetDarknessLevel()
         {
-            return lightCycle.time;
+            return lightCycle.Time;
         }
 
         private IEnumerator DayNightCycleProcess()
