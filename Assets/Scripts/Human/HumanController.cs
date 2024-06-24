@@ -155,6 +155,10 @@ namespace Human
                 {
                     isHit = false;
                     humanAnimator.SetBool(IsHitAnimation, false);
+                    foreach (var interactableObject in interactableObjects)
+                    {
+                        interactableObject.SetHighlight(true);
+                    }
                 }
             }
 
@@ -412,6 +416,10 @@ namespace Human
                 DropItems();
                 // TODO: Update Collider on other and on recover
                 if (hitSound) audio.PlayOneShot(hitSound);
+                foreach (var interactableObject in interactableObjects)
+                {
+                    interactableObject.SetHighlight(false);
+                }
             }
             else
             {
