@@ -47,7 +47,7 @@ MonoBehaviour:
   lightType: 1
   lightPresetId: 0
   eventPresetId: 0
-  lightLayer: 0
+  lightLayer: -1
   occlusionLayer: 0
   translucentLayer: 0
   translucentPresetId: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   lightType: 1
   lightPresetId: 0
   eventPresetId: 0
-  lightLayer: 0
+  lightLayer: -1
   occlusionLayer: 0
   translucentLayer: 0
   translucentPresetId: 0
