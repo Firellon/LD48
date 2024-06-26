@@ -2,7 +2,7 @@
 
 namespace Human
 {
-    public class HumanState : MonoBehaviour
+    public class HumanState
     {
         public const int K_MaxSanity = 100;
         public const int K_MinSanity = 0;

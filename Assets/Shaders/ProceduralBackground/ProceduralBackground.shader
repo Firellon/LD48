@@ -149,7 +149,7 @@
 
                 if (_Pixelate)
                 {
-                    pixelatedWorldUV = float2(floor((worldUV.x) * pix.x) / pix.x, floor((worldUV.y) * pix.y) / pix.y);
+                    pixelatedWorldUV = float2(floor(worldUV.x * pix.x) / pix.x, floor(worldUV.y * pix.y) / pix.y);
                 }
                 else
                 {

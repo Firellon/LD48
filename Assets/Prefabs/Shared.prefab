@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 5615235357629526986}
   - component: {fileID: 7715562318320808741}
   m_Layer: 0
-  m_Name: FlyingEyesController
+  m_Name: FlyingObjectsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   delay:
     Min: 10
     Max: 15
-  flyingEyesPrefab: {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
+  prefabs: []
   animationCurve:
     serializedVersion: 2
     m_Curve:
@@ -638,7 +638,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: time
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: maxDayLighting

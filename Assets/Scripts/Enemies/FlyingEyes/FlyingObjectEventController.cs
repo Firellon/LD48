@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using FunkyCode;
 using Map.Actor;
@@ -9,29 +10,28 @@ using Zenject;
 
 namespace LD48.Enemies
 {
-    public class FlyingEyesController : MonoBehaviour
+    public class FlyingObjectEventController : MonoBehaviour
     {
         [SerializeField] private FloatMinMax delay;
 
-        [SerializeField] private GameObject flyingEyesPrefab;
+        [SerializeField] private List<GameObject> prefabs;
         [SerializeField] private AnimationCurve animationCurve;
 
         [SerializeField] private float moveSpeed = 2f;
-        
+
         [Inject] private IMapActorRegistry mapActorRegistry;
         [Inject] private IRandomService randomService;
         [Inject] private IPrefabPool prefabPool;
 
         [Inject] private ILightCycle lightCycle;
-
         [Inject] private IEnemiesHelper enemiesHelper;
 
         private void OnEnable()
         {
-            StartCoroutine(nameof(ShowFlyingEyesProcess));
+            StartCoroutine(nameof(ShowFlyingObjectProcess));
         }
 
-        private IEnumerator ShowFlyingEyesProcess()
+        private IEnumerator ShowFlyingObjectProcess()
         {
             while (true)
             {
@@ -48,8 +48,10 @@ namespace LD48.Enemies
 
                 var moveTime = Vector2.Distance(startPoint, endPoint) / moveSpeed;
 
-                var eyes = prefabPool.Spawn(flyingEyesPrefab, transform);
-                eyes.transform.position = startPoint;
+                var prefab = randomService.Sample(prefabs);
+
+                var flyingObject = prefabPool.Spawn(prefab, transform);
+                flyingObject.transform.position = startPoint;
 
                 var moves = randomService.Int(3, 5);
 
@@ -60,12 +62,12 @@ namespace LD48.Enemies
                     var start = Vector2.Lerp(startPoint, endPoint, (i-1) / (float)moves);
                     var end = Vector2.Lerp(startPoint, endPoint, i / (float)moves);
 
-                    eyes.transform.position = start;
+                    flyingObject.transform.position = start;
 
                     yield return DOTween.Sequence()
-                        .Append(eyes.transform
+                        .Append(flyingObject.transform
                             .DOMoveX(end.x, moveTime))
-                        .Insert(0f, eyes.transform
+                        .Insert(0f, flyingObject.transform
                             .DOMoveY(end.y, moveTime)
                             .SetEase(animationCurve))
                         .WaitForCompletion();
@@ -73,7 +75,7 @@ namespace LD48.Enemies
                     yield return new WaitForSeconds(randomService.Float(0.5f, 2f));
                 }
 
-                prefabPool.Despawn(eyes);
+                prefabPool.Despawn(flyingObject);
             }
         }
     }
