@@ -7,7 +7,7 @@ using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
 
-namespace LD48.Enemies.Trails
+namespace Enemies.Trails
 {
     public class TrailsController : MonoBehaviour
     {

@@ -636,6 +636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trailsPrefabs:
   - {fileID: 2751337477146638838, guid: 2b0829843ea75b647ba782187452aebf, type: 3}
+  - {fileID: 5563227863647676399, guid: 32832cdf4e386744ea18538daaff9c61, type: 3}
   timeBetweenSpawn: 300
   generationRadius: 10
 --- !u!1 &6924954415958716150
