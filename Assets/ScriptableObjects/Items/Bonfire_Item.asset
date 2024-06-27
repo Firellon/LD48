@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bonfire_Item
   m_EditorClassIdentifier: 
   itemType: 2
-  itemSprite: {fileID: 21300000, guid: 488ce1cf923f2452d9f611ecda0b9669, type: 3}
+  itemSprite: {fileID: 21300000, guid: 0d907f58402915f47893f286d1e0a8e8, type: 3}
   inventoryItemSprite: {fileID: 21300000, guid: 5488e93c7e08b3a40bd4a894ba8e344a, type: 3}
   itemPrefab: {fileID: 5667914319977949734, guid: 73bd7954e27114120a48a889595954e3, type: 3}
   canBePickedUp: 0

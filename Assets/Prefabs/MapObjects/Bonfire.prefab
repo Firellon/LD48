@@ -268,8 +268,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.25}
-  m_Size: {x: 1, y: 0.25}
+  m_Offset: {x: 0, y: 0.25}
+  m_Size: {x: 1, y: 0.35}
   m_Direction: 1
 --- !u!70 &240403883343159843
 CapsuleCollider2D:
@@ -303,8 +303,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.25}
-  m_Size: {x: 1.5, y: 0.75}
+  m_Offset: {x: 0, y: 0.2}
+  m_Size: {x: 1.6, y: 0.8}
   m_Direction: 1
 --- !u!1001 &3660833765370672364
 PrefabInstance:
@@ -320,7 +320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5503630408770930096, guid: 035958f0d50d04262b6f5aeaaf6b85a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.49299997
       objectReference: {fileID: 0}
     - target: {fileID: 5503630408770930096, guid: 035958f0d50d04262b6f5aeaaf6b85a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -398,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8279293098313044534, guid: b7741d6dd5455614f961eceb61079c03, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.313
+      value: 0.17999998
       objectReference: {fileID: 0}
     - target: {fileID: 8279293098313044534, guid: b7741d6dd5455614f961eceb61079c03, type: 3}
       propertyPath: m_LocalPosition.z
@@ -464,11 +464,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3946231247244719114, guid: c8348818c8a0b41c19aed5779ae000a5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.25
+      value: 0.743
       objectReference: {fileID: 0}
     - target: {fileID: 3946231247244719114, guid: c8348818c8a0b41c19aed5779ae000a5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3946231247244719114, guid: c8348818c8a0b41c19aed5779ae000a5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -563,7 +563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 490590, guid: 68e36aa0999a80d429ffd21cb0095cf5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.047
+      value: 0.44599998
       objectReference: {fileID: 0}
     - target: {fileID: 490590, guid: 68e36aa0999a80d429ffd21cb0095cf5, type: 3}
       propertyPath: m_LocalPosition.z
