@@ -221,52 +221,133 @@ MonoBehaviour:
   delay:
     Min: 1
     Max: 5
-  prefabs:
-  - {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
-  - {fileID: 2297988777118836439, guid: 2302d2fefd378eb45bc9434452d23c34, type: 3}
-  animationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.17675069
-      outSlope: 0.17675069
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.38004643
-    - serializedVersion: 3
-      time: 0.26336193
-      value: 0.38383782
-      inSlope: 1.1919122
-      outSlope: 1.1919122
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6566384
-      value: 0.58123374
-      inSlope: 1.3181528
-      outSlope: 1.3181528
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.13777086
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  moveSpeed: 0.8
+  items:
+  - MovementType: 0
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.17675069
+        outSlope: 0.17675069
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.38004643
+      - serializedVersion: 3
+        time: 0.26336193
+        value: 0.38383782
+        inSlope: 1.1919122
+        outSlope: 1.1919122
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.6566384
+        value: 0.58123374
+        inSlope: 1.3181528
+        outSlope: 1.3181528
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.13777086
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
+    MoveSpeed: 0.8
+  - MovementType: 1
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.17675069
+        outSlope: 0.17675069
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.38004643
+      - serializedVersion: 3
+        time: 0.14701462
+        value: 0.087995686
+        inSlope: 1.1919122
+        outSlope: 1.1919122
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.3046165
+        value: 0.17514405
+        inSlope: 0.9544716
+        outSlope: 0.9544716
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.13931583
+      - serializedVersion: 3
+        time: 0.43385267
+        value: 0.36062154
+        inSlope: 0.81384957
+        outSlope: 0.81384957
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.34133998
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.59643406
+        value: 0.45492965
+        inSlope: 0.9816022
+        outSlope: 0.9816022
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.37522522
+      - serializedVersion: 3
+        time: 0.7216982
+        value: 0.642407
+        inSlope: 1.2577537
+        outSlope: 1.2577537
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.34098405
+        outWeight: 0.3442047
+      - serializedVersion: 3
+        time: 0.8697013
+        value: 0.77255
+        inSlope: 1.4161668
+        outSlope: 1.4161668
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.3319547
+      - serializedVersion: 3
+        time: 0.99902344
+        value: 1
+        inSlope: 0.6706639
+        outSlope: 0.6706639
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.8623733
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 2297988777118836439, guid: 2302d2fefd378eb45bc9434452d23c34, type: 3}
+    MoveSpeed: 1
 --- !u!1 &4516522281272598058
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,6 +485,8 @@ MonoBehaviour:
   items:
   - {fileID: 11400000, guid: 87f20f937e0baca4b87834e7eef0cb88, type: 2}
   - {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
+  - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
+  - {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
 --- !u!1 &5930166732300080848
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +538,7 @@ MonoBehaviour:
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
+  minGateConnectivity: 3
   minGateDistance: 3
   playerSegmentText: {fileID: 0}
 --- !u!1 &6175899444449373084
@@ -642,7 +726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: time
-      value: 0
+      value: 0.527
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: maxDayLighting

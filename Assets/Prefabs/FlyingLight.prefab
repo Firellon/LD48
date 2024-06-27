@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 325719138382148770}
   - component: {fileID: 2040034621758538734}
-  - component: {fileID: 2467117555897725913}
+  - component: {fileID: 2915508693467697580}
+  - component: {fileID: -6703452830334028208}
   m_Layer: 0
   m_Name: FlyingLight
   m_TagString: Untagged
@@ -52,7 +53,7 @@ MonoBehaviour:
   occlusionLayer: 0
   translucentLayer: 0
   translucentPresetId: 0
-  color: {r: 0, g: 29.067509, b: 45.254833, a: 1}
+  color: {r: 11.370555, g: 95.87449, b: 76.126274, a: 1}
   size: 0.6
   spotAngleInner: 360
   spotAngleOuter: 360
@@ -69,7 +70,7 @@ MonoBehaviour:
   textureSize: 1
   meshMode:
     enable: 0
-    alpha: 0.5
+    alpha: 1
     shader: 0
     materials:
     - {fileID: 0}
@@ -94,7 +95,19 @@ MonoBehaviour:
     - {x: -0.4999999, y: -0.86602545}
   drawingEnabled: 1
   drawingTranslucencyEnabled: 0
---- !u!114 &2467117555897725913
+--- !u!210 &2915508693467697580
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2297988777118836439}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+--- !u!114 &-6703452830334028208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,9 +116,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2297988777118836439}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 843af0ca5c03a2343885a7b28877582b, type: 3}
+  m_Script: {fileID: 11500000, guid: 597da6c5994b4b89be12cc8c598464b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flickering: 1
   flickersPerSecond: 15
-  flickerRangeMin: -0.1
-  flickerRangeMax: 0.1
+  flickerRangeMin: -0.2
+  flickerRangeMax: 0.2
+  light: {fileID: 2040034621758538734}

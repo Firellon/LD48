@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using FunkyCode;
@@ -10,14 +11,26 @@ using Zenject;
 
 namespace LD48.Enemies
 {
+    public enum FlyingObjectMovementType
+    {
+        Steps,
+        Continuos,
+    }
+
+    [Serializable]
+    public class FlyingObjectItem
+    {
+        public FlyingObjectMovementType MovementType;
+        public AnimationCurve AnimationCurve;
+        public GameObject Prefab;
+        public float MoveSpeed;
+    }
+
     public class FlyingObjectEventController : MonoBehaviour
     {
         [SerializeField] private FloatMinMax delay;
 
-        [SerializeField] private List<GameObject> prefabs;
-        [SerializeField] private AnimationCurve animationCurve;
-
-        [SerializeField] private float moveSpeed = 2f;
+        [SerializeField] private List<FlyingObjectItem> items;
 
         [Inject] private IMapActorRegistry mapActorRegistry;
         [Inject] private IRandomService randomService;
@@ -46,33 +59,46 @@ namespace LD48.Enemies
 
                 var (startPoint, endPoint) = enemiesHelper.FindPathNearCharacter();
 
-                var moveTime = Vector2.Distance(startPoint, endPoint) / moveSpeed;
+                var item = randomService.Sample(items);
+                var moveTime = Vector2.Distance(startPoint, endPoint) / item.MoveSpeed;
 
-                var prefab = randomService.Sample(prefabs);
-
-                var flyingObject = prefabPool.Spawn(prefab, transform);
+                var flyingObject = prefabPool.Spawn(item.Prefab, transform);
                 flyingObject.transform.position = startPoint;
 
-                var moves = randomService.Int(3, 5);
-
-                moveTime /= moves;
-
-                for (var i = 1; i <= moves; i++)
+                if (item.MovementType == FlyingObjectMovementType.Steps)
                 {
-                    var start = Vector2.Lerp(startPoint, endPoint, (i-1) / (float)moves);
-                    var end = Vector2.Lerp(startPoint, endPoint, i / (float)moves);
+                    var moves = randomService.Int(3, 5);
 
-                    flyingObject.transform.position = start;
+                    moveTime /= moves;
 
+                    for (var i = 1; i <= moves; i++)
+                    {
+                        var start = Vector2.Lerp(startPoint, endPoint, (i - 1) / (float)moves);
+                        var end = Vector2.Lerp(startPoint, endPoint, i / (float)moves);
+
+                        flyingObject.transform.position = start;
+
+                        yield return DOTween.Sequence()
+                            .Append(flyingObject.transform
+                                .DOMoveX(end.x, moveTime))
+                            .Insert(0f, flyingObject.transform
+                                .DOMoveY(end.y, moveTime)
+                                .SetEase(item.AnimationCurve))
+                            .WaitForCompletion();
+
+                        yield return new WaitForSeconds(randomService.Float(0.5f, 2f));
+                    }
+                }
+
+                if (item.MovementType == FlyingObjectMovementType.Continuos)
+                {
                     yield return DOTween.Sequence()
                         .Append(flyingObject.transform
-                            .DOMoveX(end.x, moveTime))
+                            .DOMoveX(endPoint.x, moveTime))
                         .Insert(0f, flyingObject.transform
-                            .DOMoveY(end.y, moveTime)
-                            .SetEase(animationCurve))
+                            .DOMoveY(endPoint.y, moveTime)
+                            .SetEase(item.AnimationCurve))
                         .WaitForCompletion();
-
-                    yield return new WaitForSeconds(randomService.Float(0.5f, 2f));
                 }
 
                 prefabPool.Despawn(flyingObject);

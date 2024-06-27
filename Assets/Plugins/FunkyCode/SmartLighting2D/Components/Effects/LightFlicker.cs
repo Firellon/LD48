@@ -18,7 +18,7 @@ namespace FunkyCode
         void Start() {
             lightSource = GetComponent<Light2D>();
             lightAlpha = lightSource.color.a;
-            
+
             timer = TimerHelper.Create();
         }
 
