@@ -219,9 +219,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay:
-    Min: 10
-    Max: 15
-  prefabs: []
+    Min: 1
+    Max: 5
+  prefabs:
+  - {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
+  - {fileID: 2297988777118836439, guid: 2302d2fefd378eb45bc9434452d23c34, type: 3}
   animationCurve:
     serializedVersion: 2
     m_Curve:
@@ -453,6 +455,8 @@ MonoBehaviour:
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
+  minGateDistance: 3
+  playerSegmentText: {fileID: 0}
 --- !u!1 &6175899444449373084
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +642,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: time
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: maxDayLighting

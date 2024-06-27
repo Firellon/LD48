@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using Utilities;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
@@ -19,10 +22,10 @@ namespace Map
         [Inject] private IRandomService randomService;
         [Inject] private IMapObjectRegistry mapObjectRegistry;
 
-        [SerializeField] private Vector2Int mapSegmentSize = new(10, 10);
+        [SerializeField] private Vector2Int mapSegmentSize = new(15, 15);
 
         [ShowInInspector, ReadOnly] private StringToMapSegmentDictionary mapSegmentKeysToMapSegments = new();
-        [ShowInInspector, ReadOnly] private CoordinatesToMapSegmentKeyDictionary coordinatesToMapSegmentKeys = new();
+        [ShowInInspector, ReadOnly] private Vector2IntToStringDictionary positionsToMapSegmentKeys = new();
         [ShowInInspector, ReadOnly] private HashSet<string> shownMapSegmentKeys = new();
         [ShowInInspector, ReadOnly] private HashSet<string> hiddenMapSegmentKeys = new();
         [ShowInInspector, ReadOnly] private List<Vector2Int> adjacentSegments = new(); // TODO: Remove
@@ -44,6 +47,14 @@ namespace Map
 
         #endregion
 
+        #region Segments
+
+        [SerializeField] private int minGateConnectivity = 3;
+        [SerializeField] private float minGateDistance = 3f;
+        [SerializeField] private TextMeshProUGUI playerSegmentText;
+
+        #endregion
+
         private const int K_defaultMapSegmentSize = 10;
 
         private void Awake()
@@ -62,38 +73,19 @@ namespace Map
                     Mathf.FloorToInt(playerPosition.x / mapSegmentSize.x),
                     Mathf.FloorToInt(playerPosition.y / mapSegmentSize.y)
                 );
-                var adjacentSegmentCoordinates = GetAdjacentSegmentCoordinates(playerIntPosition);
-                adjacentSegments = adjacentSegmentCoordinates;
+                
+                var adjacentSegmentPositions = GetAdjacentSegmentPositions(playerIntPosition);
+                adjacentSegments = adjacentSegmentPositions;
+                if (playerSegmentText != null) playerSegmentText.text = $"{positionsToMapSegmentKeys[playerIntPosition]}";
 
-                ShowAdjacentSegments(adjacentSegmentCoordinates);
-                HideNonAdjacentSegments(adjacentSegmentCoordinates);
+                ShowAdjacentSegments(adjacentSegmentPositions);
+                HideNonAdjacentSegments(adjacentSegmentPositions);
             });
-        }
-
-        private MapSegment CreateMapSegment(Vector2Int segmentPosition)
-        {
-            var topLeftCorner = segmentPosition * mapSegmentSize;
-            var bottomRightCorner = topLeftCorner + mapSegmentSize;
-            var trees = GenerateTrees(topLeftCorner, bottomRightCorner);
-            var grass = GenerateGrass(topLeftCorner, bottomRightCorner);
-
-            var mapSegment = new MapSegment
-            {
-                Key = MapSegment.ToMapSegmentCoordinatesKey(segmentPosition),
-                StaticObjects = trees.Union(grass).ToList()
-            };
-            
-            coordinatesToMapSegmentKeys.Add(segmentPosition, mapSegment.Key);
-            mapSegmentKeysToMapSegments.Add(mapSegment.Key, mapSegment);
-            hiddenMapSegmentKeys.Add(mapSegment.Key);
-            mapSegment.Hide();
-
-            return mapSegment;
         }
 
         private MapSegment GetMapSegment(Vector2Int segmentPosition)
         {
-            if (!coordinatesToMapSegmentKeys.TryGetValue(segmentPosition, out var segmentKey))
+            if (!positionsToMapSegmentKeys.TryGetValue(segmentPosition, out var segmentKey))
             {
                 return CreateMapSegment(segmentPosition);
             }
@@ -103,34 +95,111 @@ namespace Map
                 return mapSegment;
             }
 
-            Debug.LogError($"Data Inconsistency: Key {segmentKey} for position {segmentPosition} exists but the MapSegment does not!");
-            
+            Debug.LogError(
+                $"Data Inconsistency: Key {segmentKey} for position {segmentPosition} exists but the MapSegment does not!");
+
             return CreateMapSegment(segmentPosition);
         }
 
-        private List<Vector2Int> GetAdjacentSegmentCoordinates(Vector2Int segmentPosition)
+        private MapSegmentNeighbourToKeyDictionary FindAdjacentSegments(
+            Vector2Int segmentPosition, out List<MapSegmentNeighbour> openNeighbourKeys)
+        {
+            openNeighbourKeys = new List<MapSegmentNeighbour>();
+            var neighbours = new MapSegmentNeighbourToKeyDictionary();
+            foreach (var neighbour in EnumExtensions.GetAllItems<MapSegmentNeighbour>())
+            {
+                var neighbourSegmentPosition = segmentPosition + neighbour.GetPosition();
+                if (positionsToMapSegmentKeys.TryGetValue(neighbourSegmentPosition, out var neighbourKey))
+                    neighbours.Add(neighbour, neighbourKey);
+                else if (neighbour != MapSegmentNeighbour.None)
+                    openNeighbourKeys.Add(neighbour);
+            }
+
+            return neighbours;
+        }
+
+        private IMaybe<MapSegment> FindGateSegment(Vector2Int segmentPosition, MapSegmentNeighbour neighbour)
+        {
+            var openSegments = mapSegmentKeysToMapSegments.Values
+                .Where(segment => !segment.MapSegmentNeighbourKeys.ContainsKey(neighbour) &&
+                                  GetShortestDistance(segmentPosition, segment.Key) >= minGateDistance).ToList();
+            if (openSegments.None()) return Maybe.Empty<MapSegment>();
+
+            return randomService.Sample(openSegments).ToMaybe();
+        }
+
+        private float GetShortestDistance(Vector2Int segmentPosition, string segmentKey)
+        {
+            return positionsToMapSegmentKeys
+                .Where(pair => pair.Value == segmentKey).Select(pair => pair.Key)
+                .Min(position => Vector2Int.Distance(segmentPosition, position));
+        }
+
+        private List<Vector2Int> GetAdjacentSegmentPositions(Vector2Int segmentPosition)
         {
             var mapSegment = GetMapSegment(segmentPosition);
             return EnumExtensions.GetAllItems<MapSegmentNeighbour>()
                 .Select(neighbour =>
                 {
                     var neighbourSegmentPosition = segmentPosition + neighbour.GetPosition();
-                    if (mapSegment.NeighbourSegmentKeys.TryGetValue(neighbour, out var neighbourKey))
+                    if (mapSegment.MapSegmentNeighbourKeys.TryGetValue(neighbour, out var neighbourKey))
                     {
-                        if (!coordinatesToMapSegmentKeys.ContainsKey(neighbourSegmentPosition)) 
-                            coordinatesToMapSegmentKeys.Add(neighbourSegmentPosition, neighbourKey);
-                        
-                        if (coordinatesToMapSegmentKeys[neighbourSegmentPosition] != neighbourKey)
-                            Debug.LogError($"GetAdjacentSegmentCoordinates > a key discrepancy for coordinates {neighbourSegmentPosition}: {coordinatesToMapSegmentKeys[neighbourSegmentPosition]} != {neighbourKey}");
+                        if (!positionsToMapSegmentKeys.ContainsKey(neighbourSegmentPosition))
+                            positionsToMapSegmentKeys.Add(neighbourSegmentPosition, neighbourKey);
+
+                        if (positionsToMapSegmentKeys[neighbourSegmentPosition] != neighbourKey)
+                        {
+                            mapSegment.MapSegmentNeighbourKeys[neighbour] =
+                                positionsToMapSegmentKeys[neighbourSegmentPosition];
+                        }
 
                         return neighbourSegmentPosition;
                     }
-                    
+
                     var neighbourMapSegment = GetMapSegment(neighbourSegmentPosition);
-                    mapSegment.NeighbourSegmentKeys.Add(neighbour, neighbourMapSegment.Key);
+                    mapSegment.MapSegmentNeighbourKeys.Add(neighbour, neighbourMapSegment.Key);
 
                     return neighbourSegmentPosition;
                 }).ToList();
+        }
+
+        private MapSegment CreateMapSegment(Vector2Int segmentPosition)
+        {
+            var topLeftCorner = segmentPosition * mapSegmentSize;
+            var bottomRightCorner = topLeftCorner + mapSegmentSize;
+            var trees = GenerateTrees(topLeftCorner, bottomRightCorner);
+            var grass = GenerateGrass(topLeftCorner, bottomRightCorner);
+
+            var mapSegmentKey = MapSegment.ToMapSegmentCoordinatesKey(segmentPosition);
+            var mapSegmentNeighboursKeys = FindAdjacentSegments(segmentPosition, out var openNeighbourKeys);
+
+            if (openNeighbourKeys.Count >= minGateConnectivity)
+            {
+                var openNeighbour = openNeighbourKeys[randomService.Int(0, openNeighbourKeys.Count)];
+                var oppositeNeighbour = openNeighbour.GetOpposite();
+                var maybeGateSegment = FindGateSegment(segmentPosition, oppositeNeighbour);
+                maybeGateSegment.IfPresent(gateSegment =>
+                {
+                    Debug.Log($"{nameof(CreateMapSegment)} > {openNeighbour}-{oppositeNeighbour} gate in {segmentPosition}={gateSegment.Position}");
+                    mapSegmentNeighboursKeys.Add(openNeighbour, gateSegment.Key);
+                    positionsToMapSegmentKeys.Add(segmentPosition + openNeighbour.GetPosition(), gateSegment.Key);
+                });
+            }
+
+            var mapSegment = new MapSegment
+            {
+                Key = mapSegmentKey,
+                Position = segmentPosition,
+                MapSegmentNeighbourKeys = mapSegmentNeighboursKeys,
+                StaticObjects = trees.Union(grass).ToList()
+            };
+
+            positionsToMapSegmentKeys.Add(segmentPosition, mapSegment.Key);
+            mapSegmentKeysToMapSegments.Add(mapSegment.Key, mapSegment);
+            hiddenMapSegmentKeys.Add(mapSegment.Key);
+            mapSegment.Hide();
+
+            return mapSegment;
         }
 
         private List<GameObject> GenerateTrees(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
@@ -179,17 +248,18 @@ namespace Map
 
             return grassObjects;
         }
-        
-        private void ShowAdjacentSegments(List<Vector2Int> adjacentSegmentCoordinates)
+
+        private void ShowAdjacentSegments(List<Vector2Int> adjacentSegmentPositions)
         {
-            foreach (var position in adjacentSegmentCoordinates)
+            foreach (var position in adjacentSegmentPositions)
             {
-                var segmentKey = coordinatesToMapSegmentKeys[position];
+                var segmentKey = positionsToMapSegmentKeys[position];
                 var mapSegment = mapSegmentKeysToMapSegments[segmentKey];
                 if (hiddenMapSegmentKeys.Contains(segmentKey))
                 {
                     hiddenMapSegmentKeys.Remove(segmentKey);
                     shownMapSegmentKeys.Add(segmentKey);
+                    mapSegment.Move(position, mapSegmentSize);
                     mapSegment.Show();
                 }
                 else if (!shownMapSegmentKeys.Contains(segmentKey))
@@ -204,18 +274,16 @@ namespace Map
         private void HideNonAdjacentSegments(ICollection<Vector2Int> adjacentSegmentPositions)
         {
             var adjacentSegmentKeys = adjacentSegmentPositions
-                    .Select(position => coordinatesToMapSegmentKeys.TryGetValue(position, out var key) ? key : string.Empty)
-                    .ToList();
+                .Select(position => positionsToMapSegmentKeys.TryGetValue(position, out var key) ? key : string.Empty)
+                .ToList();
             var keysToRemove = new List<string>();
             foreach (var key in shownMapSegmentKeys)
             {
-                if (!adjacentSegmentKeys.Contains(key))
-                {
-                    keysToRemove.Add(key);
-                    hiddenMapSegmentKeys.Add(key);
-                    var mapSegment = mapSegmentKeysToMapSegments[key];
-                    mapSegment.Hide();
-                }
+                if (adjacentSegmentKeys.Contains(key)) continue;
+                keysToRemove.Add(key);
+                hiddenMapSegmentKeys.Add(key);
+                var mapSegment = mapSegmentKeysToMapSegments[key];
+                mapSegment.Hide();
             }
 
             foreach (var key in keysToRemove)
@@ -226,7 +294,7 @@ namespace Map
     }
 
     [Serializable]
-    public class CoordinatesToMapSegmentKeyDictionary : UnitySerializedDictionary<Vector2Int, string>
+    public class Vector2IntToStringDictionary : UnitySerializedDictionary<Vector2Int, string>
     {
     }
 
