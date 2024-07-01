@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Day;
+using Environment;
 using Inventory;
 using Inventory.Signals;
 using JetBrains.Annotations;
@@ -298,10 +299,10 @@ namespace Human
             }
         }
 
-        private IList<Bonfire> GetClosestBonfires()
+        private IList<MapBonfire> GetClosestBonfires()
         {
             return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
-                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+                .Select(collider => collider.gameObject.GetComponent<MapBonfire>())
                 .Where(bonfire => bonfire != null)
                 .ToList();
         }
@@ -489,7 +490,7 @@ namespace Human
 
             if (!inventory.HasItem(ItemType.Wood)) return "Gather some Wood to survive through the Night";
             var bonfires = GetClosestBonfires();
-            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
+            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new MapBonfire";
         }
 
         private bool IsCloseToMapBorder()

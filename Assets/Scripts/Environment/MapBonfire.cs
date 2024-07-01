@@ -4,9 +4,9 @@ using UnityEngine.Serialization;
 using Utilities.Prefabs;
 using Zenject;
 
-namespace LD48
+namespace Environment
 {
-    public class Bonfire : MonoBehaviour
+    public class MapBonfire : MonoBehaviour
     {
         [Inject] private IPrefabPool prefabPool;
 

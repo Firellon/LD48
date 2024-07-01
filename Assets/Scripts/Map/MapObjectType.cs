@@ -4,6 +4,7 @@ namespace Map
     {
         None = 0,
         Tree = 1,
-        Grass = 2
+        Grass = 2,
+        Exit = 3,
     }
 }
