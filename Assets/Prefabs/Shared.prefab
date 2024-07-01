@@ -133,6 +133,7 @@ MonoBehaviour:
   mapObjects:
   - {fileID: 11400000, guid: 39ad7743842c92840a05cdd5e5cc5f87, type: 2}
   - {fileID: 11400000, guid: 80777e677492838489423ae68f56243f, type: 2}
+  - {fileID: 11400000, guid: 73450db4f6ea7944f844c86e3a480d05, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +173,7 @@ Transform:
   - {fileID: 189813373295199125}
   - {fileID: 2086277358901509390}
   - {fileID: 5615235357629526986}
+  - {fileID: 5042157423292267896}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2201146596934307437
@@ -487,6 +489,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
   - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
   - {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
+  - {fileID: 11400000, guid: 8ad62dc47981ddd4fb5239f4c89fa473, type: 2}
 --- !u!1 &5930166732300080848
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,6 +592,55 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5e7b0c347f0391442a8071a69893a705, type: 2}
   - {fileID: 11400000, guid: 71a00950ed472724d95311cb3d3511d8, type: 2}
   - {fileID: 11400000, guid: c132342410a202f4184af7309a958e90, type: 2}
+--- !u!1 &6242018258371590378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5042157423292267896}
+  - component: {fileID: 1638974327496814560}
+  m_Layer: 0
+  m_Name: TrailsController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5042157423292267896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6242018258371590378}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214609521494742059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1638974327496814560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6242018258371590378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8b2e6746154e379c2e5c5a9b2b167e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trailsPrefabs:
+  - {fileID: 2751337477146638838, guid: 2b0829843ea75b647ba782187452aebf, type: 3}
+  - {fileID: 5563227863647676399, guid: 32832cdf4e386744ea18538daaff9c61, type: 3}
+  timeBetweenSpawn: 300
+  generationRadius: 10
 --- !u!1 &6924954415958716150
 GameObject:
   m_ObjectHideFlags: 0
