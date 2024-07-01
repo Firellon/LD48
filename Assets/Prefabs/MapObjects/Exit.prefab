@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5667914319977949752}
   - component: {fileID: 4278715650071772312}
   - component: {fileID: 4191005214743361497}
-  - component: {fileID: 2398295906508628994}
   - component: {fileID: 8778291578602689761}
+  - component: {fileID: 9175035632687583115}
   - component: {fileID: 6649743728803296774}
   - component: {fileID: 240403883343159843}
   m_Layer: 7
@@ -201,22 +201,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2398295906508628994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5667914319977949734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd86b41233fd47768d14ff7f5d2a31d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 8ad62dc47981ddd4fb5239f4c89fa473, type: 2}
-  spriteRenderer: {fileID: 5667914319977949752}
-  regularShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  highlightShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
 --- !u!114 &8778291578602689761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +213,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ddd054a8350464f9ce2538a5710d68e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9175035632687583115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb88d89fcd74a03b39b8e931a2eb870, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapObject: {fileID: 11400000, guid: 73450db4f6ea7944f844c86e3a480d05, type: 2}
+  spriteRenderer: {fileID: 0}
 --- !u!70 &6649743728803296774
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -494,6 +492,10 @@ PrefabInstance:
     - target: {fileID: 3946231247244719117, guid: c8348818c8a0b41c19aed5779ae000a5, type: 3}
       propertyPath: m_Name
       value: FireLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946231247244719117, guid: c8348818c8a0b41c19aed5779ae000a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

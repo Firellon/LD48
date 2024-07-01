@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Environment;
+using Inventory;
 using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
@@ -21,8 +23,10 @@ namespace Map
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IRandomService randomService;
         [Inject] private IMapObjectRegistry mapObjectRegistry;
+        [Inject] private IItemRegistry itemRegistry;
 
-        [SerializeField] private Vector2Int mapSegmentSize = new(15, 15);
+        [SerializeField] private Vector2Int halfMapSize = new(20, 20);
+        [SerializeField] private Vector2Int mapSegmentSize = new(10, 10);
 
         [ShowInInspector, ReadOnly] private StringToMapSegmentDictionary mapSegmentKeysToMapSegments = new();
         [ShowInInspector, ReadOnly] private Vector2IntToStringDictionary positionsToMapSegmentKeys = new();
@@ -40,7 +44,6 @@ namespace Map
 
         #region Grass
 
-        // TODO: use prefab provider
         [SerializeField] private Transform grassParent;
         [SerializeField] private Vector2Int grassDensity = new(2, 2);
         [SerializeField] private float grassSpawnProbability = 0.5f;
@@ -49,18 +52,36 @@ namespace Map
 
         #region Segments
 
+        /**
+         * How Many empty segments should a segment have to warrant a gate creation?
+         */
         [SerializeField] private int minGateConnectivity = 3;
         [SerializeField] private float minGateDistance = 3f;
         [SerializeField] private TextMeshProUGUI playerSegmentText;
-
+        
         #endregion
 
         private const int K_defaultMapSegmentSize = 10;
+        
+        [ShowInInspector, ReadOnly] private Vector2Int keyMapSegmentPosition;
+        [ShowInInspector, ReadOnly] private Vector2Int exitMapSegmentPosition;
+        [ShowInInspector, ReadOnly] private bool keyHasBeenSpawned;
 
         private void Awake()
         {
             if (mapSegmentSize.x <= 0) mapSegmentSize.x = K_defaultMapSegmentSize;
             if (mapSegmentSize.y <= 0) mapSegmentSize.y = K_defaultMapSegmentSize;
+        }
+
+        private void Start()
+        {
+            var minDistanceBetweenKeyAndExit = Mathf.Max(halfMapSize.x / 2, halfMapSize.y / 2);
+            keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
+            exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
+            while (Vector2Int.Distance(keyMapSegmentPosition, exitMapSegmentPosition) < minDistanceBetweenKeyAndExit)
+            {
+                exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
+            }
         }
 
         private void Update()
@@ -76,13 +97,21 @@ namespace Map
                 
                 var adjacentSegmentPositions = GetAdjacentSegmentPositions(playerIntPosition);
                 adjacentSegments = adjacentSegmentPositions;
-                if (playerSegmentText != null) playerSegmentText.text = $"{positionsToMapSegmentKeys[playerIntPosition]}";
+                if (playerSegmentText != null) playerSegmentText.text = $"P: {playerIntPosition}, S: {positionsToMapSegmentKeys[playerIntPosition]}";
 
                 ShowAdjacentSegments(adjacentSegmentPositions);
                 HideNonAdjacentSegments(adjacentSegmentPositions);
             });
         }
 
+        private Vector2Int GetRandomDistantMapSegmentPosition()
+        {
+            var segmentPositionX = randomService.Int(-halfMapSize.x, halfMapSize.x);
+            var segmentPositionY = randomService.Int(-halfMapSize.y, halfMapSize.y);
+
+            return new Vector2Int(segmentPositionX, segmentPositionY);
+        }
+        
         private MapSegment GetMapSegment(Vector2Int segmentPosition)
         {
             if (!positionsToMapSegmentKeys.TryGetValue(segmentPosition, out var segmentKey))
@@ -92,6 +121,22 @@ namespace Map
 
             if (mapSegmentKeysToMapSegments.TryGetValue(segmentKey, out var mapSegment))
             {
+                if (segmentPosition == exitMapSegmentPosition && !mapSegment.ContainsMapObject<MapExit>())
+                {
+                    Debug.Log($"Segment {mapSegment} does not have a MapExit, adding one!");
+                    var exit = GenerateExit(segmentPosition * mapSegmentSize, segmentPosition * mapSegmentSize + mapSegmentSize);
+                    mapSegment.MapObjects.Add(exit);
+                }
+                
+                if (!keyHasBeenSpawned && segmentPosition == keyMapSegmentPosition && !mapSegment.ContainsItem(ItemType.Key))
+                {
+                    Debug.Log($"Segment {mapSegment} does not have a Key item, adding one!");
+                    var key = GenerateItem(ItemType.Key, segmentPosition * mapSegmentSize,
+                        segmentPosition * mapSegmentSize + mapSegmentSize);
+                    mapSegment.ItemObjects.Add(key);
+                    keyHasBeenSpawned = true;
+                }
+                
                 return mapSegment;
             }
 
@@ -167,8 +212,22 @@ namespace Map
         {
             var topLeftCorner = segmentPosition * mapSegmentSize;
             var bottomRightCorner = topLeftCorner + mapSegmentSize;
-            var trees = GenerateTrees(topLeftCorner, bottomRightCorner);
-            var grass = GenerateGrass(topLeftCorner, bottomRightCorner);
+            var mapObjects = new List<GameObject>();
+            mapObjects.AddRange(GenerateTrees(topLeftCorner, bottomRightCorner));
+            mapObjects.AddRange(GenerateGrass(topLeftCorner, bottomRightCorner));
+            if (segmentPosition == exitMapSegmentPosition)
+            {
+                Debug.Log($"Generate Exit at {segmentPosition}!");
+                mapObjects.Add(GenerateExit(topLeftCorner, bottomRightCorner));
+            }
+
+            var itemObjects = new List<GameObject>();
+            if (!keyHasBeenSpawned && segmentPosition == keyMapSegmentPosition)
+            {
+                Debug.Log($"Generate Key at {segmentPosition}");
+                itemObjects.Add(GenerateItem(ItemType.Key, topLeftCorner, bottomRightCorner));
+                keyHasBeenSpawned = true;
+            }
 
             var mapSegmentKey = MapSegment.ToMapSegmentCoordinatesKey(segmentPosition);
             var mapSegmentNeighboursKeys = FindAdjacentSegments(segmentPosition, out var openNeighbourKeys);
@@ -191,7 +250,8 @@ namespace Map
                 Key = mapSegmentKey,
                 Position = segmentPosition,
                 MapSegmentNeighbourKeys = mapSegmentNeighboursKeys,
-                StaticObjects = trees.Union(grass).ToList()
+                MapObjects = mapObjects,
+                ItemObjects = itemObjects,
             };
 
             positionsToMapSegmentKeys.Add(segmentPosition, mapSegment.Key);
@@ -249,6 +309,32 @@ namespace Map
             return grassObjects;
         }
 
+        private GameObject GenerateExit(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            var cornerDiff = bottomRightCorner - topLeftCorner;
+            var exitMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Exit);
+            var exitPosition = new Vector2(topLeftCorner.x + randomService.Int(cornerDiff.x), topLeftCorner.y + randomService.Int(cornerDiff.y));
+
+            var exit = prefabPool.Spawn(exitMapObject.Prefab, grassParent);
+            exit.GetComponent<MapObjectController>().SetMapObject(exitMapObject);
+            exit.transform.position = exitPosition;
+
+            return exit;
+        }
+        
+        private GameObject GenerateItem(ItemType key, Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            var cornerDiff = bottomRightCorner - topLeftCorner;
+            var itemObject = itemRegistry.GetItem(ItemType.Key);
+            var itemPosition = new Vector2(topLeftCorner.x + randomService.Int(cornerDiff.x), topLeftCorner.y + randomService.Int(cornerDiff.y));
+
+            var item = prefabPool.Spawn(itemObject.ItemPrefab, grassParent);
+            item.GetComponent<ItemController>().SetItem(itemObject);
+            item.transform.position = itemPosition;
+
+            return item;
+        }
+        
         private void ShowAdjacentSegments(List<Vector2Int> adjacentSegmentPositions)
         {
             foreach (var position in adjacentSegmentPositions)

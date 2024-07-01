@@ -18,7 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 4934778073541862276, guid: ad384408d577c7f4881d163103aabb8b, type: 3}
   canBePickedUp: 1
   canBeDropped: 1
-  isHandItem: 0
+  isHandItem: 1
   isCraftable: 0
   craftingRequirements:
     keyData: 

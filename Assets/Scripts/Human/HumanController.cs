@@ -37,7 +37,8 @@ namespace Human
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
-        public float fireTouchRadius = 2f;
+        public float fireTouchRadius = 1f;
+        public float mapObjectTouchRadius = 1f;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator humanAnimator;
@@ -270,6 +271,9 @@ namespace Human
                 case ItemType.Book:
                     AddToFire(item);
                     return;
+                case ItemType.Key:
+                    OpenExit(item);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -279,7 +283,7 @@ namespace Human
         {
             if (isHit || IsDead) return;
 
-            var bonfires = GetClosestBonfires();
+            var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.Any())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
@@ -291,23 +295,34 @@ namespace Human
         {
             if (isHit || IsDead) return;
 
-            var bonfires = GetClosestBonfires();
+            var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.None())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
             }
         }
-
-        private IList<MapBonfire> GetClosestBonfires()
+        
+        private void OpenExit(Item keyItem)
         {
-            return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
-                .Select(collider => collider.gameObject.GetComponent<MapBonfire>())
+            if (isHit || IsDead) return;
+
+            var exits = GetClosestMapObjects<MapExit>();
+            if (exits.Any())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                // TODO: Win the Game!
+            }
+        }
+
+        private IList<T> GetClosestMapObjects<T>() where T : MonoBehaviour
+        {
+            return Physics2D.OverlapCircleAll(transform.position, mapObjectTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
+                .Select(mapObjectCollider => mapObjectCollider.gameObject.GetComponent<T>())
                 .Where(bonfire => bonfire != null)
                 .ToList();
         }
-
-
+        
         private void CreateBonfire()
         {
             var bonfirePrefab = itemRegistry.GetItem(ItemType.Bonfire).ItemPrefab;
@@ -478,10 +493,10 @@ namespace Human
                 return "You have been wounded, a few seconds needed to recover!";
             }
 
-            if (IsCloseToMapBorder())
-            {
-                return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
-            }
+            // if (IsCloseToMapBorder())
+            // {
+            //     return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
+            // }
 
             if (isAiming)
             {
@@ -489,19 +504,19 @@ namespace Human
             }
 
             if (!inventory.HasItem(ItemType.Wood)) return "Gather some Wood to survive through the Night";
-            var bonfires = GetClosestBonfires();
+            var bonfires = GetClosestMapObjects<MapBonfire>();
             return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new MapBonfire";
         }
 
-        private bool IsCloseToMapBorder()
-        {
-            var minBorderDistance = 1f;
-            if (transform.position.x < minBorderDistance ||
-                transform.position.x > levelSize.x - minBorderDistance) return true;
-            if (transform.position.y < minBorderDistance ||
-                transform.position.y > levelSize.y - minBorderDistance) return true;
-            return false;
-        }
+        // private bool IsCloseToMapBorder()
+        // {
+        //     var minBorderDistance = 1f;
+        //     if (transform.position.x < minBorderDistance ||
+        //         transform.position.x > levelSize.x - minBorderDistance) return true;
+        //     if (transform.position.y < minBorderDistance ||
+        //         transform.position.y > levelSize.y - minBorderDistance) return true;
+        //     return false;
+        // }
 
         public bool IsFacingTowards(Vector3 position)
         {
