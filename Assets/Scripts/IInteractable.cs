@@ -10,5 +10,6 @@ namespace LD48
         
         GameObject GameObject { get; }
         void SetHighlight(bool isLit);
+        void Remove();
     }
 }

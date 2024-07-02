@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Environment;
 using Inventory;
 using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
+using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -67,6 +69,29 @@ namespace Map
         [ShowInInspector, ReadOnly] private Vector2Int exitMapSegmentPosition;
         [ShowInInspector, ReadOnly] private bool keyHasBeenSpawned;
 
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<MapItemRemovedEvent>(OnMapItemRemoved);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<MapItemRemovedEvent>(OnMapItemRemoved);
+        }
+
+        private void OnMapItemRemoved(MapItemRemovedEvent evt)
+        {
+            var itemPosition = ConvertWorldPositionToSegmentPosition(evt.GameObject.transform.position);
+            if (positionsToMapSegmentKeys.TryGetValue(itemPosition, out var itemSegmentKey) && 
+                mapSegmentKeysToMapSegments.TryGetValue(itemSegmentKey, out var itemSegment))
+            {
+                Debug.Log($"OnMapItemRemoved > remove item {evt.ItemType} from segment {itemSegmentKey}");
+                itemSegment.ItemObjects.Remove(evt.GameObject);
+            }
+            
+            Destroy(evt.GameObject);
+        }
+
         private void Awake()
         {
             if (mapSegmentSize.x <= 0) mapSegmentSize.x = K_defaultMapSegmentSize;
@@ -89,11 +114,7 @@ namespace Map
             var maybePlayer = mapActorRegistry.Player;
             maybePlayer.IfPresent(player =>
             {
-                var playerPosition = player.transform.position;
-                var playerIntPosition = new Vector2Int(
-                    Mathf.FloorToInt(playerPosition.x / mapSegmentSize.x),
-                    Mathf.FloorToInt(playerPosition.y / mapSegmentSize.y)
-                );
+                var playerIntPosition = ConvertWorldPositionToSegmentPosition(player.transform.position);
                 
                 var adjacentSegmentPositions = GetAdjacentSegmentPositions(playerIntPosition);
                 adjacentSegments = adjacentSegmentPositions;
@@ -102,6 +123,14 @@ namespace Map
                 ShowAdjacentSegments(adjacentSegmentPositions);
                 HideNonAdjacentSegments(adjacentSegmentPositions);
             });
+        }
+
+        private Vector2Int ConvertWorldPositionToSegmentPosition(Vector3 worldPosition)
+        {
+            return new Vector2Int(
+                Mathf.FloorToInt(worldPosition.x / mapSegmentSize.x),
+                Mathf.FloorToInt(worldPosition.y / mapSegmentSize.y)
+            );
         }
 
         private Vector2Int GetRandomDistantMapSegmentPosition()

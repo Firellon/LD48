@@ -112,6 +112,7 @@ namespace Human
         }
 
         public bool IsDead => State.IsDead;
+        public bool HasWon => State.HasWon;
 
         bool IHittable.IsDead()
         {
@@ -120,7 +121,7 @@ namespace Human
 
         public bool IsThreat()
         {
-            return !isHit && !IsDead && isAiming;
+            return !HasWon && !isHit && !IsDead && isAiming;
         }
 
         private void Start()
@@ -311,7 +312,8 @@ namespace Human
             if (exits.Any())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
-                // TODO: Win the Game!
+                Debug.Log("Successfully exited the forest!");
+                State.Win();
             }
         }
 
@@ -377,7 +379,7 @@ namespace Human
 
             inventory.AddItem(interactable.Item);
             interactableObjects.Remove(interactable);
-            Destroy(interactable.GameObject);
+            interactable.Remove();
         }
 
         public void ToggleIsAiming()
@@ -422,6 +424,8 @@ namespace Human
 
         public void Hit()
         {
+            if (HasWon) return;
+            
             StopMovement();
             if (!isHit && !IsDead)
             {
@@ -445,6 +449,8 @@ namespace Human
 
         public void Die()
         {
+            if (HasWon) return;
+            
             StopMovement();
             State.Die();
             humanAnimator.SetBool(IsDeadAnimation, true);
@@ -482,10 +488,14 @@ namespace Human
 
         public string GetTipMessageText()
         {
+            if (HasWon)
+            {
+                return $"Congrats! You have found the exit from this endless forest in {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
+            }
+            
             if (IsDead)
             {
-                return
-                    $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
+                return $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
             }
 
             if (isHit)

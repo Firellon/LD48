@@ -18,12 +18,20 @@ namespace Human
         public int MaxSanity => K_MaxSanity;
 
         public bool IsDead { get; private set; } = false;
+        public bool HasWon { get; private set; } = false;
 
         public void Die()
         {
-            if (IsDead) return;
+            if (IsDead || HasWon) return;
 
             IsDead = true;
+        }
+
+        public void Win()
+        {
+            if (IsDead || HasWon) return;
+
+            HasWon = true;
         }
     }
 }
