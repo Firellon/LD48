@@ -161,11 +161,11 @@ namespace LD48
 
 
             var currentCycle = dayNightCycle.GetCurrentCycle();
-            if (currentCycle == DayTime.NightComing || currentCycle == DayTime.Night)
+            if (currentCycle is DayTime.NightComing or DayTime.Night)
             {
                 var closestBonfires = Physics2D
                     .OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
-                    .Select(collider => collider.gameObject.GetComponent<MapBonfire>())
+                    .Select(otherCollider => otherCollider.gameObject.GetComponent<MapBonfire>())
                     .Where(bonfire => bonfire != null && bonfire.IsBurning())
                     .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
                     .ToList();
@@ -211,13 +211,19 @@ namespace LD48
                 humanController.Move(bonfireDirection.SkewDirection(5));
                 return;
             }
+            else
+            {
+                humanController.StopMovement();
+            }
 
             if (inventory.GetItemAmount(ItemType.Wood) == 0) return;
 
             var bonfire = target.GetComponent<MapBonfire>();
+            // TODO: Check if we have that wood item?
             if (Random.Range(1, 10) > bonfire.GetTimeToBurn())
             {
-                humanController.Act();
+                var woodItem = itemRegistry.GetItem(ItemType.Wood);
+                humanController.AddToFire(woodItem);
             }
         }
 

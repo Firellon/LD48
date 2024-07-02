@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Inventory;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -53,6 +54,11 @@ namespace Environment
             timeToBurn += burnTimePerWood;
             Debug.Log($"AddWood > timeToBurn {timeToBurn}");
             isBurning = true;
+        }
+        
+        public void AddBurnableItem(Item burnableItem)
+        {
+            AddWood();
         }
 
         private void Burn()
