@@ -1,4 +1,6 @@
+using System;
 using LD48;
+using Signals;
 using UnityEngine;
 
 namespace Inventory
@@ -33,6 +35,11 @@ namespace Inventory
         public void SetHighlight(bool isLit = true)
         {
             spriteRenderer.material = isLit ? highlightShader : regularShader;
+        }
+
+        public void Remove()
+        {
+            SignalsHub.DispatchAsync(new MapItemRemovedEvent(GameObject, item.ItemType));
         }
     }
 }

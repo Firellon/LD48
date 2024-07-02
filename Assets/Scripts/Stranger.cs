@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Day;
+using Environment;
 using Human;
 using Inventory;
 using UnityEngine;
@@ -164,7 +165,7 @@ namespace LD48
             {
                 var closestBonfires = Physics2D
                     .OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
-                    .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+                    .Select(collider => collider.gameObject.GetComponent<MapBonfire>())
                     .Where(bonfire => bonfire != null && bonfire.IsBurning())
                     .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
                     .ToList();
@@ -213,7 +214,7 @@ namespace LD48
 
             if (inventory.GetItemAmount(ItemType.Wood) == 0) return;
 
-            var bonfire = target.GetComponent<Bonfire>();
+            var bonfire = target.GetComponent<MapBonfire>();
             if (Random.Range(1, 10) > bonfire.GetTimeToBurn())
             {
                 humanController.Act();

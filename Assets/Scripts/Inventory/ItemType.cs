@@ -6,5 +6,6 @@ namespace LD48
         Bonfire = 2,
         Pistol = 3,
         Book = 4,
+        Key = 5,
     }
 }

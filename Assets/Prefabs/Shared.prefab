@@ -133,6 +133,8 @@ MonoBehaviour:
   mapObjects:
   - {fileID: 11400000, guid: 39ad7743842c92840a05cdd5e5cc5f87, type: 2}
   - {fileID: 11400000, guid: 80777e677492838489423ae68f56243f, type: 2}
+  - {fileID: 11400000, guid: 73450db4f6ea7944f844c86e3a480d05, type: 2}
+  - {fileID: 11400000, guid: cab9c2a52fee0b8459b8f071a1df4f94, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,6 +490,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
   - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
   - {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
+  - {fileID: 11400000, guid: 8ad62dc47981ddd4fb5239f4c89fa473, type: 2}
 --- !u!1 &5930166732300080848
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,13 +535,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489386c9df294da6b57898b109bf5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSegmentSize: {x: 15, y: 10}
+  halfMapSize: {x: 5, y: 5}
+  mapSegmentSize: {x: 12, y: 8}
+  mapObjectParent: {fileID: 0}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
+  itemParent: {fileID: 0}
+  itemDensity: {x: 4, y: 4}
+  itemSpawnProbability: 0.25
+  spawnItemTypes: 0100000001000000010000000400000001000000010000000100000001000000
   minGateConnectivity: 3
   minGateDistance: 3
   playerSegmentText: {fileID: 0}

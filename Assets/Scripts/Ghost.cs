@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Environment;
 using Human;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -170,7 +171,7 @@ namespace LD48
         private GhostState GetCurrentState()
         {
             var closestBonfires = Physics2D.OverlapCircleAll(transform.position, detectionRadius, 1 << LayerMask.NameToLayer("Solid"))
-                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+                .Select(collider => collider.gameObject.GetComponent<MapBonfire>())
                 .Where(bonfire => bonfire != null && bonfire.IsBurning())
                 .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
                 .ToList();

@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Day;
+using Environment;
 using Inventory;
 using Inventory.Signals;
 using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
+using Map;
 using Signals;
 using UnityEngine;
 using Utilities.Monads;
@@ -23,6 +25,7 @@ namespace Human
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
+        [Inject] private IMapObjectRegistry mapObjectRegistry;
 
         public IItemContainer Inventory => inventory;
         public HumanState State { get; } = new();
@@ -36,7 +39,8 @@ namespace Human
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
-        public float fireTouchRadius = 2f;
+        public float fireTouchRadius = 1f;
+        public float mapObjectTouchRadius = 1f;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator humanAnimator;
@@ -64,11 +68,14 @@ namespace Human
 
         #region Audio
 
-        public new AudioSource audio;
+        public AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        public AudioSource walkAudio;
+        [CanBeNull] public AudioClip walkSound;
 
         #endregion
 
@@ -110,6 +117,7 @@ namespace Human
         }
 
         public bool IsDead => State.IsDead;
+        public bool HasWon => State.HasWon;
 
         bool IHittable.IsDead()
         {
@@ -118,7 +126,7 @@ namespace Human
 
         public bool IsThreat()
         {
-            return !isHit && !IsDead && isAiming;
+            return !HasWon && !isHit && !IsDead && isAiming;
         }
 
         private void Start()
@@ -127,7 +135,6 @@ namespace Human
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
             dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             levelSize = terrainGenerator.levelSize;
-            if (!audio) audio = GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -243,9 +250,22 @@ namespace Human
 
             if (!body) return;
 
-            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveDirection.magnitude);
+            var moveLength = moveDirection.magnitude;
+
+            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveLength);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
+
+            if (moveLength > float.Epsilon)
+            {
+                if (!walkAudio.isPlaying)
+                    walkAudio.Play();
+            }
+            else
+            {
+                if (walkAudio.isPlaying)
+                    walkAudio.Stop();
+            }
 
             if (moveDirection.x != 0)
             {
@@ -269,6 +289,9 @@ namespace Human
                 case ItemType.Book:
                     AddToFire(item);
                     return;
+                case ItemType.Key:
+                    OpenExit(item);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -278,7 +301,7 @@ namespace Human
         {
             if (isHit || IsDead) return;
 
-            var bonfires = GetClosestBonfires();
+            var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.Any())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
@@ -290,26 +313,38 @@ namespace Human
         {
             if (isHit || IsDead) return;
 
-            var bonfires = GetClosestBonfires();
+            var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.None())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
             }
         }
-
-        private IList<Bonfire> GetClosestBonfires()
+        
+        private void OpenExit(Item keyItem)
         {
-            return Physics2D.OverlapCircleAll(transform.position, fireTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
-                .Select(collider => collider.gameObject.GetComponent<Bonfire>())
+            if (isHit || IsDead) return;
+
+            var exits = GetClosestMapObjects<MapExit>();
+            if (exits.Any())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                Debug.Log("Successfully exited the forest!");
+                State.Win();
+            }
+        }
+
+        private IList<T> GetClosestMapObjects<T>() where T : MonoBehaviour
+        {
+            return Physics2D.OverlapCircleAll(transform.position, mapObjectTouchRadius, 1 << LayerMask.NameToLayer("Solid"))
+                .Select(mapObjectCollider => mapObjectCollider.gameObject.GetComponent<T>())
                 .Where(bonfire => bonfire != null)
                 .ToList();
         }
-
-
+        
         private void CreateBonfire()
         {
-            var bonfirePrefab = itemRegistry.GetItem(ItemType.Bonfire).ItemPrefab;
+            var bonfirePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Bonfire).Prefab;
             var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f,
                 Quaternion.identity);
         }
@@ -346,6 +381,7 @@ namespace Human
             body.velocity = Vector2.zero;
             characterController.MoveSpeed = 0;
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
+            walkAudio.Stop();
         }
 
         public void PickUp(IInteractable interactable)
@@ -361,7 +397,7 @@ namespace Human
 
             inventory.AddItem(interactable.Item);
             interactableObjects.Remove(interactable);
-            Destroy(interactable.GameObject);
+            interactable.Remove();
         }
 
         public void ToggleIsAiming()
@@ -406,6 +442,8 @@ namespace Human
 
         public void Hit()
         {
+            if (HasWon) return;
+            
             StopMovement();
             if (!isHit && !IsDead)
             {
@@ -429,6 +467,8 @@ namespace Human
 
         public void Die()
         {
+            if (HasWon) return;
+            
             StopMovement();
             State.Die();
             humanAnimator.SetBool(IsDeadAnimation, true);
@@ -466,10 +506,14 @@ namespace Human
 
         public string GetTipMessageText()
         {
+            if (HasWon)
+            {
+                return $"Congrats! You have found the exit from this endless forest in {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
+            }
+            
             if (IsDead)
             {
-                return
-                    $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
+                return $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
             }
 
             if (isHit)
@@ -477,10 +521,10 @@ namespace Human
                 return "You have been wounded, a few seconds needed to recover!";
             }
 
-            if (IsCloseToMapBorder())
-            {
-                return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
-            }
+            // if (IsCloseToMapBorder())
+            // {
+            //     return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
+            // }
 
             if (isAiming)
             {
@@ -488,19 +532,19 @@ namespace Human
             }
 
             if (!inventory.HasItem(ItemType.Wood)) return "Gather some Wood to survive through the Night";
-            var bonfires = GetClosestBonfires();
-            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new Bonfire";
+            var bonfires = GetClosestMapObjects<MapBonfire>();
+            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new MapBonfire";
         }
 
-        private bool IsCloseToMapBorder()
-        {
-            var minBorderDistance = 1f;
-            if (transform.position.x < minBorderDistance ||
-                transform.position.x > levelSize.x - minBorderDistance) return true;
-            if (transform.position.y < minBorderDistance ||
-                transform.position.y > levelSize.y - minBorderDistance) return true;
-            return false;
-        }
+        // private bool IsCloseToMapBorder()
+        // {
+        //     var minBorderDistance = 1f;
+        //     if (transform.position.x < minBorderDistance ||
+        //         transform.position.x > levelSize.x - minBorderDistance) return true;
+        //     if (transform.position.y < minBorderDistance ||
+        //         transform.position.y > levelSize.y - minBorderDistance) return true;
+        //     return false;
+        // }
 
         public bool IsFacingTowards(Vector3 position)
         {

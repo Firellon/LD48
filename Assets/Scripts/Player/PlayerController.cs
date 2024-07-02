@@ -126,9 +126,6 @@ namespace Player
 
         private void Update()
         {
-            // horizontal = Input.GetAxisRaw("Horizontal");
-            // vertical = Input.GetAxisRaw("Vertical");
-
             if (tipMessageText)
             {
                 tipMessageText.text = humanController.GetTipMessageText();
