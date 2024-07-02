@@ -537,12 +537,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfMapSize: {x: 5, y: 5}
   mapSegmentSize: {x: 12, y: 8}
+  mapObjectParent: {fileID: 0}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
   grassParent: {fileID: 0}
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
+  itemParent: {fileID: 0}
+  itemDensity: {x: 4, y: 4}
+  itemSpawnProbability: 0.25
+  spawnItemTypes: 0100000001000000010000000400000001000000010000000100000001000000
   minGateConnectivity: 3
   minGateDistance: 3
   playerSegmentText: {fileID: 0}

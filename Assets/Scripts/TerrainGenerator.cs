@@ -90,7 +90,7 @@ public class TerrainGenerator : MonoBehaviour
         itemSpawnSet = itemTypeToSpawnProbabilityMap.SelectMany(pair =>
             Enumerable.Range(1, pair.Value).Select(_ => pair.Key).Take(pair.Value)).ToList();
 
-        GenerateItems(itemSpawnProbability);
+        // GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
         GenerateDead();
         GeneratePlayer();
@@ -104,33 +104,6 @@ public class TerrainGenerator : MonoBehaviour
         }
 
         itemPositions.Clear();
-    }
-
-    public void GenerateItems(float spawnProbability)
-    {
-        DeleteItems();
-
-        if (itemSpawnSet.None())
-        {
-            Debug.LogWarning("GenerateItems > itemSpawnSet is empty, no items to generate!");
-            return;
-        }
-
-        for (var itemX = itemDensity.x / 2; itemX < levelSize.x; itemX += itemDensity.x)
-        {
-            for (var itemY = itemDensity.y / 2; itemY < levelSize.y; itemY += itemDensity.y)
-            {
-                if (Random.value > spawnProbability) continue;
-                var itemPosition = new Vector2(itemX + Random.Range(0f, itemDensity.x),
-                    itemY + Random.Range(0f, itemDensity.y));
-                itemPositions.Add(itemPosition);
-                var itemType = randomService.Sample(itemSpawnSet);
-                var itemPrefab = itemRegistry.GetItem(itemType).ItemPrefab;
-                var itemObject = prefabPool.Spawn(itemPrefab, itemParent);
-                itemObject.transform.position += new Vector3(itemPosition.x, itemPosition.y, 0);
-                items.Add(itemObject);
-            }
-        }
     }
 
     public void GenerateStrangers(float spawnProbability)

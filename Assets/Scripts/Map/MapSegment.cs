@@ -54,7 +54,7 @@ namespace Map
 
             foreach (var itemObject in ItemObjects)
             {
-                itemObject.SetActive(true);
+                if (itemObject != null) itemObject.SetActive(true);
             }
         }
 

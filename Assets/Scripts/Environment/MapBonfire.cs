@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Utilities.Prefabs;
-using Zenject;
 
 namespace Environment
 {
     public class MapBonfire : MonoBehaviour
     {
-        [Inject] private IPrefabPool prefabPool;
-
         public float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
         [SerializeField] private List<GameObject> visualEffects = new();
@@ -35,7 +31,6 @@ namespace Environment
             fireSound.Play();
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (timeToBurn > 0)
