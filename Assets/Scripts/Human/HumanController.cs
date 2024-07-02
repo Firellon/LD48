@@ -9,6 +9,7 @@ using Inventory.Signals;
 using JetBrains.Annotations;
 using LD48;
 using LD48.CharacterController2D;
+using Map;
 using Signals;
 using UnityEngine;
 using Utilities.Monads;
@@ -24,6 +25,7 @@ namespace Human
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
+        [Inject] private IMapObjectRegistry mapObjectRegistry;
 
         public IItemContainer Inventory => inventory;
         public HumanState State { get; } = new();
@@ -327,7 +329,7 @@ namespace Human
         
         private void CreateBonfire()
         {
-            var bonfirePrefab = itemRegistry.GetItem(ItemType.Bonfire).ItemPrefab;
+            var bonfirePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Bonfire).Prefab;
             var bonfire = prefabPool.Spawn(bonfirePrefab, transform.position + Vector3.down * 0.5f,
                 Quaternion.identity);
         }

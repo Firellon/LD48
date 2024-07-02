@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4278715650071772312}
   - component: {fileID: -572411631985468027}
   - component: {fileID: 4191005214743361497}
-  - component: {fileID: 2398295906508628994}
+  - component: {fileID: 4405225850342510393}
   - component: {fileID: 6649743728803296774}
   - component: {fileID: 240403883343159843}
   m_Layer: 7
@@ -220,7 +220,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2398295906508628994
+--- !u!114 &4405225850342510393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -229,13 +229,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5667914319977949734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd86b41233fd47768d14ff7f5d2a31d2, type: 3}
+  m_Script: {fileID: 11500000, guid: adb88d89fcd74a03b39b8e931a2eb870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 698b65448a6ae514d81092c5d7efd82d, type: 2}
+  mapObject: {fileID: 11400000, guid: cab9c2a52fee0b8459b8f071a1df4f94, type: 2}
   spriteRenderer: {fileID: 5667914319977949752}
-  regularShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  highlightShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
 --- !u!70 &6649743728803296774
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

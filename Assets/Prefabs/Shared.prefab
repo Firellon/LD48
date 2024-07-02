@@ -134,6 +134,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 39ad7743842c92840a05cdd5e5cc5f87, type: 2}
   - {fileID: 11400000, guid: 80777e677492838489423ae68f56243f, type: 2}
   - {fileID: 11400000, guid: 73450db4f6ea7944f844c86e3a480d05, type: 2}
+  - {fileID: 11400000, guid: cab9c2a52fee0b8459b8f071a1df4f94, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +535,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489386c9df294da6b57898b109bf5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSegmentSize: {x: 15, y: 10}
+  halfMapSize: {x: 5, y: 5}
+  mapSegmentSize: {x: 12, y: 8}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
