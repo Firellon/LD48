@@ -351,6 +351,42 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 2297988777118836439, guid: 2302d2fefd378eb45bc9434452d23c34, type: 3}
     MoveSpeed: 1
+  - MovementType: 2
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 8652183122302125244, guid: 148a74f400aad274c9aa790328083eaa, type: 3}
+    MoveSpeed: 0
+  - MovementType: 2
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 8652183122302125244, guid: 5fbe1c2e41b3daf47bab23a93006b93f, type: 3}
+    MoveSpeed: 0
+  - MovementType: 2
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 8652183122302125244, guid: f494b53c01ef28741ad27c5dfa6b70a6, type: 3}
+    MoveSpeed: 0
+  - MovementType: 2
+    AnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Prefab: {fileID: 8652183122302125244, guid: c02a36172176eef4dad1b8897546014c, type: 3}
+    MoveSpeed: 0
 --- !u!1 &4516522281272598058
 GameObject:
   m_ObjectHideFlags: 0
