@@ -20,7 +20,7 @@ namespace Player
         [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
 
         [Inject] private HumanController humanController;
-        [Inject] private IItemContainer humanInventory;
+        [Inject] private IInventory humanInventory;
 
         [SerializeField] private List<Item> initialInventoryItems = new();
 
@@ -33,7 +33,7 @@ namespace Player
         private PointerEventData clickData;
         private List<RaycastResult> clickResults = new();
 
-        public IItemContainer Inventory => humanInventory;
+        public IInventory Inventory => humanInventory;
         public IMaybe<Item> HandItem => humanInventory.HandItem;
         public HumanState State => humanController.State;
         

@@ -1,5 +1,4 @@
-﻿using System;
-using Day;
+﻿using Day;
 using FunkyCode;
 using Human;
 using LD48;

@@ -23,11 +23,10 @@ namespace Human
     public class HumanController : MonoBehaviour, IHittable
     {
         [Inject] private IPrefabPool prefabPool;
-        [Inject] private IItemContainer inventory;
-        [Inject] private IItemRegistry itemRegistry;
+        [Inject] private IInventory inventory;
         [Inject] private IMapObjectRegistry mapObjectRegistry;
 
-        public IItemContainer Inventory => inventory;
+        public IInventory Inventory => inventory;
         public HumanState State { get; } = new();
 
         private PlayerMovement2D characterController;
@@ -207,13 +206,13 @@ namespace Human
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Item"))
+            if (other.gameObject.CompareTag("Item") || other.gameObject.CompareTag("MapObject"))
             {
                 var interactable = other.gameObject.GetComponent<IInteractable>();
                 if (interactable == null)
                 {
                     Debug.LogError(
-                        $"OnCollisionEnter2D > {other.gameObject} has Item tag and lacks IInteractable component!");
+                        $"OnCollisionEnter2D > {other.gameObject} has Item/MapObject tag and lacks IInteractable component!");
                     return;
                 }
 
@@ -224,7 +223,7 @@ namespace Human
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Item"))
+            if (other.gameObject.CompareTag("Item") || other.gameObject.CompareTag("MapObject"))
             {
                 var interactable = other.gameObject.GetComponent<IInteractable>();
                 if (interactable == null)
@@ -277,6 +276,9 @@ namespace Human
                 case ItemType.Key:
                     OpenExit(item);
                     return;
+                case ItemType.Crate:
+                    PlaceCrate(item);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -303,6 +305,19 @@ namespace Human
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 CreateBonfire();
+            }
+        }
+        
+        private void PlaceCrate(Item item)
+        {
+            if (isHit || IsDead) return;
+            
+            var crates = GetClosestMapObjects<MapCrate>();
+            if (crates.None())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                var cratePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Crate).Prefab;
+                var crate = prefabPool.Spawn(cratePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);   
             }
         }
         
@@ -379,9 +394,14 @@ namespace Human
             if (itemPickupSound)
                 audio.PlayOneShot(itemPickupSound);
 
-            inventory.AddItem(interactable.Item);
+            interactable.MaybeItem.IfPresent(item => inventory.AddItem(item));
             interactableObjects.Remove(interactable);
             interactable.Remove();
+        }
+        
+        private void ToggleInteractableContainer(IInteractable interactableContainer)
+        {
+            SignalsHub.DispatchAsync(new ToggleItemContainerCommand(interactableContainer as IItemContainer));
         }
 
         public void ToggleIsAiming()
@@ -417,6 +437,9 @@ namespace Human
                 // TODO: Implement other ways to interact with objects
                 if (firstInteractableObject.CanBePickedUp)
                     PickUp(firstInteractableObject);
+
+                if (firstInteractableObject.IsItemContainer)
+                    ToggleInteractableContainer(firstInteractableObject);
             }
             else
             {

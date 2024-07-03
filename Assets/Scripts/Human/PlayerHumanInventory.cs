@@ -26,7 +26,7 @@ namespace Human
             {
                 SignalsHub.DispatchAsync(new PlayerInventoryUpdatedEvent());
             }
-                
+
             return itemAdded;
         }
 
@@ -35,19 +35,19 @@ namespace Human
             var itemRemoved = base.RemoveItem(item);
             if (itemRemoved)
             {
-                SignalsHub.DispatchAsync(new PlayerInventoryUpdatedEvent());    
+                SignalsHub.DispatchAsync(new PlayerInventoryUpdatedEvent());
             }
-            
+
             return itemRemoved;
         }
-        
+
         public override bool RemoveItem(ItemType itemType, int itemAmountToRemove)
         {
             if (!GetItem(itemType, out var itemToRemove))
             {
                 return false;
             }
-            
+
             for (var i = 0; i < itemAmountToRemove; i++)
             {
                 if (!RemoveItem(itemToRemove)) return false;

@@ -7,5 +7,6 @@ namespace LD48
         Pistol = 3,
         Book = 4,
         Key = 5,
+        Crate = 6,
     }
 }

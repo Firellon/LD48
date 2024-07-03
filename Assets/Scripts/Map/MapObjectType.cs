@@ -7,5 +7,6 @@ namespace Map
         Grass = 2,
         Exit = 3,
         Bonfire = 4,
+        Crate = 5,
     }
 }

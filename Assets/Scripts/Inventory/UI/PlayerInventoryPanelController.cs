@@ -66,7 +66,7 @@ namespace Inventory.UI
             inventoryPanel.transform.DespawnChildren(prefabPool);
             mapActorRegistry.Player.IfPresent(player =>
             {
-                for (var i = 0; i < player.Inventory.ItemSlotCount; i++)
+                for (var i = 0; i < player.Inventory.Capacity; i++)
                 {
                     var itemSlotView = prefabPool.Spawn(inventorySlotPrefab, inventoryPanel.transform)
                         .GetComponent<InventoryItemView>();

@@ -11,7 +11,7 @@ namespace Map
         [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Inject] private IRandomService randomService;
-        
+
         private void Start()
         {
             UpdateSprite();
@@ -23,10 +23,17 @@ namespace Map
                 spriteRenderer.sprite = randomService.Sample(mapObject.Sprites);
         }
 
+        public MapObject MapObject => mapObject;
+
         public void SetMapObject(MapObject newMapObject)
         {
             mapObject = newMapObject;
             UpdateSprite();
+        }
+
+        public void Remove()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

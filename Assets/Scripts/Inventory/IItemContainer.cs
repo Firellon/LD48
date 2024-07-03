@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using LD48;
-using Utilities.Monads;
 
 namespace Inventory
 {
     public interface IItemContainer
     {
-        int ItemSlotCount { get; }
+        int Capacity { get; }
         List<Item> Items { get; }
-        IMaybe<Item> HandItem { get; }
-
-        bool SetHandItem(IMaybe<Item> maybeItem);
 
         bool CanAddItem();
         bool AddItem(Item item);
