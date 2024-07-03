@@ -125,6 +125,7 @@ MonoBehaviour:
   flickerRangeMin: -0.2
   flickerRangeMax: 0.2
   light: {fileID: 2040034621758538734}
+  audioSource: {fileID: 8112646842908361540}
 --- !u!82 &8112646842908361540
 AudioSource:
   m_ObjectHideFlags: 0
