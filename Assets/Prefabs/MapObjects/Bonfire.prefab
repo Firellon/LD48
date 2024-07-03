@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 240403883343159843}
   m_Layer: 7
   m_Name: Bonfire
-  m_TagString: Wall
+  m_TagString: MapObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,6 +118,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505b56be32fba434dac7280f1f217c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5667914319977949752}
+  mapObjectController: {fileID: 4405225850342510393}
+  regularShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  highlightShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
   burnTimePerWood: 10
   fireSound: {fileID: 4191005214743361497}
   visualEffects:
