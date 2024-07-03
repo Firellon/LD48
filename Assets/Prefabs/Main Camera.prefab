@@ -183,28 +183,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSize: {x: 100, y: 100}
-  woodPrefab: {fileID: 4934778073541862276, guid: 8a990cc8ac7484d49be997e3575611fb, type: 3}
   itemParent: {fileID: 0}
-  itemDensity: {x: 5, y: 5}
+  itemDensity: {x: 3, y: 3}
   itemSpawnProbability: 0.25
-  strangerPrefabs:
-  - {fileID: 5133988400910477835, guid: 80b933b1a7f8641adbdb90f4ef789646, type: 3}
-  - {fileID: 4454069631617825706, guid: 185ceffcb9cee47fc95b3701a7b9a6b3, type: 3}
+  itemTypeToSpawnProbabilityMap:
+    keyData: 0100000002000000
+    valueData: 0500000001000000
   strangerParent: {fileID: 0}
   strangerDensity: {x: 18, y: 18}
   strangerSpawnProbability: 0.25
-  playerPrefab: {fileID: 5133988400910477835, guid: 2ffbe540af8504870bbe7222284299a3, type: 3}
   playerFollowers:
   - {fileID: 0}
   tipMessageText: {fileID: 0}
-  woodAmountText: {fileID: 0}
   deadPrefab: {fileID: 8517205137437858493, guid: c23ea6e9a4bcf4437a789d73a1b39181, type: 3}
   deadDensity: {x: 15, y: 15}
   deadParent: {fileID: 0}
   deadSpawnProbability: 0.75
-  ghostPrefab: {fileID: 5133988400910477835, guid: 80e2f39ec1bf741a9afad02b3a2684cf, type: 3}
   ghostParent: {fileID: 0}
-  ghostSpawnProbability: 0.5
+  baseGhostSpawnProbability: 4
 --- !u!114 &4906072383102550967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,9 +250,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4677152421441812855, guid: 0b537b8be4b60431aaeeb984eb35f4fb, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 2479a54676f9d4f41be9af11419280df, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c9eb545d7b86e9248966cae877579767, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0

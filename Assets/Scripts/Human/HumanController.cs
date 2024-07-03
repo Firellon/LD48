@@ -67,11 +67,14 @@ namespace Human
 
         #region Audio
 
-        public new AudioSource audio;
+        public AudioSource audio;
         [CanBeNull] public AudioClip hitSound;
         [CanBeNull] public AudioClip deadSound;
         [CanBeNull] public AudioClip shootSound;
         [CanBeNull] public AudioClip itemPickupSound;
+
+        public AudioSource walkAudio;
+        [CanBeNull] public AudioClip walkSound;
 
         #endregion
 
@@ -131,7 +134,6 @@ namespace Human
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
             dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             levelSize = terrainGenerator.levelSize;
-            if (!audio) audio = GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -247,9 +249,22 @@ namespace Human
 
             if (!body) return;
 
-            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveDirection.magnitude);
+            var moveLength = moveDirection.magnitude;
+
+            humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveLength);
             characterController.MoveSpeed = moveSpeed;
             characterController.Move(moveDirection);
+
+            if (moveLength > float.Epsilon)
+            {
+                if (walkAudio != null && !walkAudio.isPlaying)
+                    walkAudio.Play();
+            }
+            else
+            {
+                if (walkAudio != null && walkAudio.isPlaying)
+                    walkAudio.Stop();
+            }
 
             if (moveDirection.x != 0)
             {
@@ -381,6 +396,7 @@ namespace Human
             body.velocity = Vector2.zero;
             characterController.MoveSpeed = 0;
             humanAnimator.SetFloat(MovementSpeedAnimation, 0);
+            walkAudio.Stop();
         }
 
         public void PickUp(IInteractable interactable)

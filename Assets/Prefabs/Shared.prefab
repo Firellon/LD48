@@ -547,7 +547,7 @@ MonoBehaviour:
   grassDensity: {x: 2, y: 2}
   grassSpawnProbability: 0.5
   itemParent: {fileID: 0}
-  itemDensity: {x: 2, y: 2}
+  itemDensity: {x: 4, y: 4}
   itemSpawnProbability: 0.25
   spawnItemTypes: 0100000001000000010000000400000001000000010000000100000001000000
   minGateConnectivity: 3
