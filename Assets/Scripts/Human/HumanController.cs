@@ -258,12 +258,12 @@ namespace Human
 
             if (moveLength > float.Epsilon)
             {
-                if (!walkAudio.isPlaying)
+                if (walkAudio != null && !walkAudio.isPlaying)
                     walkAudio.Play();
             }
             else
             {
-                if (walkAudio.isPlaying)
+                if (walkAudio != null && walkAudio.isPlaying)
                     walkAudio.Stop();
             }
 
@@ -305,7 +305,7 @@ namespace Human
             if (bonfires.Any())
             {
                 inventory.SetHandItem(Maybe.Empty<Item>());
-                bonfires.First().AddWood();
+                bonfires.First().AddBurnableItem(burnableItem);
             }
         }
 
@@ -376,7 +376,7 @@ namespace Human
             if (shootSound) audio.PlayOneShot(shootSound);
         }
 
-        private void StopMovement()
+        public void StopMovement()
         {
             body.velocity = Vector2.zero;
             characterController.MoveSpeed = 0;
