@@ -1,4 +1,3 @@
-using System;
 using LD48;
 using UnityEngine;
 using Utilities;
@@ -13,6 +12,7 @@ namespace Inventory.UI
         [SerializeField] private GameObject inventorySlotPrefab;
 
         [Inject] private IPrefabPool prefabPool;
+        [Inject] private DiContainer diContainer;
 
         private IItemContainer _itemContainer;
 
@@ -37,6 +37,11 @@ namespace Inventory.UI
 
         public bool IsVisible => inventoryPanel.activeSelf;
 
+        public bool CanAddItem()
+        {
+            return _itemContainer.CanAddItem();
+        }
+
         public void SetUp(IItemContainer itemContainer)
         {
             _itemContainer = itemContainer;
@@ -45,14 +50,27 @@ namespace Inventory.UI
 
         private void UpdateInventoryPanelItems()
         {
-            inventoryPanel.transform.DespawnChildren(prefabPool);
+            // inventoryPanel.transform.DespawnChildren(prefabPool);
+            inventoryPanel.transform.DestroyChildren();
 
             for (var i = 0; i < _itemContainer.Capacity; i++)
             {
-                var itemSlotView = prefabPool.Spawn(inventorySlotPrefab, inventoryPanel.transform)
+                var itemSlotView = diContainer.InstantiatePrefab(inventorySlotPrefab, inventoryPanel.transform)
                     .GetComponent<InventoryItemView>();
                 itemSlotView.SetUp(_itemContainer.Items.GetElementByIndexOrEmpty(i));
             }
+        }
+
+        public void AddItem(Item item)
+        {
+            _itemContainer.AddItem(item);
+            UpdateInventoryPanelItems();
+        }
+
+        public void RemoveItem(Item item)
+        {
+            _itemContainer.RemoveItem(item);
+            UpdateInventoryPanelItems();
         }
     }
 }

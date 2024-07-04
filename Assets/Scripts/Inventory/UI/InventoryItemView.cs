@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities.Monads;
+using Zenject;
 
 namespace Inventory.UI
 {
@@ -13,6 +14,9 @@ namespace Inventory.UI
 
         [Space(10)] [SerializeField] private GameObject itemIcon;
         [SerializeField] private Image itemIconImage;
+        
+        [Inject] private ItemContainerPanelController interactableContainerPanelController;
+        [Inject] private PlayerInventoryPanelController playerInventoryPanelController;
         
         private IMaybe<Item> _maybeItem = Maybe.Empty<Item>();
 
@@ -36,7 +40,10 @@ namespace Inventory.UI
         {
             _maybeItem.IfPresent(_ =>
             {
-                HighlightItem(true);
+                if (playerInventoryPanelController.IsVisible && playerInventoryPanelController.CanAddItem())
+                {
+                    HighlightItem(true);    
+                }
             });
         }
 
@@ -49,7 +56,11 @@ namespace Inventory.UI
         {
             _maybeItem.IfPresent(item =>
             {
-                // TODO: Move into Player's Inventory
+                if (playerInventoryPanelController.IsVisible && playerInventoryPanelController.CanAddItem())
+                {
+                    playerInventoryPanelController.AddItem(item);
+                    interactableContainerPanelController.RemoveItem(item);
+                }
             });
         }
         

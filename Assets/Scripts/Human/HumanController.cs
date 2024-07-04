@@ -236,6 +236,7 @@ namespace Human
                 }
                 interactable.SetHighlight(false);
                 interactableObjects.Remove(interactable);
+                SignalsHub.DispatchAsync(new InteractableExitEvent(this, interactable));
             }
         }
 
@@ -417,7 +418,7 @@ namespace Human
         
         private void ToggleInteractableContainer(IInteractable interactableContainer)
         {
-            SignalsHub.DispatchAsync(new ToggleItemContainerCommand(interactableContainer as IItemContainer));
+            SignalsHub.DispatchAsync(new ToggleItemContainerCommand(interactableContainer as IItemContainer, interactableContainer.GameObject));
         }
 
         public void ToggleIsAiming()
