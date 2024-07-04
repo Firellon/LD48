@@ -15,6 +15,7 @@ namespace LD48.Enemies
     {
         Steps,
         Continuos,
+        Manual,
     }
 
     [Serializable]
@@ -99,6 +100,12 @@ namespace LD48.Enemies
                             .DOMoveY(endPoint.y, moveTime)
                             .SetEase(item.AnimationCurve))
                         .WaitForCompletion();
+                }
+
+                if (item.MovementType == FlyingObjectMovementType.Manual)
+                {
+                    flyingObject.transform.position = startPoint;
+                    yield break;
                 }
 
                 prefabPool.Despawn(flyingObject);
