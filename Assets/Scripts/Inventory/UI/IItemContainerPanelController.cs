@@ -1,9 +1,10 @@
 namespace Inventory.UI
 {
-    public interface IInventoryPanelController
+    public interface IItemContainerPanelController
     {
         void Show();
         void Hide();
         bool IsVisible { get; }
+        void SetUp(IItemContainer itemContainer);
     }
 }

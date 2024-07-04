@@ -8,7 +8,7 @@ namespace Inventory.UI
 {
     public class InventoryButtonController : MonoBehaviour
     {
-        [Inject] private IInventoryPanelController inventoryPanelController;
+        [Inject] private PlayerInventoryPanelController playerInventoryPanelController;
 
         [SerializeField] private Button inventoryButton;
 
@@ -31,13 +31,13 @@ namespace Inventory.UI
 
         private void ToggleInventory()
         {
-            if (inventoryPanelController.IsVisible)
+            if (playerInventoryPanelController.IsVisible)
             {
-                inventoryPanelController.Hide();
+                playerInventoryPanelController.Hide();
             }
             else
             {
-                inventoryPanelController.Show();
+                playerInventoryPanelController.Show();
             }
         }
     }

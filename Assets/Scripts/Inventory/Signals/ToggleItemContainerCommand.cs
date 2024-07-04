@@ -9,4 +9,8 @@
             ItemContainer = itemContainer;
         }
     }
+
+    public class ItemContainerUpdatedEvent
+    {
+    }
 }

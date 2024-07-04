@@ -13,7 +13,7 @@ using Zenject;
 
 namespace Inventory.UI
 {
-    public class PlayerInventoryPanelController : MonoBehaviour, IInventoryPanelController
+    public class PlayerInventoryPanelController : MonoBehaviour, IItemContainerPanelController
     {
         [SerializeField] private GameObject inventoryPanel;
         [SerializeField] private GameObject inventorySlotPrefab;
@@ -60,6 +60,10 @@ namespace Inventory.UI
         }
 
         public bool IsVisible => inventoryPanel.activeSelf;
+        public void SetUp(IItemContainer itemContainer)
+        {
+            throw new NotImplementedException();
+        }
 
         private void UpdateInventoryPanelItems()
         {
@@ -69,7 +73,7 @@ namespace Inventory.UI
                 for (var i = 0; i < player.Inventory.Capacity; i++)
                 {
                     var itemSlotView = prefabPool.Spawn(inventorySlotPrefab, inventoryPanel.transform)
-                        .GetComponent<InventoryItemView>();
+                        .GetComponent<PlayerInventoryItemView>();
                     itemSlotView.SetUp(player.Inventory.Items.GetElementByIndexOrEmpty(i), player);
                 }
             });
