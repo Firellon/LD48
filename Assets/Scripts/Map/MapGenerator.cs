@@ -35,10 +35,8 @@ namespace Map
         [ShowInInspector, ReadOnly] private HashSet<string> hiddenMapSegmentKeys = new();
         [ShowInInspector, ReadOnly] private List<Vector2Int> adjacentSegments = new(); // TODO: Remove
 
-        [Space(10)] [SerializeField] private Transform mapObjectParent;
-
         #region Trees
-
+        [Space(10)] 
         [SerializeField] private Transform treeParent;
         [SerializeField] private Vector2Int treeDensity = new(2, 2);
         [SerializeField] private float treeSpawnProbability = 0.5f;
@@ -51,6 +49,16 @@ namespace Map
         [SerializeField] private Vector2Int grassDensity = new(2, 2);
         [SerializeField] private float grassSpawnProbability = 0.5f;
 
+        #endregion
+        
+        #region MapObjects
+
+        [Space(10)] 
+        [SerializeField] private Transform mapObjectParent;
+        [SerializeField] private Vector2Int mapObjectDensity = new(4, 4);
+        [SerializeField] private float mapObjectSpawnProbability = 0.1f;
+        [SerializeField] private List<MapObjectType> spawnMapObjectTypes = new();
+        
         #endregion
 
         #region Items
@@ -264,6 +272,7 @@ namespace Map
                 Debug.Log($"Generate Exit at {segmentPosition}!");
                 mapObjects.Add(GenerateExit(topLeftCorner, bottomRightCorner));
             }
+            mapObjects.AddRange(GenerateMapObjects(topLeftCorner, bottomRightCorner));
 
             var itemObjects = new List<GameObject>();
             itemObjects.AddRange(GenerateItems(topLeftCorner, bottomRightCorner));
@@ -355,6 +364,36 @@ namespace Map
             return grassObjects;
         }
 
+        public List<GameObject> GenerateMapObjects(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            var mapObjects = new List<GameObject>();
+            if (spawnMapObjectTypes.None())
+            {
+                Debug.LogWarning($"{nameof(GenerateMapObjects)} > spawnMapObjectTypes is empty, no mapObjects to generate!");
+                return mapObjects;
+            }
+
+            for (var mapObjectX = topLeftCorner.x; mapObjectX < bottomRightCorner.x; mapObjectX += mapObjectDensity.x)
+            {
+                for (var mapObjectY = topLeftCorner.y; mapObjectY < bottomRightCorner.y; mapObjectY += mapObjectDensity.y)
+                {
+                    if (randomService.Float() > mapObjectSpawnProbability) continue;
+                    var baseMapObjectPosition = new Vector2(mapObjectX + randomService.Float(0f, mapObjectDensity.x),
+                        mapObjectY + randomService.Float(0f, mapObjectDensity.y));
+                    var mapObjectType = randomService.Sample(spawnMapObjectTypes);
+                    var mapObject = mapObjectRegistry.GetMapObject(mapObjectType);
+                    var mapObjectGO = prefabPool.Spawn(mapObject.Prefab, mapObjectParent);
+                    mapObjectGO.GetComponent<MapObjectController>().SetMapObject(mapObject);
+                    mapObjectGO.transform.position += new Vector3(baseMapObjectPosition.x + randomService.Float(-2, 2),
+                        baseMapObjectPosition.y + randomService.Float(-2, 2), 0);
+                    mapObjects.Add(mapObjectGO);
+                    Debug.Log($"Added {mapObjectType} mapObject to the segment!");
+                }
+            }
+
+            return mapObjects;
+        }
+
         public List<GameObject> GenerateItems(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
             var itemObjects = new List<GameObject>();
@@ -369,8 +408,8 @@ namespace Map
                 for (var itemY = topLeftCorner.y; itemY < bottomRightCorner.y; itemY += itemDensity.y)
                 {
                     if (randomService.Float() > itemSpawnProbability) continue;
-                    var baseItemPosition = new Vector2(itemX + randomService.Float(0f, grassDensity.x),
-                        itemY + randomService.Float(0f, grassDensity.y));
+                    var baseItemPosition = new Vector2(itemX + randomService.Float(0f, itemDensity.x),
+                        itemY + randomService.Float(0f, itemDensity.y));
                     var itemType = randomService.Sample(spawnItemTypes);
                     var itemMapObject = itemRegistry.GetItem(itemType);
                     var item = prefabPool.Spawn(itemMapObject.ItemPrefab, itemParent);

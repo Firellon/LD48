@@ -11,7 +11,7 @@ namespace Environment
 {
     public class MapCrate : ItemContainer, IInteractable
     {
-        [SerializeField] private int capacity = 9;
+        [SerializeField] private int capacity = 16;
         [ShowInInspector, ReadOnly] private List<Item> items = new();
 
         [Space]
