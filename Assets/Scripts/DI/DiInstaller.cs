@@ -5,7 +5,6 @@ using FunkyCode;
 using Inventory;
 using Map;
 using Map.Actor;
-using Signals;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
@@ -22,6 +21,7 @@ namespace DI
         [SerializeField] private ItemRegistry itemRegistry;
         [SerializeField] private DayNightCycle dayNightCycle;
         [SerializeField] private LightCycle lightCycle;
+        [SerializeField] private MapGenerator mapGenerator;
 
         protected virtual void ConfigureServices()
         {
@@ -38,6 +38,8 @@ namespace DI
             Container.Bind<IPrefabPool>().FromInstance(prefabPool).AsSingle().NonLazy();
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
+
+            Container.Bind<MapGenerator>().FromInstance(mapGenerator).AsSingle();
 
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
             Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();

@@ -44,6 +44,7 @@ namespace Human
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator humanAnimator;
         [SerializeField] private Collider2D collider2d;
+        [SerializeField] private HumanGender humanGender;
 
         private bool isHit = false;
         private bool isAiming = false;
@@ -475,7 +476,7 @@ namespace Human
                 isAiming = false;
                 humanAnimator.SetBool(IsHitAnimation, true);
                 timeToRecover = baseTimeToRecover;
-                DropItems();
+                // DropItems();
                 // TODO: Update Collider on other and on recover
                 if (hitSound) audio.PlayOneShot(hitSound);
                 foreach (var interactableObject in interactableObjects)
@@ -499,6 +500,19 @@ namespace Human
             collider2d.enabled = false;
             terrainGenerator.AddDead(transform);
             if (deadSound) audio.PlayOneShot(deadSound);
+
+            var corpseMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Corpse);
+            var corpse = prefabPool.Spawn(
+                corpseMapObject.Prefab, 
+                transform.position,
+                Quaternion.identity);
+            corpse.GetComponent<MapObjectController>().SetMapObject(corpseMapObject);
+            var mapCorpse = corpse.GetComponent<MapCorpse>(); 
+            mapCorpse.SetHumanGender(humanGender);
+            mapCorpse.SetItems(inventory.Items);
+            // TODO: Drop the Hand item
+            SignalsHub.DispatchAsync(new MapObjectAddedEvent(corpse, MapObjectType.Corpse));
+            Destroy(gameObject);
         }
 
         private void DropItems()
@@ -507,7 +521,6 @@ namespace Human
             {
                 TryDropItem(item);
                 inventory.SetHandItem(Maybe.Empty<Item>());
-                
             });
 
             while (inventory.Items.Any())
@@ -519,6 +532,7 @@ namespace Human
         }
 
         private void TryDropItem(Item item)
+        
         {
             if (!item.CanBeDropped) return;
 

@@ -19,12 +19,11 @@ namespace Environment
         [Inject] private IRandomService randomService;
         [Inject] private IItemRegistry itemRegistry;
 
-        private bool isSetUp;
-
+        private bool isSetUp = false;
         public void Start()
         {
             if (isSetUp) return;
-            SetUp(randomService.Sample(new List<HumanGender> {HumanGender.Female, HumanGender.Male}));
+            SetHumanGender(randomService.Sample(new List<HumanGender> {HumanGender.Female, HumanGender.Male}));
             var startingItemAmount = randomService.Int(0, 3);
             for (var i = 0; i < startingItemAmount; i++)
             {
@@ -34,13 +33,23 @@ namespace Environment
             }
         }
 
-        public void SetUp(HumanGender gender)
+        public void SetHumanGender(HumanGender gender)
         {
-            if (isSetUp) return;
-            isSetUp = true;
-
             if (gender == HumanGender.Male) spriteRenderer.sprite = maleSprite;
             if (gender == HumanGender.Female) spriteRenderer.sprite = femaleSprite;
+
+            isSetUp = true;
+        }
+
+        public void SetItems(IEnumerable<Item> items)
+        {
+            itemContainer.RemoveItems();
+            foreach (var item in items)
+            {
+                itemContainer.AddItem(item);
+            }
+            
+            isSetUp = true;
         }
     }
 }

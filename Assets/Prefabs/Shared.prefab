@@ -741,6 +741,7 @@ MonoBehaviour:
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
   lightCycle: {fileID: 6385964874880517366}
+  mapGenerator: {fileID: 4669150510530452025}
 --- !u!114 &1887026448949627522
 MonoBehaviour:
   m_ObjectHideFlags: 0

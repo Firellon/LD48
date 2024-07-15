@@ -19,19 +19,11 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Inject] private IMapActorRegistry mapActorRegistry;
     [Inject] private IPrefabPool prefabPool;
-    [Inject] private IItemRegistry itemRegistry;
-    [Inject] private IRandomService randomService;
 
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
 
     #region MapObjects
-
-    public Transform itemParent;
-    public Vector2Int itemDensity = new(2, 2);
-    public float itemSpawnProbability = 0.1f;
-    [SerializeField] private ItemTypeToIntSerializedDictionary itemTypeToSpawnProbabilityMap = new();
-    private List<ItemType> itemSpawnSet = new();
 
     private List<Vector2> itemPositions = new();
     private readonly List<GameObject> items = new();
@@ -81,22 +73,9 @@ public class TerrainGenerator : MonoBehaviour
     void Start()
     {
         dayNightCycle = GetComponent<DayNightCycle>();
-        itemSpawnSet = itemTypeToSpawnProbabilityMap.SelectMany(pair =>
-            Enumerable.Range(1, pair.Value).Select(_ => pair.Key).Take(pair.Value)).ToList();
 
-        // GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
         GeneratePlayer();
-    }
-
-    private void DeleteItems()
-    {
-        foreach (var item in items)
-        {
-            Destroy(item);
-        }
-
-        itemPositions.Clear();
     }
 
     public void GenerateStrangers(float spawnProbability)
@@ -143,6 +122,7 @@ public class TerrainGenerator : MonoBehaviour
         var ghostSpawnProbability = (1 - playerSanity) * (float) dayNightCycle.GetCurrentDay() / (baseGhostSpawnProbability + dayNightCycle.GetCurrentDay());
         foreach (var dead in deads)
         {
+            if (dead == null) continue;
             if (Random.value > ghostSpawnProbability) continue;
             var ghost = prefabPool.Spawn(ghostMapActor.Prefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;

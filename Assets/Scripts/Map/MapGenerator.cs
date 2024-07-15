@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Environment;
 using Inventory;
+using Inventory.Signals;
 using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
@@ -90,21 +91,34 @@ namespace Map
 
         private void OnEnable()
         {
+            SignalsHub.AddListener<MapObjectAddedEvent>(OnMapObjectAdded);
             SignalsHub.AddListener<MapItemRemovedEvent>(OnMapItemRemoved);
         }
 
         private void OnDisable()
         {
+            SignalsHub.RemoveListener<MapObjectAddedEvent>(OnMapObjectAdded);
             SignalsHub.RemoveListener<MapItemRemovedEvent>(OnMapItemRemoved);
         }
 
+        private void OnMapObjectAdded(MapObjectAddedEvent evt)
+        {
+            var mapObjectPosition = ConvertWorldPositionToSegmentPosition(evt.GameObject.transform.position);
+            if (positionsToMapSegmentKeys.TryGetValue(mapObjectPosition, out var mapObjectSegmentKey) &&
+                mapSegmentKeysToMapSegments.TryGetValue(mapObjectSegmentKey, out var mapSegment))
+            {
+                Debug.Log($"{nameof(OnMapObjectAdded)} > add map object {evt.MapObjectType} to segment {mapObjectSegmentKey}");
+                mapSegment.MapObjects.Add(evt.GameObject);
+            }
+        }
+        
         private void OnMapItemRemoved(MapItemRemovedEvent evt)
         {
             var itemPosition = ConvertWorldPositionToSegmentPosition(evt.GameObject.transform.position);
             if (positionsToMapSegmentKeys.TryGetValue(itemPosition, out var itemSegmentKey) &&
                 mapSegmentKeysToMapSegments.TryGetValue(itemSegmentKey, out var itemSegment))
             {
-                Debug.Log($"OnMapItemRemoved > remove item {evt.ItemType} from segment {itemSegmentKey}");
+                Debug.Log($"{nameof(OnMapItemRemoved)} > remove item {evt.ItemType} from segment {itemSegmentKey}");
                 itemSegment.ItemObjects.Remove(evt.GameObject);
             }
 

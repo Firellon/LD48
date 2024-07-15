@@ -256,6 +256,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3471607891558574174}
   humanAnimator: {fileID: 4777048309013230726}
   collider2d: {fileID: 5133988400910477832}
+  humanGender: 1
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
   shootAnimationLengthSeconds: 0.5
