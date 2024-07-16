@@ -3,6 +3,7 @@ using Day;
 using DITools;
 using FunkyCode;
 using Inventory;
+using LD48;
 using Map;
 using Map.Actor;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace DI
         [SerializeField] private LightCycle lightCycle;
         [SerializeField] private MapGenerator mapGenerator;
 
+        [SerializeField] private VisualsConfig visualsConfig; 
+
         protected virtual void ConfigureServices()
         {
             Container.Configure(new List<ConfigureType>
@@ -39,6 +42,7 @@ namespace DI
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
 
+            Container.Bind<VisualsConfig>().FromInstance(visualsConfig).AsSingle();
             Container.Bind<MapGenerator>().FromInstance(mapGenerator).AsSingle();
 
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();

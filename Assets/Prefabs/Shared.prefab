@@ -137,6 +137,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cab9c2a52fee0b8459b8f071a1df4f94, type: 2}
   - {fileID: 11400000, guid: 06eaee41e47e2be4c8b2382f0f1688d3, type: 2}
   - {fileID: 11400000, guid: c896cacdff9a5e94a8bd0050555c7330, type: 2}
+  - {fileID: 11400000, guid: c5e468b37dfdaaa4ea1cad4a1ea60509, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +531,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
   - {fileID: 11400000, guid: 8ad62dc47981ddd4fb5239f4c89fa473, type: 2}
   - {fileID: 11400000, guid: 1c365529c386ca04595e1bd32b14c889, type: 2}
+  - {fileID: 11400000, guid: 15224dab1c1582a4bb7655dfc0707100, type: 2}
 --- !u!1 &5930166732300080848
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,6 +744,7 @@ MonoBehaviour:
   dayNightCycle: {fileID: 0}
   lightCycle: {fileID: 6385964874880517366}
   mapGenerator: {fileID: 4669150510530452025}
+  visualsConfig: {fileID: 11400000, guid: f655ccb5147d3554aa2e8b45177d6418, type: 2}
 --- !u!114 &1887026448949627522
 MonoBehaviour:
   m_ObjectHideFlags: 0

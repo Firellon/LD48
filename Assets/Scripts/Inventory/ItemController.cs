@@ -3,6 +3,7 @@ using Map;
 using Signals;
 using UnityEngine;
 using Utilities.Monads;
+using Zenject;
 
 namespace Inventory
 {
@@ -10,8 +11,8 @@ namespace Inventory
     {
         [SerializeField] private Item item;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Material regularShader;
-        [SerializeField] private Material highlightShader;
+        
+        [Inject] private VisualsConfig visualsConfig;
 
         public Item Item => item;
         
@@ -27,7 +28,7 @@ namespace Inventory
 
         public void SetHighlight(bool isLit = true)
         {
-            spriteRenderer.material = isLit ? highlightShader : regularShader;
+            spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
         }
 
         public void Remove()

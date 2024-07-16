@@ -9,5 +9,6 @@ namespace Map
         Bonfire = 4,
         Crate = 5,
         Corpse = 6,
+        GuidePost = 7,
     }
 }

@@ -296,6 +296,9 @@ namespace Human
                 case ItemType.Crate:
                     PlaceCrate(item);
                     return;
+                case ItemType.GuidePost:
+                    PlaceGuidePost(item);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -328,6 +331,11 @@ namespace Human
         private void PlaceCrate(Item item)
         {
             if (isHit || IsDead) return;
+            if (item.ItemType != ItemType.Crate)
+            {
+                Debug.LogError($"{nameof(PlaceCrate)} > cannot place {item.ItemType} instead!");
+                return;
+            }
             
             var crates = GetClosestMapObjects<MapCrate>();
             if (crates.None())
@@ -335,6 +343,26 @@ namespace Human
                 inventory.SetHandItem(Maybe.Empty<Item>());
                 var cratePrefab = mapObjectRegistry.GetMapObject(MapObjectType.Crate).Prefab;
                 var crate = prefabPool.Spawn(cratePrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);   
+                SignalsHub.DispatchAsync(new MapObjectAddedEvent(crate, MapObjectType.Crate));
+            }
+        }
+
+        private void PlaceGuidePost(Item item)
+        {
+            if (isHit || IsDead) return;
+            if (item.ItemType != ItemType.GuidePost)
+            {
+                Debug.LogError($"{nameof(PlaceGuidePost)} > cannot place {item.ItemType} instead!");
+                return;
+            }
+            
+            var guidePosts = GetClosestMapObjects<MapGuidePost>();
+            if (guidePosts.None())
+            {
+                inventory.SetHandItem(Maybe.Empty<Item>());
+                var guidePostPrefab = mapObjectRegistry.GetMapObject(MapObjectType.GuidePost).Prefab;
+                var guidePost = prefabPool.Spawn(guidePostPrefab, transform.position + Vector3.down * 0.5f, Quaternion.identity);
+                SignalsHub.DispatchAsync(new MapObjectAddedEvent(guidePost, MapObjectType.GuidePost));
             }
         }
         

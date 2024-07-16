@@ -6,6 +6,7 @@ using Signals;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities.Monads;
+using Zenject;
 
 namespace Environment
 {
@@ -13,14 +14,14 @@ namespace Environment
     {
         [SerializeField] private SpriteRenderer spriteRenderer; // TODO: Inject
         [SerializeField] private MapObjectController mapObjectController; // TODO: Inject
-        [SerializeField] private Material regularShader;
-        [SerializeField] private Material highlightShader;
         
         [Space]
         [SerializeField] private float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
         [SerializeField] private List<GameObject> visualEffects = new();
         [SerializeField] private ParticleSystem fireEffect;
+        
+        [Inject] private VisualsConfig visualsConfig;
 
         private float timeToBurn = 0f;
         private bool isBurning;
@@ -95,7 +96,7 @@ namespace Environment
         public GameObject GameObject => gameObject;
         public void SetHighlight(bool isLit)
         {
-            spriteRenderer.material = isLit ? highlightShader : regularShader;
+            spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
         }
 
         public void Remove()
