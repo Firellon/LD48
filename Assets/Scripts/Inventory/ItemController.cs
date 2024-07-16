@@ -1,3 +1,4 @@
+using Human;
 using LD48;
 using Map;
 using Signals;
@@ -19,7 +20,6 @@ namespace Inventory
         #region IInteractable
         
         public bool CanBePickedUp => item.CanBePickedUp;
-        public bool IsItemContainer => false;
 
         public IMaybe<Item> MaybeItem => item.ToMaybe();
 
@@ -29,6 +29,11 @@ namespace Inventory
         public void SetHighlight(bool isLit = true)
         {
             spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
+        }
+
+        public void Interact(HumanController humanController)
+        {
+            // TODO: Implement Picking it up
         }
 
         public void Remove()

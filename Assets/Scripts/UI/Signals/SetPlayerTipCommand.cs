@@ -1,4 +1,4 @@
-﻿namespace Player.UI
+﻿namespace UI.Signals
 {
     public class SetPlayerTipCommand
     {

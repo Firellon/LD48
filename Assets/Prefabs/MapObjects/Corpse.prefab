@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1140258660782525754}
   - component: {fileID: 241581296046243404}
   - component: {fileID: 796442472036789964}
+  - component: {fileID: 4260336577412508253}
+  - component: {fileID: 6190867439742929853}
   - component: {fileID: -8551982333944625844}
   - component: {fileID: 4926377219162670675}
   - component: {fileID: 2276775032157319986}
@@ -102,6 +104,38 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &4260336577412508253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8517205137437858493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 6190867439742929853}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &6190867439742929853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8517205137437858493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea511d8b2eda40c7a8719d08d62ac890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 241581296046243404}
+  mapObjectController: {fileID: -8551982333944625844}
 --- !u!114 &-8551982333944625844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,10 +163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capacity: 9
-  mapObjectController: {fileID: -8551982333944625844}
-  spriteRenderer: {fileID: 241581296046243404}
-  regularShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  highlightShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
 --- !u!114 &2276775032157319986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,7 +176,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemContainer: {fileID: 4926377219162670675}
-  spriteRenderer: {fileID: 241581296046243404}
   maleSprite: {fileID: -1457070783, guid: d1fc7be84d497c844a223a7f510f1e2a, type: 3}
   femaleSprite: {fileID: -180903842, guid: fee1a89699f990b4985ab8f7a75d4763, type: 3}
   startingItemTypes: 01000000010000000100000004000000

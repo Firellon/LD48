@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5667914319977949752}
   - component: {fileID: 4278715650071772312}
   - component: {fileID: 4191005214743361497}
+  - component: {fileID: 8278496847972893988}
+  - component: {fileID: 8695772448060171628}
   - component: {fileID: 8778291578602689761}
   - component: {fileID: 9175035632687583115}
   - component: {fileID: 6649743728803296774}
@@ -201,6 +203,38 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8278496847972893988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 8695772448060171628}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &8695772448060171628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea511d8b2eda40c7a8719d08d62ac890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5667914319977949752}
+  mapObjectController: {fileID: 9175035632687583115}
 --- !u!114 &8778291578602689761
 MonoBehaviour:
   m_ObjectHideFlags: 0

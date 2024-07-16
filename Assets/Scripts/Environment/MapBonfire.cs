@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Human;
 using Inventory;
 using LD48;
 using Map;
@@ -12,16 +13,14 @@ namespace Environment
 {
     public class MapBonfire : MonoBehaviour, IInteractable
     {
-        [SerializeField] private SpriteRenderer spriteRenderer; // TODO: Inject
-        [SerializeField] private MapObjectController mapObjectController; // TODO: Inject
-        
-        [Space]
         [SerializeField] private float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
         [SerializeField] private List<GameObject> visualEffects = new();
         [SerializeField] private ParticleSystem fireEffect;
         
         [Inject] private VisualsConfig visualsConfig;
+        [Inject] private SpriteRenderer spriteRenderer; 
+        [Inject] private MapObjectController mapObjectController;
 
         private float timeToBurn = 0f;
         private bool isBurning;
@@ -90,13 +89,17 @@ namespace Environment
         #region IInteractable
 
         public bool CanBePickedUp => false;
-        public bool IsItemContainer => false;
         public IMaybe<Item> MaybeItem => Maybe.Empty<Item>();
         public IMaybe<MapObject> MaybeMapObject => mapObjectController.MapObject.ToMaybe();
         public GameObject GameObject => gameObject;
         public void SetHighlight(bool isLit)
         {
             spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
+        }
+
+        public void Interact(HumanController humanController)
+        {
+            // TODO: Add a burnable item to the fire if possible
         }
 
         public void Remove()

@@ -8,9 +8,9 @@ namespace Map
     public class MapObjectController : MonoBehaviour
     {
         [SerializeField] private MapObject mapObject;
-        [SerializeField] private SpriteRenderer spriteRenderer;
 
         [Inject] private IRandomService randomService;
+        [Inject] private SpriteRenderer spriteRenderer;
 
         private void Start()
         {

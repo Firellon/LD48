@@ -444,11 +444,6 @@ namespace Human
             interactableObjects.Remove(interactable);
             interactable.Remove();
         }
-        
-        private void ToggleInteractableContainer(IInteractable interactableContainer)
-        {
-            SignalsHub.DispatchAsync(new ToggleItemContainerCommand(interactableContainer as IItemContainer, interactableContainer.GameObject));
-        }
 
         public void ToggleIsAiming()
         {
@@ -482,10 +477,12 @@ namespace Human
                 var firstInteractableObject = interactableObjects.First();
                 // TODO: Implement other ways to interact with objects
                 if (firstInteractableObject.CanBePickedUp)
+                {
                     PickUp(firstInteractableObject);
+                    return;
+                }
 
-                if (firstInteractableObject.IsItemContainer)
-                    ToggleInteractableContainer(firstInteractableObject);
+                firstInteractableObject.Interact(this);
             }
             else
             {

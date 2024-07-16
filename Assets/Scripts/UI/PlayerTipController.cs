@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
 using Signals;
 using TMPro;
+using UI.Signals;
 using UnityEngine;
 
-namespace Player.UI
+namespace UI
 {
     public class PlayerTipController : MonoBehaviour
     {

@@ -11,13 +11,13 @@ namespace Environment
     public class MapCorpse : MonoBehaviour
     {
         [SerializeField] private MapCrate itemContainer; // TODO Inject IItemContainer
-        [SerializeField] private SpriteRenderer spriteRenderer; // TODO: inject
         [SerializeField] private Sprite maleSprite;
         [SerializeField] private Sprite femaleSprite;
         [SerializeField] private List<ItemType> startingItemTypes;
 
         [Inject] private IRandomService randomService;
         [Inject] private IItemRegistry itemRegistry;
+        [Inject] private SpriteRenderer spriteRenderer; // TODO: inject
 
         private bool isSetUp = false;
         public void Start()

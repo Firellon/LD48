@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5667914319977949752}
   - component: {fileID: 4278715650071772312}
   - component: {fileID: 4191005214743361497}
+  - component: {fileID: 5651145860396256003}
+  - component: {fileID: 912413284844970667}
   - component: {fileID: 4405225850342510393}
   - component: {fileID: 836569105615175606}
   - component: {fileID: 6649743728803296774}
@@ -199,6 +201,38 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5651145860396256003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 912413284844970667}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &912413284844970667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea511d8b2eda40c7a8719d08d62ac890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5667914319977949752}
+  mapObjectController: {fileID: 4405225850342510393}
 --- !u!114 &4405225850342510393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapObject: {fileID: 11400000, guid: c5e468b37dfdaaa4ea1cad4a1ea60509, type: 2}
-  spriteRenderer: {fileID: 5667914319977949752}
 --- !u!114 &836569105615175606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,10 +258,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc12e5dc91144ec87347b59392c4916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapObjectController: {fileID: 4405225850342510393}
-  spriteRenderer: {fileID: 5667914319977949752}
-  regularShader: {fileID: 0}
-  highlightShader: {fileID: 0}
 --- !u!70 &6649743728803296774
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

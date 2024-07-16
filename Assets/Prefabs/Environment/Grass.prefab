@@ -93,6 +93,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7917349791545079184}
+  - component: {fileID: -7641924394572697298}
+  - component: {fileID: -7265789138818292505}
   - component: {fileID: -7507826435601743739}
   - component: {fileID: 5202053566771902750}
   - component: {fileID: 2949338123441944029}
@@ -120,6 +122,38 @@ Transform:
   - {fileID: 5705294788044446275}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7641924394572697298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437584075045460538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: -7265789138818292505}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &-7265789138818292505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437584075045460538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea511d8b2eda40c7a8719d08d62ac890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5202053566771902750}
+  mapObjectController: {fileID: -7507826435601743739}
 --- !u!114 &-7507826435601743739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +167,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapObject: {fileID: 11400000, guid: 80777e677492838489423ae68f56243f, type: 2}
-  spriteRenderer: {fileID: 5202053566771902750}
 --- !u!212 &5202053566771902750
 SpriteRenderer:
   m_ObjectHideFlags: 0

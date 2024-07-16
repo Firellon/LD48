@@ -3,9 +3,9 @@ using System.Collections;
 using DG.Tweening;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
-using Player.UI;
 using Signals;
 using TMPro;
+using UI.Signals;
 using UnityEngine;
 
 namespace Day
