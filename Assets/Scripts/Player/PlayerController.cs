@@ -17,8 +17,6 @@ namespace Player
 {
     public class PlayerController : MonoBehaviour
     {
-        [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
-
         [Inject] private HumanController humanController;
         [Inject] private IInventory humanInventory;
 
@@ -122,14 +120,6 @@ namespace Player
             playerInput.HumanPlayer.Interact.performed -= OnInteract;
 
             playerInput.HumanPlayer.Inventory.performed -= OnInventory;
-        }
-
-        private void Update()
-        {
-            if (tipMessageText)
-            {
-                tipMessageText.text = humanController.GetTipMessageText();
-            }
         }
 
         private void FixedUpdate()

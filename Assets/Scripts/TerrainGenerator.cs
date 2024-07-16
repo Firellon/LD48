@@ -45,7 +45,6 @@ public class TerrainGenerator : MonoBehaviour
     private GameObject player;
     private CinemachineVirtualCamera cinemachineCam;
     public List<ObjectFollower> playerFollowers;
-    public TMP_Text tipMessageText;
 
     #endregion
 
@@ -102,7 +101,6 @@ public class TerrainGenerator : MonoBehaviour
         var playerObject = prefabPool.Spawn(playerMapActor.Prefab, new Vector2(levelSize.x / 2, levelSize.y / 2),
             Quaternion.identity);
         var playerController = playerObject.GetComponent<PlayerController>();
-        playerController.tipMessageText = tipMessageText;
 
         cinemachineCam.Follow = playerController.transform;
 

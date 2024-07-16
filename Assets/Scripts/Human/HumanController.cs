@@ -542,48 +542,6 @@ namespace Human
             itemObject.GetComponent<ItemController>().SetItem(item);
         }
 
-        public string GetTipMessageText()
-        {
-            if (HasWon)
-            {
-                return $"Congrats! You have found the exit from this endless forest in {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
-            }
-            
-            if (IsDead)
-            {
-                return $"Alas, you have died after surviving for {dayNightCycle.GetCurrentDay()} days. Press R to restart.";
-            }
-
-            if (isHit)
-            {
-                return "You have been wounded, a few seconds needed to recover!";
-            }
-
-            // if (IsCloseToMapBorder())
-            // {
-            //     return "You are about to leave the Forest!\n To find what you seek, try going Deeper instead.";
-            // }
-
-            if (isAiming)
-            {
-                return "Press LMB to Shoot";
-            }
-
-            if (!inventory.HasItem(ItemType.Wood)) return "Gather some Wood to survive through the Night";
-            var bonfires = GetClosestMapObjects<MapBonfire>();
-            return bonfires.Any() ? "Press LMB to add Wood to the bonfire" : "Press LMB to start a new MapBonfire";
-        }
-
-        // private bool IsCloseToMapBorder()
-        // {
-        //     var minBorderDistance = 1f;
-        //     if (transform.position.x < minBorderDistance ||
-        //         transform.position.x > levelSize.x - minBorderDistance) return true;
-        //     if (transform.position.y < minBorderDistance ||
-        //         transform.position.y > levelSize.y - minBorderDistance) return true;
-        //     return false;
-        // }
-
         public bool IsFacingTowards(Vector3 position)
         {
             return spriteRenderer.flipX ? transform.position.x - position.x > 0 : position.x - transform.position.x > 0;

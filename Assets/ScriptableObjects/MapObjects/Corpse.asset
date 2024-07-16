@@ -14,6 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8517205137437858493, guid: c23ea6e9a4bcf4437a789d73a1b39181, type: 3}
   mapObjectType: 6
-  sprites:
-  - {fileID: -180903842, guid: fee1a89699f990b4985ab8f7a75d4763, type: 3}
-  - {fileID: -1457070783, guid: d1fc7be84d497c844a223a7f510f1e2a, type: 3}
+  sprites: []
