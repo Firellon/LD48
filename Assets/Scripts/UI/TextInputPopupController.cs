@@ -1,4 +1,5 @@
 ﻿using System;
+using Player;
 using Signals;
 using TMPro;
 using UI.Signals;
@@ -40,6 +41,7 @@ namespace UI
 
         private void Show(ShowTextInputPopupCommand command)
         {
+            SignalsHub.DispatchAsync(new PlayerInputEnabledEvent(false));
             textInputLabel.text = command.Label;
             textInputField.text = command.CurrentText;
             maybeOnTextEntered = command.OnTextEntered.ToMaybe();
@@ -52,6 +54,7 @@ namespace UI
             textInputField.text = string.Empty;
             popupGameObject.SetActive(false);
             maybeOnTextEntered = Maybe.Empty<Func<string, string>>();
+            SignalsHub.DispatchAsync(new PlayerInputEnabledEvent(true));
         }
         
         private void OnClose()
