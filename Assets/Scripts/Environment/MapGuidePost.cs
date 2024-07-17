@@ -6,7 +6,6 @@ using Signals;
 using UI;
 using UI.Signals;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Utilities.Monads;
 using Zenject;
 
@@ -17,6 +16,9 @@ namespace Environment
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
         [Inject] private SpriteRenderer spriteRenderer;
+        
+        [SerializeField] private Vector2 leftBottomTooltipOffset;
+        [SerializeField] private Vector2 rightTopTooltipOffset;
 
         public bool CanBePickedUp => false;
         public IMaybe<Item> MaybeItem => Maybe.Empty<Item>();
@@ -44,5 +46,7 @@ namespace Environment
         }
 
         public string TooltipText => GuidePostText;
+        public Vector2 LeftBottomTooltipOffset => leftBottomTooltipOffset;
+        public Vector2 RightTopTooltipOffset => rightTopTooltipOffset;
     }
 }

@@ -258,6 +258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc12e5dc91144ec87347b59392c4916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftBottomTooltipOffset: {x: -10, y: 50}
+  rightTopTooltipOffset: {x: 10, y: -20}
 --- !u!70 &6649743728803296774
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
