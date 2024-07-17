@@ -7,8 +7,10 @@ namespace LD48
     {
         [SerializeField] private Material regularInteractableShader;
         [SerializeField] private Material highlightedInteractableShader;
+        [SerializeField] private GameObject temporaryItemPrefab;
 
         public Material RegularInteractableShader => regularInteractableShader;
         public Material HighlightedInteractableShader => highlightedInteractableShader;
+        public GameObject TemporaryItemPrefab => temporaryItemPrefab;
     }
 }

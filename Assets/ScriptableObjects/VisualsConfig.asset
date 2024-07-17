@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   regularInteractableShader: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   highlightedInteractableShader: {fileID: 2100000, guid: aa1c583575ebfd240adc8b14738002a3, type: 2}
+  temporaryItemPrefab: {fileID: 1673212100811290324, guid: dadf364a0340f4445b91e3972eae04f3, type: 3}
