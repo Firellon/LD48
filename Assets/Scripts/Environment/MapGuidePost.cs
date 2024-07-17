@@ -3,14 +3,16 @@ using Inventory;
 using LD48;
 using Map;
 using Signals;
+using UI;
 using UI.Signals;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities.Monads;
 using Zenject;
 
 namespace Environment
 {
-    public class MapGuidePost : MonoBehaviour, IInteractable
+    public class MapGuidePost : MonoBehaviour, IInteractable, IHoverTooltipTarget
     {
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
@@ -40,5 +42,7 @@ namespace Environment
         {
             SignalsHub.DispatchAsync(new MapObjectRemovedEvent(GameObject, mapObjectController.MapObject.ObjectType));
         }
+
+        public string TooltipText => GuidePostText;
     }
 }
