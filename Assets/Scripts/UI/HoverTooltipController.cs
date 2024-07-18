@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Linq;
 using DG.Tweening;
+using Signals;
 using TMPro;
+using UI.Signals;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,6 +20,20 @@ namespace UI
         private Coroutine startTooltipHoverCoroutine;
         private Coroutine hideHoverTooltipCoroutine;
 
+        private bool isTooltipForced;
+
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<ShowHoverTooltipCommand>(OnShowHoverTooltipCommand);
+            SignalsHub.AddListener<HideHoverTooltipCommand>(OnHideHoverTooltipCommand);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<ShowHoverTooltipCommand>(OnShowHoverTooltipCommand);
+            SignalsHub.RemoveListener<HideHoverTooltipCommand>(OnHideHoverTooltipCommand);
+        }
+
         private void Start()
         {
             tooltipRectTransform = tooltipGameObject.transform as RectTransform;
@@ -26,19 +42,32 @@ namespace UI
 
         private void Update()
         {
+            if (isTooltipForced) return;
             if (!UIExtensions.IsPointerOverUIElement() &&
                 UIExtensions.IsPointerOverElement(IsHoverTooltipTarget, out var hoverTooltipTargets))
             {
                 var firstRaycastTarget = hoverTooltipTargets.First();
                 var firstTooltipTarget = firstRaycastTarget.gameObject.GetComponent<IHoverTooltipTarget>();
-                var targetScreenPosition =
-                    Camera.main.WorldToScreenPoint(firstRaycastTarget.gameObject.transform.position); // TODO: Inject
+                var targetScreenPosition = Camera.main
+                    .WorldToScreenPoint(firstRaycastTarget.gameObject.transform.position); // TODO: Inject Camera
                 ShowHoverTooltip(targetScreenPosition, firstTooltipTarget);
             }
             else
             {
                 HideHoverTooltip();
             }
+        }
+
+        private void OnHideHoverTooltipCommand(HideHoverTooltipCommand command)
+        {
+            isTooltipForced = false;
+            HideHoverTooltip();
+        }
+
+        private void OnShowHoverTooltipCommand(ShowHoverTooltipCommand command)
+        {
+            isTooltipForced = true;
+            ShowHoverTooltip(command.TargetScreenPosition, command.TooltipText, command.TooltipOffset);
         }
 
         private bool IsHoverTooltipTarget(RaycastResult raycastResult)
@@ -59,6 +88,20 @@ namespace UI
             tooltipRectTransform.position = hoverPosition + pivotedOffset;
 
             tooltipText.text = tooltipTarget.TooltipText;
+            tooltipGameObject.SetActive(true);
+
+            if (startTooltipHoverCoroutine != null) return;
+            startTooltipHoverCoroutine = StartCoroutine(StartHoverTooltipCoroutine());
+        }
+
+        private void ShowHoverTooltip(Vector3 hoverPosition, string text, Vector3 tooltipOffset)
+        {
+            tooltipRectTransform.pivot = new Vector2(
+                0.5f,
+                0.5f);
+            tooltipRectTransform.position = hoverPosition + tooltipOffset;
+
+            tooltipText.text = text;
             tooltipGameObject.SetActive(true);
 
             if (startTooltipHoverCoroutine != null) return;

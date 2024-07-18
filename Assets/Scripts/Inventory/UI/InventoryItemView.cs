@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Signals;
+using UI.Signals;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities.Monads;
@@ -15,24 +17,24 @@ namespace Inventory.UI
         [Space(10)] [SerializeField] private GameObject itemIcon;
         [SerializeField] private Image itemIconImage;
         
+        [Space(10)]
+        [SerializeField] private Vector3 tooltipOffset = new(0, 40);
+
         [Inject] private ItemContainerPanelController interactableContainerPanelController;
         [Inject] private PlayerInventoryPanelController playerInventoryPanelController;
-        
+
         private IMaybe<Item> _maybeItem = Maybe.Empty<Item>();
 
         public void SetUp(IMaybe<Item> maybeItem)
         {
             _maybeItem = maybeItem;
-            
+
             maybeItem.IfPresent(item =>
             {
                 itemIcon.SetActive(true);
                 itemIconImage.sprite = item.InventoryItemSprite;
-            }).IfNotPresent(() =>
-            {
-                itemIcon.SetActive(false);
-            });
-            
+            }).IfNotPresent(() => { itemIcon.SetActive(false); });
+
             HighlightItem(false);
         }
 
@@ -42,7 +44,14 @@ namespace Inventory.UI
             {
                 if (playerInventoryPanelController.IsVisible && playerInventoryPanelController.CanAddItem())
                 {
-                    HighlightItem(true);    
+                    HighlightItem(true);
+                }
+                else
+                {
+                    SignalsHub.DispatchAsync(new ShowHoverTooltipCommand(
+                        transform.position, 
+                        "Inventory is full!",
+                        tooltipOffset));
                 }
             });
         }
@@ -50,6 +59,7 @@ namespace Inventory.UI
         public void OnPointerExit(PointerEventData eventData)
         {
             HighlightItem(false);
+            SignalsHub.DispatchAsync(new HideHoverTooltipCommand());
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -63,7 +73,7 @@ namespace Inventory.UI
                 }
             });
         }
-        
+
         private void HighlightItem(bool isHighlighted)
         {
             itemBackground.sprite = isHighlighted ? focusedBackgroundSprite : unfocusedBackgroundSprite;
