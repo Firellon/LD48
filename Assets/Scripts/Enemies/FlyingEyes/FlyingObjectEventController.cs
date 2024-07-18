@@ -16,6 +16,13 @@ namespace LD48.Enemies
         Steps,
         Continuos,
         Manual,
+        WalkingAround,
+    }
+
+    [Serializable]
+    public class FlyingObjectItemOptions
+    {
+        public float StepsDelay;
     }
 
     [Serializable]
@@ -25,6 +32,8 @@ namespace LD48.Enemies
         public AnimationCurve AnimationCurve;
         public GameObject Prefab;
         public float MoveSpeed;
+
+        public FlyingObjectItemOptions Options;
     }
 
     public class FlyingObjectEventController : MonoBehaviour
@@ -49,6 +58,8 @@ namespace LD48.Enemies
         {
             while (true)
             {
+                yield return new WaitForSeconds(1f);
+
                 if (lightCycle.Time < 0.9f)
                 {
                     yield return null;
@@ -106,6 +117,32 @@ namespace LD48.Enemies
                 {
                     flyingObject.transform.position = startPoint;
                     yield break;
+                }
+
+                if (item.MovementType == FlyingObjectMovementType.WalkingAround)
+                {
+                    var moves = randomService.Int(3, 5);
+
+                    for (var i = 1; i <= moves; i++)
+                    {
+                        var nextPoint = enemiesHelper.FindPointAround(startPoint, 2f);
+
+                        flyingObject.transform.position = startPoint;
+
+                        moveTime = Vector2.Distance(startPoint, nextPoint) / item.MoveSpeed;
+
+                        yield return DOTween.Sequence()
+                            .Append(flyingObject.transform
+                                .DOMoveX(nextPoint.x, moveTime))
+                            .Insert(0f, flyingObject.transform
+                                .DOMoveY(nextPoint.y, moveTime)
+                                .SetEase(item.AnimationCurve))
+                            .WaitForCompletion();
+
+                        yield return new WaitForSeconds(item.Options.StepsDelay);
+
+                        startPoint = nextPoint;
+                    }
                 }
 
                 prefabPool.Despawn(flyingObject);

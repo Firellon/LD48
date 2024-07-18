@@ -6,6 +6,7 @@
     "com.nebulateme.di_tools": "https://github.com/Nebulate-me/DI-Tools.git",
     "com.nebulateme.signals": "https://github.com/Nebulate-me/SignalsHub.git",
     "com.nebulateme.utilities": "https://github.com/Nebulate-me/Unity-Utilities.git",
+    "com.unity.2d.tilemap.extras": "https://github.com/Unity-Technologies/2d-extras.git#master",
     "com.unity.cinemachine": "2.9.7",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.2d": "2.0.0",
