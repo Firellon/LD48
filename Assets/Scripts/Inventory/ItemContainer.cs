@@ -47,6 +47,10 @@ namespace Inventory
 
             return true;
         }
+        public virtual void RemoveItems()
+        {
+            Items.Clear();
+        }
 
         public bool HasItem(Item item)
         {

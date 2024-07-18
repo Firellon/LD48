@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
+using Human;
 using Inventory;
+using Inventory.Signals;
 using LD48;
 using Map;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Monads;
+using Zenject;
 
 namespace Environment
 {
     public class MapCrate : ItemContainer, IInteractable
     {
-        [SerializeField] private int capacity = 9;
+        [SerializeField] private int capacity = 16;
         [ShowInInspector, ReadOnly] private List<Item> items = new();
 
-        [Space]
-        [SerializeField] private MapObjectController mapObjectController; // TODO: Inject
-        [SerializeField] private SpriteRenderer spriteRenderer; // TODO: inject
-        [SerializeField] private Material regularShader;
-        [SerializeField] private Material highlightShader;
+        [Inject] private MapObjectController mapObjectController;
+        [Inject] private SpriteRenderer spriteRenderer;
+        [Inject] private VisualsConfig visualsConfig;
 
         public override int Capacity => capacity;
         public override List<Item> Items => items;
@@ -26,15 +27,22 @@ namespace Environment
         #region IInteractable
 
         public bool CanBePickedUp => false;
-        public bool IsItemContainer => true;
 
         public IMaybe<Item> MaybeItem => Maybe.Empty<Item>();
 
         public IMaybe<MapObject> MaybeMapObject => mapObjectController.MapObject.ToMaybe();
         public GameObject GameObject => gameObject;
+
         public void SetHighlight(bool isLit)
         {
-            spriteRenderer.material = isLit ? highlightShader : regularShader;
+            spriteRenderer.material =
+                isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
+        }
+
+        public void Interact(HumanController humanController)
+        {
+            SignalsHub.DispatchAsync(new ToggleItemContainerCommand(this, GameObject));
+            SignalsHub.DispatchAsync(new ShowInventoryCommand());
         }
 
         public void Remove()

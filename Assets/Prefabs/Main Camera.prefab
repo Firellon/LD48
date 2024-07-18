@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 98666378576296824}
   - component: {fileID: 2922954531186986372}
+  - component: {fileID: 3385117890041560405}
   - component: {fileID: 3164662886346592670}
   - component: {fileID: 7920688031621408536}
   - component: {fileID: 7476991000698447668}
@@ -94,6 +95,22 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &3385117890041560405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304517227016174079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56666c5a40171f54783dd416a44f42bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 129
+  m_MaxRayIntersections: 0
 --- !u!81 &3164662886346592670
 AudioListener:
   m_ObjectHideFlags: 0
@@ -183,22 +200,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSize: {x: 100, y: 100}
-  itemParent: {fileID: 0}
-  itemDensity: {x: 3, y: 3}
-  itemSpawnProbability: 0.25
-  itemTypeToSpawnProbabilityMap:
-    keyData: 0100000002000000
-    valueData: 0500000001000000
   strangerParent: {fileID: 0}
   strangerDensity: {x: 18, y: 18}
   strangerSpawnProbability: 0.25
   playerFollowers:
   - {fileID: 0}
-  tipMessageText: {fileID: 0}
-  deadPrefab: {fileID: 8517205137437858493, guid: c23ea6e9a4bcf4437a789d73a1b39181, type: 3}
-  deadDensity: {x: 15, y: 15}
-  deadParent: {fileID: 0}
-  deadSpawnProbability: 0.75
   ghostParent: {fileID: 0}
   baseGhostSpawnProbability: 4
 --- !u!114 &4906072383102550967
@@ -215,7 +221,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cycleLength: 15
   nightLengthGrowth: 2
-  cycleMessage: {fileID: 0}
   dayIntensity: 0
   nightIntensity: 1
   nextDayTime:

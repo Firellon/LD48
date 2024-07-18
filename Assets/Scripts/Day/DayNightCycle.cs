@@ -3,7 +3,9 @@ using System.Collections;
 using DG.Tweening;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
+using Signals;
 using TMPro;
+using UI.Signals;
 using UnityEngine;
 
 namespace Day
@@ -15,9 +17,7 @@ namespace Day
         [SerializeField] private float cycleLength = 15f;
 
         [SerializeField] private int nightLengthGrowth = 2;
-
-        [SerializeField] private TMP_Text cycleMessage;
-
+        
         [SerializeField] private float dayIntensity = 0f;
         [SerializeField] private float nightIntensity = 1f;
 
@@ -58,7 +58,6 @@ namespace Day
         private IEnumerator DayNightCycleProcess()
         {
             SetDarknessLevel(GetTargetLightIntensity(currentCycle));
-            cycleMessage.SetText("");
 
             while (true)
             {
@@ -80,7 +79,7 @@ namespace Day
 
                 currentCycle = GetNextCycle(currentCycle);
 
-                StartCoroutine(ShowCycleMessage(currentCycle));
+                ShowCycleMessage(currentCycle);
 
                 if (currentCycle == DayTime.DayComing)
                 {
@@ -117,16 +116,9 @@ namespace Day
             return cycleLength;
         }
 
-        private IEnumerator ShowCycleMessage(DayTime cycle)
+        private void ShowCycleMessage(DayTime cycle)
         {
-            cycleMessage.alpha = 0f;
-            cycleMessage.text = GetCycleMessage(cycle);
-
-            yield return cycleMessage.DOFade(1f, 0.5f);
-
-            yield return new WaitForSeconds(5f);
-
-            yield return cycleMessage.DOFade(0f, 0.5f);
+            SignalsHub.DispatchAsync(new SetPlayerTipCommand(GetCycleMessage(cycle)));
         }
 
         private string GetCycleMessage(DayTime dayTime)

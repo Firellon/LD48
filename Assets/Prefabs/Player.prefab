@@ -100,10 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb01107ec51b949c3b81ff152eec2ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipMessageText: {fileID: 0}
   initialInventoryItems:
   - {fileID: 11400000, guid: 9a878a05b85c4814b9db636b1c772d55, type: 2}
   - {fileID: 11400000, guid: 56ac4fca9ad6be04f8f215642dab0e7f, type: 2}
+  - {fileID: 11400000, guid: 15224dab1c1582a4bb7655dfc0707100, type: 2}
   pointerPositionInput: {fileID: -5546266567474852310, guid: 0075e90841b352443ab31869889e216d, type: 3}
 --- !u!114 &2036147488874963323
 MonoBehaviour:
@@ -134,9 +134,11 @@ MonoBehaviour:
   bulletPosition: {x: 0.52, y: 0.62}
   bulletPrefab: {fileID: 3946231247244719117, guid: f1fa1828a0ac044a78eab208a5a76ec1, type: 3}
   fireTouchRadius: 1
+  mapObjectTouchRadius: 1
   spriteRenderer: {fileID: 2517725035491772571}
   humanAnimator: {fileID: 6324449375686134154}
   collider2d: {fileID: 8292827878907360640}
+  humanGender: 1
   baseTimeToRecover: 5
   baseTimeToReload: 0.5
   shootAnimationLengthSeconds: 0.5

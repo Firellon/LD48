@@ -1,8 +1,10 @@
-using Player;
+﻿using Signals;
+using UI.Signals;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities.Monads;
+using Zenject;
 
 namespace Inventory.UI
 {
@@ -14,15 +16,18 @@ namespace Inventory.UI
 
         [Space(10)] [SerializeField] private GameObject itemIcon;
         [SerializeField] private Image itemIconImage;
+        
+        [Space(10)]
+        [SerializeField] private Vector3 tooltipOffset = new(0, 40);
 
+        [Inject] private ItemContainerPanelController interactableContainerPanelController;
+        [Inject] private PlayerInventoryPanelController playerInventoryPanelController;
 
         private IMaybe<Item> _maybeItem = Maybe.Empty<Item>();
-        private PlayerController _player;
 
-        public void SetUp(IMaybe<Item> maybeItem, PlayerController player)
+        public void SetUp(IMaybe<Item> maybeItem)
         {
             _maybeItem = maybeItem;
-            _player = player;
 
             maybeItem.IfPresent(item =>
             {
@@ -35,11 +40,18 @@ namespace Inventory.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _maybeItem.IfPresent(item =>
+            _maybeItem.IfPresent(_ =>
             {
-                if (item.IsHandItem)
+                if (playerInventoryPanelController.IsVisible && playerInventoryPanelController.CanAddItem())
                 {
                     HighlightItem(true);
+                }
+                else
+                {
+                    SignalsHub.DispatchAsync(new ShowHoverTooltipCommand(
+                        transform.position, 
+                        "Inventory is full!",
+                        tooltipOffset));
                 }
             });
         }
@@ -47,31 +59,24 @@ namespace Inventory.UI
         public void OnPointerExit(PointerEventData eventData)
         {
             HighlightItem(false);
-        }
-
-        private void HighlightItem(bool isHighlighted)
-        {
-            itemBackground.sprite = isHighlighted ? focusedBackgroundSprite : unfocusedBackgroundSprite;
+            SignalsHub.DispatchAsync(new HideHoverTooltipCommand());
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             _maybeItem.IfPresent(item =>
             {
-                if (item.IsHandItem)
+                if (playerInventoryPanelController.IsVisible && playerInventoryPanelController.CanAddItem())
                 {
-                    _player.HandItem.IfPresent((handItem) =>
-                    {
-                        _player.Inventory.RemoveItem(item);
-                        _player.Inventory.AddItem(handItem);
-                        _player.Inventory.SetHandItem(item.ToMaybe());
-                    }).IfNotPresent(() =>
-                    {
-                        _player.Inventory.RemoveItem(item);
-                        _player.Inventory.SetHandItem(item.ToMaybe());
-                    });
+                    playerInventoryPanelController.AddItem(item);
+                    interactableContainerPanelController.RemoveItem(item);
                 }
             });
+        }
+
+        private void HighlightItem(bool isHighlighted)
+        {
+            itemBackground.sprite = isHighlighted ? focusedBackgroundSprite : unfocusedBackgroundSprite;
         }
     }
 }

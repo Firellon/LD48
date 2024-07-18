@@ -5,11 +5,9 @@ using Inventory;
 using Inventory.Signals;
 using LD48;
 using Signals;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Utilities.Monads;
 using Zenject;
 
@@ -17,8 +15,6 @@ namespace Player
 {
     public class PlayerController : MonoBehaviour
     {
-        [FormerlySerializedAs("tipMessage")] public TMP_Text tipMessageText;
-
         [Inject] private HumanController humanController;
         [Inject] private IInventory humanInventory;
 
@@ -37,9 +33,17 @@ namespace Player
         public IMaybe<Item> HandItem => humanInventory.HandItem;
         public HumanState State => humanController.State;
         
+        private bool isEnabled = true;
 
         public void OnMove(InputAction.CallbackContext ctx)
         {
+            if (!isEnabled)
+            {
+                horizontal = 0f;
+                vertical = 0f;
+                return;
+            }
+            
             var moveAmount = ctx.ReadValue<Vector2>(); 
             horizontal = moveAmount.x;
             vertical = moveAmount.y;
@@ -47,9 +51,10 @@ namespace Player
 
         public void OnFire(InputAction.CallbackContext ctx)
         {
+            if (!isEnabled) return;
             if (IsPointerOverUIElement())
                 return;
-            
+
             humanController.Act();
         }
 
@@ -60,11 +65,13 @@ namespace Player
 
         public void OnInteract(InputAction.CallbackContext ctx)
         {
+            if (!isEnabled) return;
             humanController.Interact();
         }
 
         public void OnInventory(InputAction.CallbackContext ctx)
         {
+            if (!isEnabled) return;
             SignalsHub.DispatchAsync(new ToggleInventoryCommand());
         }
         
@@ -124,14 +131,6 @@ namespace Player
             playerInput.HumanPlayer.Inventory.performed -= OnInventory;
         }
 
-        private void Update()
-        {
-            if (tipMessageText)
-            {
-                tipMessageText.text = humanController.GetTipMessageText();
-            }
-        }
-
         private void FixedUpdate()
         {
             var moveVector = new Vector2(horizontal, vertical);
@@ -141,11 +140,13 @@ namespace Player
         private void OnEnable()
         {
             SignalsHub.AddListener<PlayerHandItemUpdatedEvent>(OnHandItemUpdated);
+            SignalsHub.AddListener<PlayerInputEnabledEvent>(OnPlayerInputEnabled);
         }
         
         private void OnDisable()
         {
             SignalsHub.RemoveListener<PlayerHandItemUpdatedEvent>(OnHandItemUpdated);
+            SignalsHub.RemoveListener<PlayerInputEnabledEvent>(OnPlayerInputEnabled);
         }
 
         private void OnHandItemUpdated(PlayerHandItemUpdatedEvent evt)
@@ -157,6 +158,11 @@ namespace Player
             {
                 humanController.SetIsAiming(false);
             });
+        }
+        
+        private void OnPlayerInputEnabled(PlayerInputEnabledEvent evt)
+        {
+            isEnabled = evt.IsEnabled;
         }
     }
 }

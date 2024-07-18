@@ -8,17 +8,19 @@ using Map.Actor;
 using Signals;
 using UnityEngine;
 using Utilities;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
 namespace Inventory.UI
 {
-    public class PlayerInventoryPanelController : MonoBehaviour, IInventoryPanelController
+    public class PlayerInventoryPanelController : MonoBehaviour, IItemContainerPanelController
     {
         [SerializeField] private GameObject inventoryPanel;
         [SerializeField] private GameObject inventorySlotPrefab;
 
         [Inject] private IPrefabPool prefabPool;
+        [Inject] private DiContainer diContainer;
         [Inject] private IMapActorRegistry mapActorRegistry;
 
         private void OnEnable()
@@ -61,18 +63,35 @@ namespace Inventory.UI
 
         public bool IsVisible => inventoryPanel.activeSelf;
 
+        public void SetUp(IItemContainer itemContainer)
+        {
+            throw new NotImplementedException();
+        }
+
         private void UpdateInventoryPanelItems()
         {
-            inventoryPanel.transform.DespawnChildren(prefabPool);
+            // inventoryPanel.transform.DespawnChildren(prefabPool);
+            inventoryPanel.transform.DestroyChildren();
             mapActorRegistry.Player.IfPresent(player =>
             {
                 for (var i = 0; i < player.Inventory.Capacity; i++)
                 {
-                    var itemSlotView = prefabPool.Spawn(inventorySlotPrefab, inventoryPanel.transform)
-                        .GetComponent<InventoryItemView>();
+                    var itemSlotView = diContainer.InstantiatePrefab(inventorySlotPrefab, inventoryPanel.transform)
+                        .GetComponent<PlayerInventoryItemView>();
+                    
                     itemSlotView.SetUp(player.Inventory.Items.GetElementByIndexOrEmpty(i), player);
                 }
             });
+        }
+
+        public bool CanAddItem()
+        {
+            return mapActorRegistry.Player.Match(player => player.Inventory.CanAddItem(), false);
+        }
+
+        public void AddItem(Item item)
+        {
+            mapActorRegistry.Player.IfPresent(player => player.Inventory.AddItem(item));
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Inventory.UI
         [SerializeField] private InventoryHandItemController inventoryHandItem;
         [SerializeField] private InventoryCraftingItemController inventoryCraftingItem;
         [SerializeField] private PlayerInventoryPanelController playerInventoryPanelController;
+        [SerializeField] private ItemContainerPanelController itemContainerPanelController;
 
         public override void InstallBindings()
         {
@@ -17,6 +18,8 @@ namespace Inventory.UI
                 .FromInstance(playerInventoryPanelController);
             Container.BindInterfacesAndSelfTo<InventoryHandItemController>().FromInstance(inventoryHandItem);
             Container.BindInterfacesAndSelfTo<InventoryCraftingItemController>().FromInstance(inventoryCraftingItem);
+            Container.BindInterfacesAndSelfTo<ItemContainerPanelController>()
+                .FromInstance(itemContainerPanelController);
         }
     }
 }

@@ -9,7 +9,6 @@ using Map.Actor;
 using Player;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
@@ -20,19 +19,11 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Inject] private IMapActorRegistry mapActorRegistry;
     [Inject] private IPrefabPool prefabPool;
-    [Inject] private IItemRegistry itemRegistry;
-    [Inject] private IRandomService randomService;
 
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
 
     #region MapObjects
-
-    public Transform itemParent;
-    public Vector2Int itemDensity = new(2, 2);
-    public float itemSpawnProbability = 0.1f;
-    [SerializeField] private ItemTypeToIntSerializedDictionary itemTypeToSpawnProbabilityMap = new();
-    private List<ItemType> itemSpawnSet = new();
 
     private List<Vector2> itemPositions = new();
     private readonly List<GameObject> items = new();
@@ -54,18 +45,12 @@ public class TerrainGenerator : MonoBehaviour
     private GameObject player;
     private CinemachineVirtualCamera cinemachineCam;
     public List<ObjectFollower> playerFollowers;
-    public TMP_Text tipMessageText;
 
     #endregion
 
     #region Dead
 
-    public GameObject deadPrefab;
-    public Vector2 deadDensity = new Vector2Int(25, 25);
-    public Transform deadParent;
-    public float deadSpawnProbability = 0.25f;
-
-    private List<Transform> deads = new List<Transform>();
+    private List<Transform> deads = new();
 
     #endregion
 
@@ -87,23 +72,9 @@ public class TerrainGenerator : MonoBehaviour
     void Start()
     {
         dayNightCycle = GetComponent<DayNightCycle>();
-        itemSpawnSet = itemTypeToSpawnProbabilityMap.SelectMany(pair =>
-            Enumerable.Range(1, pair.Value).Select(_ => pair.Key).Take(pair.Value)).ToList();
 
-        // GenerateItems(itemSpawnProbability);
         GenerateStrangers(strangerSpawnProbability);
-        GenerateDead();
         GeneratePlayer();
-    }
-
-    private void DeleteItems()
-    {
-        foreach (var item in items)
-        {
-            Destroy(item);
-        }
-
-        itemPositions.Clear();
     }
 
     public void GenerateStrangers(float spawnProbability)
@@ -124,29 +95,12 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateDead()
-    {
-        for (var deadX = deadDensity.x / 2; deadX < levelSize.x; deadX += deadDensity.x)
-        {
-            for (var deadY = deadDensity.y / 2; deadY < levelSize.y; deadY += deadDensity.y)
-            {
-                if (Random.value > deadSpawnProbability) continue;
-                var deadPosition = new Vector2(deadX + Random.Range(0f, deadDensity.x),
-                    deadY + Random.Range(0f, deadDensity.y));
-                var dead = prefabPool.Spawn(deadPrefab, deadParent);
-                dead.transform.position += new Vector3(deadPosition.x, deadPosition.y, 0);
-                deads.Add(dead.transform);
-            }
-        }
-    }
-
     private void GeneratePlayer()
     {
         var playerMapActor = mapActorRegistry.GetMapActor(MapActorType.Player);
         var playerObject = prefabPool.Spawn(playerMapActor.Prefab, new Vector2(levelSize.x / 2, levelSize.y / 2),
             Quaternion.identity);
         var playerController = playerObject.GetComponent<PlayerController>();
-        playerController.tipMessageText = tipMessageText;
 
         cinemachineCam.Follow = playerController.transform;
 
@@ -166,6 +120,7 @@ public class TerrainGenerator : MonoBehaviour
         var ghostSpawnProbability = (1 - playerSanity) * (float) dayNightCycle.GetCurrentDay() / (baseGhostSpawnProbability + dayNightCycle.GetCurrentDay());
         foreach (var dead in deads)
         {
+            if (dead == null) continue;
             if (Random.value > ghostSpawnProbability) continue;
             var ghost = prefabPool.Spawn(ghostMapActor.Prefab, dead.position, dead.rotation);
             ghost.transform.parent = ghostParent;
