@@ -42,6 +42,7 @@ namespace Environment
         public void Interact(HumanController humanController)
         {
             SignalsHub.DispatchAsync(new ToggleItemContainerCommand(this, GameObject));
+            SignalsHub.DispatchAsync(new ShowInventoryCommand());
         }
 
         public void Remove()

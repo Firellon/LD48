@@ -41,7 +41,10 @@ namespace Inventory.UI
         private void OnInteractableExit(InteractableExitEvent evt)
         {
             if (_currentInteractable == evt.Interactable.GameObject)
+            {
                 itemContainerPanelController.Hide();
+                SignalsHub.DispatchAsync(new HideInventoryCommand());
+            }
         }
     }
 }
