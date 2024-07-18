@@ -5,6 +5,7 @@ using System.Linq;
 using Day;
 using DG.Tweening;
 using Environment;
+using Human.Signal;
 using Inventory;
 using Inventory.Signals;
 using JetBrains.Annotations;
@@ -557,7 +558,9 @@ namespace Human
             mapCorpse.SetItems(inventory.Items);
             // TODO: Drop the Hand item
             SignalsHub.DispatchAsync(new MapObjectAddedEvent(corpse, MapObjectType.Corpse));
-            Destroy(gameObject);
+            
+            SignalsHub.DispatchAsync(new HumanDiedEvent(this));
+            // Destroy(gameObject);
         }
 
         private void DropItems()
