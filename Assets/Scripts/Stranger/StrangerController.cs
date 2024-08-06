@@ -10,18 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace LD48
 {
-    public enum StrangerState
-    {
-        Wander,
-        Gather,
-        SeekBonfire,
-        StartBonfire,
-        Fight,
-        Rob,
-        Flee,
-    }
-
-    public class Stranger : MonoBehaviour
+    public class StrangerController : MonoBehaviour
     {
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
@@ -40,12 +29,14 @@ namespace LD48
 
         [SerializeField] private StrangerState state;
         [SerializeField] private Transform target;
+        [SerializeField] private float freeMoveCheckDistance = 1f;
+        [SerializeField] private LayerMask solidLayerMask; 
 
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
         private Vector2 wanderDirection = Vector2.zero;
         public int minWoodToSurvive = 3;
-
+        private Vector3 moveDirection = Vector3.zero;
 
         private void Start()
         {
@@ -208,13 +199,13 @@ namespace LD48
             if (bonfireDistance > humanController.fireTouchRadius)
             {
                 Vector2 bonfireDirection = target.transform.position - transform.position;
-                humanController.Move(bonfireDirection.SkewDirection(5));
+                moveDirection = GetFreeMoveDirection(bonfireDirection.SkewDirection(5));
+                humanController.Move(moveDirection);
                 return;
             }
-            else
-            {
-                humanController.StopMovement();
-            }
+
+            moveDirection = Vector3.zero;
+            humanController.StopMovement();
 
             if (inventory.GetItemAmount(ItemType.Wood) == 0) return;
 
@@ -233,7 +224,8 @@ namespace LD48
 
             if (timeToWander > 0f)
             {
-                humanController.Move(wanderDirection);
+                moveDirection = GetFreeMoveDirection(wanderDirection);
+                humanController.Move(moveDirection);
                 timeToWander -= Time.deltaTime;
             }
             else
@@ -270,10 +262,10 @@ namespace LD48
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
-                humanController.Move(new Vector2(
+                moveDirection = GetFreeMoveDirection(new Vector2(
                     Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
-                    Mathf.Sign(targetPosition.y - transformPosition.y)
-                ));
+                    Mathf.Sign(targetPosition.y - transformPosition.y)));
+                humanController.Move(moveDirection);
                 return;
             }
 
@@ -301,10 +293,11 @@ namespace LD48
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
-                humanController.Move(new Vector2(
+                moveDirection = GetFreeMoveDirection(new Vector2(
                     Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
                     Mathf.Sign(targetPosition.y - transformPosition.y)
                 ));
+                humanController.Move(moveDirection);
                 return;
             }
 
@@ -321,7 +314,8 @@ namespace LD48
             }
 
             Vector2 gatherDirection = target.position - transform.position;
-            humanController.Move(gatherDirection.SkewDirection(5));
+            moveDirection = GetFreeMoveDirection(gatherDirection.SkewDirection(5));
+            humanController.Move(moveDirection);
             if (humanController.CanPickUp(out var item))
                 humanController.PickUp(item);
         }
@@ -330,7 +324,8 @@ namespace LD48
         {
             SetReadyToShoot(false);
             Vector2 fleeDirection = transform.position - target.transform.position;
-            humanController.Move(fleeDirection.SkewDirection(10));
+            moveDirection = GetFreeMoveDirection(fleeDirection.SkewDirection(10));
+            humanController.Move(moveDirection);
         }
 
         private void SetReadyToShoot(bool ready)
@@ -340,6 +335,26 @@ namespace LD48
             {
                 humanController.ToggleIsAiming();
             }
+        }
+        
+        private Vector3 GetFreeMoveDirection(Vector2 direction)
+        {
+            var moveObstacle = Physics2D.Raycast(transform.position, direction, freeMoveCheckDistance, solidLayerMask);
+            var rotationAngle = 0f;
+            while (moveObstacle.collider != null && rotationAngle < 360)
+            {
+                rotationAngle += 5f;
+                moveObstacle = Physics2D.Raycast(transform.position, Quaternion.Euler(0f, 0f, rotationAngle) * direction, freeMoveCheckDistance, solidLayerMask);
+            }
+
+            return Quaternion.Euler(0f, 0f, rotationAngle) * direction;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            var transformPosition = transform.position;
+            Gizmos.DrawLine(transformPosition, transformPosition + moveDirection.normalized);
         }
     }
 }
