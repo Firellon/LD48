@@ -11,6 +11,7 @@ using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -36,6 +37,13 @@ namespace Map
         [ShowInInspector, ReadOnly] private HashSet<string> hiddenMapSegmentKeys = new();
         [ShowInInspector, ReadOnly] private List<Vector2Int> adjacentSegments = new(); // TODO: Remove
 
+        #region Trails
+        [Space(10)]
+        [SerializeField] private GameObject trailsTilemapPrefab;
+        [SerializeField] private RuleTile trailRuleTile;
+        
+        #endregion
+
         #region Trees
         [Space(10)] 
         [SerializeField] private Transform treeParent;
@@ -51,7 +59,7 @@ namespace Map
         [SerializeField] private float grassSpawnProbability = 0.5f;
 
         #endregion
-        
+
         #region MapObjects
 
         [Space(10)] 
@@ -111,7 +119,7 @@ namespace Map
                 mapSegment.MapObjects.Add(evt.GameObject);
             }
         }
-        
+
         private void OnMapItemRemoved(MapItemRemovedEvent evt)
         {
             var itemPosition = ConvertWorldPositionToSegmentPosition(evt.GameObject.transform.position);
@@ -166,6 +174,11 @@ namespace Map
                 Mathf.FloorToInt(worldPosition.x / mapSegmentSize.x),
                 Mathf.FloorToInt(worldPosition.y / mapSegmentSize.y)
             );
+        }
+
+        private Vector2 ConvertSegmentPositionToWorldPosition(Vector2Int segmentPosition)
+        {
+            return segmentPosition * mapSegmentSize + ((Vector2)mapSegmentSize) / 2f;
         }
 
         private Vector2Int GetRandomDistantMapSegmentPosition()
@@ -279,8 +292,12 @@ namespace Map
             var topLeftCorner = segmentPosition * mapSegmentSize;
             var bottomRightCorner = topLeftCorner + mapSegmentSize;
             var mapObjects = new List<GameObject>();
+
             mapObjects.AddRange(GenerateTrees(topLeftCorner, bottomRightCorner));
             mapObjects.AddRange(GenerateGrass(topLeftCorner, bottomRightCorner));
+
+            mapObjects.Add(GenerateTrails(segmentPosition));
+
             if (segmentPosition == exitMapSegmentPosition)
             {
                 Debug.Log($"Generate Exit at {segmentPosition}!");
@@ -436,6 +453,31 @@ namespace Map
             }
 
             return itemObjects;
+        }
+
+        private GameObject GenerateTrails(Vector2Int segmentPosition)
+        {
+            var position = ConvertSegmentPositionToWorldPosition(segmentPosition);
+            var trailsTilemap = prefabPool.Spawn(trailsTilemapPrefab).GetComponentInChildren<Tilemap>();
+            trailsTilemap.transform.position = position;
+
+            var linesCount = randomService.Int(2, 4);
+
+            for (var i = 0; i < linesCount; i++)
+            {
+                var startPoint = position + (Vector2)randomService.PointOnCircleEdge(4f);
+                var endPoint = startPoint + (Vector2)randomService.PointOnCircleEdge(4f);
+
+                trailsTilemap.DrawLine(
+                    trailRuleTile,
+                    (Vector2Int)trailsTilemap.WorldToCell(startPoint),
+                    (Vector2Int)trailsTilemap.WorldToCell(endPoint)
+                );
+            }
+
+            // trailsTilemap.DrawLine(trailRuleTile, new Vector2Int(0, 0), new Vector2Int(5, 5));
+
+            return trailsTilemap.gameObject;
         }
 
         private GameObject GenerateExit(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
