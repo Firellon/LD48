@@ -258,7 +258,7 @@ namespace Human
             var moveLength = moveDirection.magnitude;
 
             humanAnimator.SetFloat(MovementSpeedAnimation, moveSpeed * moveLength);
-            characterController.MoveSpeed = moveSpeed;
+            characterController.MoveSpeed = Mathf.Min(moveLength * moveSpeed, moveSpeed);
             characterController.Move(moveDirection);
 
             if (moveLength > float.Epsilon)

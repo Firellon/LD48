@@ -3,6 +3,7 @@ using FunkyCode;
 using Map.Actor;
 using Unity.Mathematics;
 using UnityEngine;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
@@ -36,7 +37,7 @@ namespace Enemies.Trails
 
                 lastSpawnTime = Time.time;
 
-                var playerPosition = actorRegistry.Player.ValueOrDefault().transform.position;
+                var playerPosition = actorRegistry.Player.Match(player => player.transform.position, Vector3.zero);
                 var trailPosition = playerPosition + randomService.PointOnCircleEdge(generationRadius);
 
                 var trail = prefabPool.Spawn(randomService.Sample(trailsPrefabs));

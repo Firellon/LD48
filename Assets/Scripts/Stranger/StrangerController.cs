@@ -5,6 +5,7 @@ using Environment;
 using Human;
 using Inventory;
 using UnityEngine;
+using Utilities.Monads;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -12,6 +13,8 @@ namespace LD48
 {
     public class StrangerController : MonoBehaviour
     {
+        private const float K_positionEpsilon = 0.1f;
+
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
 
@@ -30,7 +33,8 @@ namespace LD48
         [SerializeField] private StrangerState state;
         [SerializeField] private Transform target;
         [SerializeField] private float freeMoveCheckDistance = 1f;
-        [SerializeField] private LayerMask solidLayerMask; 
+        [SerializeField] private LayerMask solidLayerMask;
+        
 
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
@@ -52,6 +56,10 @@ namespace LD48
                 {
                     humanController.Inventory.AddItem(woodItem);
                 }
+            });
+            itemRegistry.GetItemOrEmpty(ItemType.Pistol).IfPresent(gunItem =>
+            {
+                humanController.Inventory.AddItem(gunItem);
             });
         }
 
@@ -258,7 +266,8 @@ namespace LD48
 
             SetReadyToShoot(true);
 
-            if (Mathf.Abs(target.position.y - transform.position.y) > 0.05f)
+            var targetPositionDiff = Mathf.Abs(target.position.y - transform.position.y);
+            if (targetPositionDiff > K_positionEpsilon)
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
@@ -331,12 +340,38 @@ namespace LD48
         private void SetReadyToShoot(bool ready)
         {
             var isThreat = humanController.IsThreat();
-            if ((ready && !isThreat) || (!ready && isThreat))
+            if (ready && !isThreat)
             {
-                humanController.ToggleIsAiming();
+                // TODO: Check if the hand item is shootable instead
+                if (humanController.Inventory.HandItem.Match(item => item.ItemType == ItemType.Pistol, false))
+                {
+                    humanController.SetIsAiming(true);
+                    return;
+                }
+
+                // TODO: Check if the hand item is shootable instead
+                var maybeGunItem =
+                    humanController.Inventory.Items.FirstOrEmpty(item => item.ItemType == ItemType.Pistol);
+                humanController.SetIsAiming(maybeGunItem.IsPresent);
+                humanController.Inventory.SetHandItem(maybeGunItem);
+                maybeGunItem.IfPresent(gunItem => humanController.Inventory.RemoveItem(gunItem));
+                return;
+            }
+
+            if (!ready && isThreat)
+            {
+                humanController.SetIsAiming(false);
+                humanController.Inventory.HandItem.IfPresent(handItem =>
+                {
+                    if (handItem.ItemType == ItemType.Pistol)
+                    {
+                        humanController.Inventory.AddItem(handItem);
+                        humanController.Inventory.SetHandItem(Maybe.Empty<Item>());
+                    }
+                });
             }
         }
-        
+
         private Vector3 GetFreeMoveDirection(Vector2 direction)
         {
             var moveObstacle = Physics2D.Raycast(transform.position, direction, freeMoveCheckDistance, solidLayerMask);
@@ -344,7 +379,8 @@ namespace LD48
             while (moveObstacle.collider != null && rotationAngle < 360)
             {
                 rotationAngle += 5f;
-                moveObstacle = Physics2D.Raycast(transform.position, Quaternion.Euler(0f, 0f, rotationAngle) * direction, freeMoveCheckDistance, solidLayerMask);
+                moveObstacle = Physics2D.Raycast(transform.position,
+                    Quaternion.Euler(0f, 0f, rotationAngle) * direction, freeMoveCheckDistance, solidLayerMask);
             }
 
             return Quaternion.Euler(0f, 0f, rotationAngle) * direction;
