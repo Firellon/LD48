@@ -431,7 +431,7 @@ namespace Human
 
             var bulletObject = prefabPool.Spawn(bulletPrefab, transform);
             var xDirection = spriteRenderer.flipX ? -1 : 1;
-            var bullet = bulletObject.GetComponent<Bullet>();
+            var bullet = bulletObject.GetComponent<BulletController>();
             bullet.SetDirection(new Vector2(xDirection, 0));
 
             bulletObject.transform.localPosition = bulletPosition * new Vector2(xDirection, 1);
