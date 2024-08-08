@@ -286,6 +286,10 @@ MonoBehaviour:
   gatherRadius: 12
   state: 0
   target: {fileID: 0}
+  freeMoveCheckDistance: 1
+  solidLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
   baseTimeToWander: 3
   minWoodToSurvive: 3
 --- !u!114 &5139208764900496796

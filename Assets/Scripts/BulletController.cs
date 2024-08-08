@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace LD48
 {
-    public class Bullet : MonoBehaviour
+    public class BulletController : MonoBehaviour
     {
-        public float moveSpeed = 20f;
+        [SerializeField] private float moveSpeed = 20f;
         
         private  Rigidbody2D body;
         
@@ -18,7 +18,7 @@ namespace LD48
 
         private void OnCollisionEnter2D(Collision2D hit)
         {
-            if (hit.gameObject.CompareTag("Wall"))
+            if (hit.gameObject.CompareTag("Wall") || hit.gameObject.CompareTag("MapObject"))
             {
                 Destroy();
             }
