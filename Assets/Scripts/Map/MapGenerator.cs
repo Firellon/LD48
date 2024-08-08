@@ -150,8 +150,62 @@ namespace Map
             }
         }
 
+        private GameObject testMaze;
+
+        [Range(0f, 10f)] public float noiseScale = 0.1f;
+        [Range(0f, 1f)] public float noiseBorder = 0.45f;
+
+        private float prevScale = 0.5f;
+        private float prevBorder = 0.4f;
+
+        private MazeGenerator mazeGen;
+
+        private void RegenerateMaze()
+        {
+            if (testMaze != null)
+            {
+                testMaze.GetComponentInChildren<Tilemap>().ClearAllTiles();
+                prefabPool.Despawn(testMaze);
+                testMaze = null;
+            }
+
+            var position = new Vector3(50f, 50f);
+            var trailsTilemap = prefabPool.Spawn(trailsTilemapPrefab).GetComponentInChildren<Tilemap>();
+            trailsTilemap.transform.position = position;
+
+            if (mazeGen == null)
+            {
+                mazeGen = new MazeGenerator(20, 20);
+                mazeGen.GenerateNewRandomMaze();
+            }
+
+            for (int x = 0; x < mazeGen.MazeWidth; x++)
+            {
+                for (int y = 0; y < mazeGen.MazeHeight; y++)
+                {
+                    if (!mazeGen.MazeGrid[x, y])
+                    {
+                        var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), noiseScale, 0f);
+                        if (noiseVal > noiseBorder)
+                        {
+                            trailsTilemap.SetTile(new Vector3Int(x, y, 0), trailRuleTile);
+                        }
+                    }
+                }
+            }
+
+            testMaze = trailsTilemap.gameObject;
+        }
+
         private void Update()
         {
+            if (Mathf.Abs(noiseScale - prevScale) > Mathf.Epsilon || Mathf.Abs(noiseBorder - prevBorder) > Mathf.Epsilon)
+            {
+                RegenerateMaze();
+                prevScale = noiseScale;
+                prevBorder = noiseBorder;
+            }
+
             var maybePlayer = mapActorRegistry.Player;
             maybePlayer.IfPresent(player =>
             {
@@ -455,27 +509,94 @@ namespace Map
             return itemObjects;
         }
 
+        /// <summary>
+        /// Returns a Perlin Noise value based on the given inputs.
+        /// </summary>
+        /// <param name="position">Position of the Tile on the Tilemap.</param>
+        /// <param name="scale">The Perlin Scale factor of the Tile.</param>
+        /// <param name="offset">Offset of the Tile on the Tilemap.</param>
+        /// <returns>A Perlin Noise value based on the given inputs.</returns>
+        public static float GetPerlinValue(Vector3Int position, float scale, float offset)
+        {
+            return Mathf.PerlinNoise((position.x + offset) * scale, (position.y + offset) * scale);
+        }
+
         private GameObject GenerateTrails(Vector2Int segmentPosition)
         {
             var position = ConvertSegmentPositionToWorldPosition(segmentPosition);
             var trailsTilemap = prefabPool.Spawn(trailsTilemapPrefab).GetComponentInChildren<Tilemap>();
             trailsTilemap.transform.position = position;
 
-            var linesCount = randomService.Int(2, 4);
+            var mazeGen = new MazeGenerator(20, 20);
+            mazeGen.GenerateNewRandomMaze();
 
-            for (var i = 0; i < linesCount; i++)
+            // for (int x = 0; x < mazeGen.MazeWidth; x++)
+            // {
+            //     // if (randomService.Chance(0.5f))
+            //     //     continue;
+            //
+            //     for (int y = 0; y < mazeGen.MazeHeight; y++)
+            //     {
+            //         if ((x == 0) || (x == mazeGen.MazeHeight-1) || y == 0 || (y == mazeGen.MazeWidth-1)) // || y % 2 == 0)
+            //             continue;
+            //
+            //         // if (randomService.Chance(0.5f))
+            //         //     continue;
+            //
+            //         if (!mazeGen.MazeGrid[x, y])
+            //         {
+            //             var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), noiseScale, 100000f);
+            //             if (noiseVal > noiseBorder)
+            //             {
+            //                 trailsTilemap.SetTile(new Vector3Int(x, y, 0), trailRuleTile);
+            //             }
+            //         }
+            //     }
+            // }
+
+            var maze = new bool[20, 20];
+
+            var width = maze.GetLength(0);
+            var height = maze.GetLength(1);
+
+            for (int i = 0; i < randomService.Int(2, 5); i++)
             {
-                var startPoint = position + (Vector2)randomService.PointOnCircleEdge(4f);
-                var endPoint = startPoint + (Vector2)randomService.PointOnCircleEdge(4f);
+                var index = randomService.Int(0, width);
 
-                trailsTilemap.DrawLine(
-                    trailRuleTile,
-                    (Vector2Int)trailsTilemap.WorldToCell(startPoint),
-                    (Vector2Int)trailsTilemap.WorldToCell(endPoint)
-                );
+                var startIndex = randomService.Int(0, Mathf.FloorToInt(width / 2f));
+                var endIndex = randomService.Int(Mathf.FloorToInt(width / 2f), width);
+
+                // X
+                if (randomService.Chance(0.5f))
+                {
+                    for (int j = 0; j < maze.GetLength(0); j++)
+                    {
+                        if (j < startIndex || j > endIndex)
+                            continue;
+
+                        maze[0, j] = true;
+                    }
+                }
+                // Y
+                else
+                {
+                    for (int j = 0; j < maze.GetLength(0); j++)
+                    {
+                        if (j < startIndex || j > endIndex)
+                            continue;
+
+                        maze[j, 0] = true;
+                    }
+                }
             }
 
-            // trailsTilemap.DrawLine(trailRuleTile, new Vector2Int(0, 0), new Vector2Int(5, 5));
+            for (int x = 0; x < 20; x++)
+            {
+                for (int y = 0; y < 20; y++)
+                {
+                    
+                }
+            }
 
             return trailsTilemap.gameObject;
         }

@@ -609,6 +609,8 @@ MonoBehaviour:
   minGateConnectivity: 3
   minGateDistance: 3
   playerSegmentText: {fileID: 0}
+  noiseScale: 0.4
+  noiseBorder: 0.37
 --- !u!1 &6175899444449373084
 GameObject:
   m_ObjectHideFlags: 0
