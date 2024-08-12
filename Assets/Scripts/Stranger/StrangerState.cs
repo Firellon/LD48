@@ -9,5 +9,6 @@
         Fight = 4,
         Rob = 5,
         Flee = 6,
+        Surrender = 7,
     }
 }
