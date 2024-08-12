@@ -42,7 +42,6 @@ namespace Enemies.Trails
 
                 var trail = prefabPool.Spawn(randomService.Sample(trailsPrefabs));
                 trail.transform.SetPositionAndRotation(trailPosition, quaternion.Euler(0f, 0f, randomService.Float(0f, 360f)));
-
                 trail.transform.localScale = Vector3.one * (randomService.Chance(0.5f) ? -1 : 1);
             }
         }

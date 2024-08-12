@@ -273,6 +273,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 7450580014671431656, guid: 22ac35c25fe33ea41ba8ba76e54015f3, type: 3}
     MoveSpeed: 0.8
+    Options:
+      StepsDelay: 0
   - MovementType: 1
     AnimationCurve:
       serializedVersion: 2
@@ -354,6 +356,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 2297988777118836439, guid: 2302d2fefd378eb45bc9434452d23c34, type: 3}
     MoveSpeed: 1
+    Options:
+      StepsDelay: 0
   - MovementType: 2
     AnimationCurve:
       serializedVersion: 2
@@ -363,6 +367,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 8652183122302125244, guid: 148a74f400aad274c9aa790328083eaa, type: 3}
     MoveSpeed: 0
+    Options:
+      StepsDelay: 0
   - MovementType: 2
     AnimationCurve:
       serializedVersion: 2
@@ -372,6 +378,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 8652183122302125244, guid: 5fbe1c2e41b3daf47bab23a93006b93f, type: 3}
     MoveSpeed: 0
+    Options:
+      StepsDelay: 0
   - MovementType: 2
     AnimationCurve:
       serializedVersion: 2
@@ -381,6 +389,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 8652183122302125244, guid: f494b53c01ef28741ad27c5dfa6b70a6, type: 3}
     MoveSpeed: 0
+    Options:
+      StepsDelay: 0
   - MovementType: 2
     AnimationCurve:
       serializedVersion: 2
@@ -390,6 +400,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     Prefab: {fileID: 8652183122302125244, guid: c02a36172176eef4dad1b8897546014c, type: 3}
     MoveSpeed: 0
+    Options:
+      StepsDelay: 0
 --- !u!1 &4516522281272598058
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,6 +590,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfMapSize: {x: 5, y: 5}
   mapSegmentSize: {x: 12, y: 8}
+  trailsTilemapPrefab: {fileID: 7773584424159345862, guid: 700cb9a4f4548db4ebc4ec87fec0a43e, type: 3}
+  trailRuleTile: {fileID: 11400000, guid: a687057b5280f6849a62e617a3da8fce, type: 2}
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
@@ -595,6 +609,8 @@ MonoBehaviour:
   minGateConnectivity: 3
   minGateDistance: 3
   playerSegmentText: {fileID: 0}
+  noiseScale: 0.4
+  noiseBorder: 0.37
 --- !u!1 &6175899444449373084
 GameObject:
   m_ObjectHideFlags: 0
