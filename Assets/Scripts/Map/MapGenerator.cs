@@ -559,42 +559,64 @@ namespace Map
             var width = maze.GetLength(0);
             var height = maze.GetLength(1);
 
-            for (int i = 0; i < randomService.Int(2, 5); i++)
+            var canChangeDirection = true;
+
+            var directionChangedIndex = -1;
+            var directionChangedType = 0;
+
+
+            // generate 2 to 3 lines
+            for (int i = 0; i < randomService.Int(1, 3); i++)
             {
                 var index = randomService.Int(0, width);
 
                 var startIndex = randomService.Int(0, Mathf.FloorToInt(width / 2f));
                 var endIndex = randomService.Int(Mathf.FloorToInt(width / 2f), width);
 
+                var isVertical = randomService.Chance(0.7f);
+
                 // X
-                if (randomService.Chance(0.5f))
+                if (isVertical)
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < width; j++)
                     {
                         if (j < startIndex || j > endIndex)
                             continue;
 
-                        maze[0, j] = true;
+                        maze[index, j] = true;
                     }
                 }
                 // Y
                 else
                 {
-                    for (int j = 0; j < maze.GetLength(0); j++)
+                    for (int j = 0; j < height; j++)
                     {
                         if (j < startIndex || j > endIndex)
                             continue;
 
-                        maze[j, 0] = true;
+                        maze[j, index] = true;
                     }
                 }
             }
 
-            for (int x = 0; x < 20; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < 20; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    
+                    // if ((x == 0) || (x == mazeGen.MazeHeight-1) || y == 0 || (y == mazeGen.MazeWidth-1)) // || y % 2 == 0)
+                    //     continue;
+
+                    // if (randomService.Chance(0.05f))
+                    //     continue;
+
+                    if (maze[x, y])
+                    {
+                        // var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), noiseScale, 100000f);
+                        // if (noiseVal > noiseBorder)
+                        // {
+                            trailsTilemap.SetTile(new Vector3Int(x, y, 0), trailRuleTile);
+                        // }
+                    }
                 }
             }
 
