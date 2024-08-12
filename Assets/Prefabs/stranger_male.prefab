@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 5139208764900496796}
   - component: {fileID: 5330428087649667961}
   - component: {fileID: 3672825779305286988}
+  - component: {fileID: -5362396070767395826}
   - component: {fileID: -7590158872547758650}
   - component: {fileID: 3861742083327022146}
   - component: {fileID: 6844957522285896385}
@@ -320,6 +321,7 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 3672825779305286988}
+  - {fileID: -5362396070767395826}
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
@@ -337,6 +339,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 5139208764900496796}
   humanController: {fileID: 1203980886353906568}
+--- !u!114 &-5362396070767395826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133988400910477835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83db206065ab46c1919e3e5f236bba0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strangerController: {fileID: 2968753310703807543}
+  config: {fileID: 11400000, guid: cd048cca01861534985c23a53a677394, type: 2}
 --- !u!114 &-7590158872547758650
 MonoBehaviour:
   m_ObjectHideFlags: 0

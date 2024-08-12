@@ -51,6 +51,9 @@ namespace Human
 
         private bool isHit = false;
         private bool isAiming = false;
+        private bool isSurrendering = false;
+        
+        public bool IsSurrendering => isSurrendering;
 
         public float baseTimeToRecover = 5f;
         private float timeToRecover = 0f;
@@ -94,6 +97,7 @@ namespace Human
         private static readonly int IsPickingUpAnimation = Animator.StringToHash("IsPickingUp");
         private static readonly int IsInteractingAnimation = Animator.StringToHash("IsInteracting");
         private static readonly int HasBookAnimation = Animator.StringToHash("HasBook");
+        private static readonly int IsSurrenderingAnimation = Animator.StringToHash("IsSurrendering");
 
         #endregion
 
@@ -465,11 +469,13 @@ namespace Human
             interactable.Remove();
         }
 
-        public void ToggleIsAiming()
+        public void SetIsSurrendering(bool newIsSurrendering)
         {
             if (isHit || IsDead) return;
-            isAiming = !isAiming;
-            humanAnimator.SetBool(IsAimingAnimation, isAiming);
+
+            isSurrendering = newIsSurrendering;
+            StopMovement();
+            humanAnimator.SetBool(IsSurrenderingAnimation, newIsSurrendering);
         }
 
         public void SetIsAiming(bool newIsAiming)
@@ -520,6 +526,9 @@ namespace Human
             {
                 isHit = true;
                 isAiming = false;
+                isSurrendering = false;
+                isResting = false;
+                
                 humanAnimator.SetBool(IsHitAnimation, true);
                 timeToRecover = baseTimeToRecover;
                 // DropItems();

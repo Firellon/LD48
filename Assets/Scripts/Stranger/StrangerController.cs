@@ -1,15 +1,16 @@
 using System;
-using System.Linq;
-using Day;
 using Environment;
 using Human;
 using Inventory;
+using LD48;
+using Stranger.AI;
+using UnityEditor;
 using UnityEngine;
 using Utilities.Monads;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace LD48
+namespace Stranger
 {
     public class StrangerController : MonoBehaviour
     {
@@ -17,38 +18,31 @@ namespace LD48
 
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
-
-        // How many enemies can I handle at once?
-        public int bravery = 3;
-
-        // How far can I see threats?
-        public float threatRadius = 10f;
-        public float bonfireRadius = 10f;
-        public float gatherRadius = 15f;
+        [Inject] private IStrangerBehaviorTree behaviorTree;
 
         private HumanController humanController;
-        private DayNightCycle dayNightCycle;
         private TerrainGenerator terrainGenerator;
 
         [SerializeField] private StrangerState state;
         [SerializeField] private Transform target;
+        [Obsolete]
         [SerializeField] private float freeMoveCheckDistance = 1f;
         [SerializeField] private LayerMask solidLayerMask;
         
-
+        [Obsolete]
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
         private Vector2 wanderDirection = Vector2.zero;
+        [Obsolete]
         public int minWoodToSurvive = 3;
         private Vector3 moveDirection = Vector3.zero;
 
         private void Start()
         {
             humanController = GetComponent<HumanController>();
-            dayNightCycle = Camera.main.GetComponent<DayNightCycle>();
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
 
-            // TODO: Set up a random inventory?
+            // TODO: Set up a random inventory? Move into config?
             var initialWoodAmount = Random.Range(1, 4);
             itemRegistry.GetItemOrEmpty(ItemType.Wood).IfPresent(woodItem =>
             {
@@ -100,6 +94,9 @@ namespace LD48
                 case StrangerState.Wander:
                     Wander();
                     break;
+                case StrangerState.Surrender:
+                    Yield();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -107,89 +104,11 @@ namespace LD48
 
         private StrangerState GetCurrentState()
         {
-            var closestThreats = Physics2D
-                .OverlapCircleAll(transform.position, threatRadius, 1 << LayerMask.NameToLayer("Default"))
-                .Select(collider => collider.gameObject)
-                .Where(threat =>
-                {
-                    if (threat.gameObject == gameObject) return false;
-                    var hittable = threat.GetComponent<IHittable>();
-                    if (hittable == null) return false;
-                    var otherHuman = threat.GetComponent<HumanController>();
-                    if (otherHuman == null && hittable.IsThreat()) return true;
-                    if (otherHuman == null) return false;
-                    var humanVerticalDistance = Mathf.Abs(otherHuman.transform.position.y - transform.position.y);
-                    var isHumanCloseAndPointingAtMe = otherHuman.IsThreat() &&
-                                                      otherHuman.IsFacingTowards(transform.position) &&
-                                                      humanVerticalDistance < threatRadius / 3;
-                    // if (isHumanCloseAndPointingAtMe) Debug.Log($"Other HumanController {otherHumanController.name} is trying to attack me!");
+            behaviorTree.Evaluate();
 
-                    return isHumanCloseAndPointingAtMe;
-                })
-                .OrderBy(threat => Vector2.Distance(transform.position, threat.transform.position))
-                .ToList();
-            if (closestThreats.Any())
-            {
-                target = closestThreats.First().transform;
-                // if (closestThreats.Count() > bravery) Debug.Log($"Too dangerous, I need to Flee! ({closestThreats.Count()})");
-                return closestThreats.Count() > bravery ? StrangerState.Flee : StrangerState.Fight;
-            }
+            target = behaviorTree.State.MaybeTarget.Match(aTarget => aTarget, () => null);
 
-            if (inventory.GetItemAmount(ItemType.Wood) < minWoodToSurvive)
-            {
-                var closestPeopleToRob = Physics2D.OverlapCircleAll(transform.position, threatRadius,
-                        1 << LayerMask.NameToLayer("Default"))
-                    .Select(collider => collider.gameObject)
-                    .Where(other =>
-                    {
-                        if (other.gameObject == gameObject) return false;
-                        var otherHuman = other.GetComponent<HumanController>();
-                        if (otherHuman == null) return false;
-
-                        return DoesHumanHaveWoodILack(otherHuman);
-                    })
-                    .OrderBy(threat => Vector2.Distance(transform.position, threat.transform.position))
-                    .ToList();
-
-                if (closestPeopleToRob.Any())
-                {
-                    target = closestPeopleToRob.First().transform;
-                    return StrangerState.Rob;
-                }
-            }
-
-
-            var currentCycle = dayNightCycle.GetCurrentCycle();
-            if (currentCycle is DayTime.NightComing or DayTime.Night)
-            {
-                var closestBonfires = Physics2D
-                    .OverlapCircleAll(transform.position, bonfireRadius, 1 << LayerMask.NameToLayer("Solid"))
-                    .Select(otherCollider => otherCollider.gameObject.GetComponent<MapBonfire>())
-                    .Where(bonfire => bonfire != null && bonfire.IsBurning())
-                    .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
-                    .ToList();
-                if (closestBonfires.Any())
-                {
-                    target = closestBonfires.First().transform;
-                    return StrangerState.SeekBonfire;
-                }
-
-                return inventory.GetItemAmount(ItemType.Wood) > 0 ? StrangerState.StartBonfire : StrangerState.Wander;
-            }
-
-            if (!inventory.CanAddItem()) return StrangerState.Wander;
-
-            var closestWood = Physics2D
-                .OverlapCircleAll(transform.position, gatherRadius, 1 << LayerMask.NameToLayer("Item"))
-                .Select(collider => collider.gameObject.GetComponent<ItemController>())
-                .Where(wood => wood != null && wood.Item.ItemType == ItemType.Wood)
-                .OrderBy(wood => Vector2.Distance(transform.position, wood.transform.position))
-                .ToList();
-
-            if (!closestWood.Any()) return StrangerState.Wander;
-
-            target = closestWood.First().transform;
-            return StrangerState.Gather;
+            return behaviorTree.State.TargetAction;
         }
 
         private bool DoesHumanHaveWoodILack(HumanController otherHumanController)
@@ -312,6 +231,11 @@ namespace LD48
 
             humanController.Act();
         }
+        
+        private void Yield()
+        {
+            throw new Exception("Not Implemented!");
+        }
 
         private void Gather()
         {
@@ -391,6 +315,7 @@ namespace LD48
             Gizmos.color = Color.cyan;
             var transformPosition = transform.position;
             Gizmos.DrawLine(transformPosition, transformPosition + moveDirection.normalized);
+            Handles.Label(transformPosition, behaviorTree.State.TargetAction.ToString());
         }
     }
 }
