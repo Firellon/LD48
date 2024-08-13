@@ -38,10 +38,21 @@ namespace Map
         [ShowInInspector, ReadOnly] private List<Vector2Int> adjacentSegments = new(); // TODO: Remove
 
         #region Trails
+
         [Space(10)]
         [SerializeField] private GameObject trailsTilemapPrefab;
         [SerializeField] private RuleTile trailRuleTile;
-        
+
+        private GameObject testMaze;
+
+        [Range(0f, 10f)] [SerializeField] private float trailNoiseScale = 0.2f;
+        [Range(0f, 1f)] [SerializeField] private float trailNoiseBorder = 0.37f;
+
+        private float prevScale = 0.5f;
+        private float prevBorder = 0.4f;
+
+        private MazeGenerator mazeGen;
+
         #endregion
 
         #region Trees
@@ -150,16 +161,6 @@ namespace Map
             }
         }
 
-        private GameObject testMaze;
-
-        [Range(0f, 10f)] public float noiseScale = 0.1f;
-        [Range(0f, 1f)] public float noiseBorder = 0.45f;
-
-        private float prevScale = 0.5f;
-        private float prevBorder = 0.4f;
-
-        private MazeGenerator mazeGen;
-
         private void RegenerateMaze()
         {
             if (testMaze != null)
@@ -185,8 +186,8 @@ namespace Map
                 {
                     if (!mazeGen.MazeGrid[x, y])
                     {
-                        var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), noiseScale, 0f);
-                        if (noiseVal > noiseBorder)
+                        var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), trailNoiseScale, 0f);
+                        if (noiseVal > trailNoiseBorder)
                         {
                             trailsTilemap.SetTile(new Vector3Int(x, y, 0), trailRuleTile);
                         }
@@ -199,12 +200,12 @@ namespace Map
 
         private void Update()
         {
-            if (Mathf.Abs(noiseScale - prevScale) > Mathf.Epsilon || Mathf.Abs(noiseBorder - prevBorder) > Mathf.Epsilon)
-            {
-                RegenerateMaze();
-                prevScale = noiseScale;
-                prevBorder = noiseBorder;
-            }
+            // if (Mathf.Abs(noiseScale - prevScale) > Mathf.Epsilon || Mathf.Abs(noiseBorder - prevBorder) > Mathf.Epsilon)
+            // {
+            //     RegenerateMaze();
+            //     prevScale = noiseScale;
+            //     prevBorder = noiseBorder;
+            // }
 
             var maybePlayer = mapActorRegistry.Player;
             maybePlayer.IfPresent(player =>
@@ -554,7 +555,7 @@ namespace Map
             //     }
             // }
 
-            var maze = new bool[20, 20];
+            var maze = new (bool Value, float Transparency)[20, 20];
 
             var width = maze.GetLength(0);
             var height = maze.GetLength(1);
@@ -564,16 +565,17 @@ namespace Map
             var directionChangedIndex = -1;
             var directionChangedType = 0;
 
+            var transparency = randomService.Float(0.3f, 0.6f);
 
-            // generate 2 to 3 lines
-            for (int i = 0; i < randomService.Int(1, 3); i++)
+            // generate 2 to 4 lines
+            for (int i = 0; i < randomService.Int(2, 4); i++)
             {
                 var index = randomService.Int(0, width);
 
                 var startIndex = randomService.Int(0, Mathf.FloorToInt(width / 2f));
                 var endIndex = randomService.Int(Mathf.FloorToInt(width / 2f), width);
 
-                var isVertical = randomService.Chance(0.7f);
+                var isVertical = randomService.Chance(randomService.Float(0.5f, 0.7f));
 
                 // X
                 if (isVertical)
@@ -583,7 +585,7 @@ namespace Map
                         if (j < startIndex || j > endIndex)
                             continue;
 
-                        maze[index, j] = true;
+                        maze[index, j] = (true, transparency); //(float)j / (endIndex - startIndex));
                     }
                 }
                 // Y
@@ -594,7 +596,7 @@ namespace Map
                         if (j < startIndex || j > endIndex)
                             continue;
 
-                        maze[j, index] = true;
+                        maze[j, index] = (true, transparency); //(float)j / (endIndex - startIndex));
                     }
                 }
             }
@@ -609,13 +611,15 @@ namespace Map
                     // if (randomService.Chance(0.05f))
                     //     continue;
 
-                    if (maze[x, y])
+                    if (maze[x, y].Value)
                     {
-                        // var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), noiseScale, 100000f);
-                        // if (noiseVal > noiseBorder)
-                        // {
-                            trailsTilemap.SetTile(new Vector3Int(x, y, 0), trailRuleTile);
-                        // }
+                        var noiseVal = GetPerlinValue(new Vector3Int(x, y, 0), trailNoiseScale, 100000f);
+                        if (noiseVal > trailNoiseBorder)
+                        {
+                            var mazePos = new Vector3Int(x, y, 0);
+                            trailsTilemap.SetTile(mazePos, trailRuleTile);
+                            trailsTilemap.SetColor(mazePos, new Color(1f, 1f, 1f, maze[x, y].Transparency));
+                        }
                     }
                 }
             }
