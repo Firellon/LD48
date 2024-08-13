@@ -168,6 +168,7 @@ namespace Human
                 else
                 {
                     isHit = false;
+                    UpdateInventoryIsHelpless();
                     humanAnimator.SetBool(IsHitAnimation, false);
                     foreach (var interactableObject in interactableObjects)
                     {
@@ -474,6 +475,7 @@ namespace Human
             if (isHit || IsDead) return;
 
             isSurrendering = newIsSurrendering;
+            UpdateInventoryIsHelpless();
             StopMovement();
             humanAnimator.SetBool(IsSurrenderingAnimation, newIsSurrendering);
         }
@@ -538,11 +540,18 @@ namespace Human
                 {
                     interactableObject.SetHighlight(false);
                 }
+
+                UpdateInventoryIsHelpless();
             }
             else
             {
                 Die();
             }
+        }
+
+        private void UpdateInventoryIsHelpless()
+        {
+            inventory.IsHelpless = isHit && isSurrendering;
         }
 
         public void Die()
@@ -609,6 +618,16 @@ namespace Human
             item = interactableObjects.FirstOrDefault();
 
             return item is {CanBePickedUp: true};
+        }
+
+        public bool CanTakeItemFromContainer(ItemType itemType, out IItemContainer itemContainer)
+        {
+            itemContainer = interactableObjects.OfType<IItemContainer>()
+                .FirstOrDefault(container => container.CanTakeItem() && container.HasItem(itemType));
+
+            return itemContainer != null;
+
+
         }
     }
 }

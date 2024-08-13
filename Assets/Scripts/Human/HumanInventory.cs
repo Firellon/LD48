@@ -15,6 +15,12 @@ namespace Human
         public override int Capacity => itemSlotCount;
         public override List<Item> Items => items;
         public IMaybe<Item> HandItem => handItem;
+        public bool IsHelpless { get; set; }
+
+        public override bool CanTakeItem()
+        {
+            return items.Count > 0 && IsHelpless;
+        }
 
         public virtual bool SetHandItem(IMaybe<Item> maybeItem)
         {

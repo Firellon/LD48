@@ -20,18 +20,21 @@ namespace Stranger.AI
 
         [Header("Bonfire")]
         [SerializeField] private int minWoodToSurvive = 3;
-        [SerializeField] private float bonfireRadius;
+        [SerializeField] private float bonfireRadius = 10f;
         [SerializeField] private LayerMask bonfireLayerMask;
 
         public int MinWoodToSurvive => minWoodToSurvive;
         public int BonfireLayerMask => bonfireLayerMask;
-        public float BonfireRadius => bonfireRadius = 10f;
+        public float BonfireRadius => bonfireRadius;
         
         [Header("Item")] 
         [SerializeField] private LayerMask itemLayerMask;
-        [SerializeField] private float itemGatherRadius;
+        [SerializeField] private LayerMask itemContainerLayerMask;
+        [SerializeField] private float itemGatherRadius = 15f;
         
         public int ItemLayerMask => itemLayerMask;
-        public float ItemGatherRadius => itemGatherRadius = 15f;
+        public int ItemContainerLayerMask => itemContainerLayerMask;
+        public float ItemGatherRadius => itemGatherRadius;
+        
     }
 }

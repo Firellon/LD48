@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using LD48;
+using UnityEngine;
 
 namespace Inventory
 {
     public interface IItemContainer
     {
+        Transform Transform { get; }
         int Capacity { get; }
         List<Item> Items { get; }
 
+        bool CanTakeItem();
         bool CanAddItem();
         bool AddItem(Item item);
         bool RemoveItem(Item item);

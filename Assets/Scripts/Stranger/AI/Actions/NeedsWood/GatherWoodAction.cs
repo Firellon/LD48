@@ -28,7 +28,7 @@ namespace Stranger.AI
             var closestWood = Physics2D
                 .OverlapCircleAll(transform.position, config.ItemGatherRadius, config.ItemLayerMask)
                 .Select(collider => collider.gameObject.GetComponent<ItemController>())
-                .Where(wood => wood != null && wood.Item.ItemType == ItemType.Wood)
+                .Where(itemController => itemController != null && itemController.Item.ItemType == ItemType.Wood)
                 .OrderBy(wood => Vector2.Distance(transform.position, wood.transform.position))
                 .ToList();
 
@@ -37,6 +37,21 @@ namespace Stranger.AI
                 aiState.MaybeTarget = closestWood.Select(wood => wood.transform).FirstOrEmpty();
                 aiState.TargetAction = StrangerState.Gather;
                 State = NodeState.Success;
+            }
+            else
+            {
+                var closestContainersWithWood = Physics2D
+                    .OverlapCircleAll(transform.position, config.ItemGatherRadius, config.ItemContainerLayerMask)
+                    .Select(collider => collider.gameObject.GetComponent<IItemContainer>())
+                    .Where(itemContainer => itemContainer != null && itemContainer.HasItem(ItemType.Wood) && itemContainer.CanTakeItem())
+                    .OrderBy(container => Vector2.Distance(transform.position, container.Transform.position))
+                    .ToList();
+                if (closestContainersWithWood.Any())
+                {
+                    aiState.MaybeTarget = closestContainersWithWood.Select(itemContainer => itemContainer.Transform).FirstOrEmpty();
+                    aiState.TargetAction = StrangerState.Gather;
+                    State = NodeState.Success;
+                }
             }
 
             return State;

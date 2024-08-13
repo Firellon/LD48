@@ -7,8 +7,15 @@ namespace Inventory
 {
     public abstract class ItemContainer : MonoBehaviour, IItemContainer
     {
+        public Transform Transform => transform;
         public abstract int Capacity { get; }
         public abstract List<Item> Items { get; }
+
+        public virtual bool CanTakeItem()
+        {
+            return Items.Count > 0;
+        }
+        
         public bool CanAddItem()
         {
             return Items.Count < Capacity;

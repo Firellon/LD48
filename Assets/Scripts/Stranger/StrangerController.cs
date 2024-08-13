@@ -19,6 +19,7 @@ namespace Stranger
         [Inject] private IItemContainer inventory;
         [Inject] private IItemRegistry itemRegistry;
         [Inject] private IStrangerBehaviorTree behaviorTree;
+        [Inject] private StrangerAiConfig config;
 
         private HumanController humanController;
         private TerrainGenerator terrainGenerator;
@@ -33,8 +34,6 @@ namespace Stranger
         public float baseTimeToWander = 3f;
         private float timeToWander = 0f;
         private Vector2 wanderDirection = Vector2.zero;
-        [Obsolete]
-        public int minWoodToSurvive = 3;
         private Vector3 moveDirection = Vector3.zero;
 
         private void Start()
@@ -114,7 +113,7 @@ namespace Stranger
         private bool DoesHumanHaveWoodILack(HumanController otherHumanController)
         {
             var currentWoodAmount = inventory.GetItemAmount(ItemType.Wood);
-            return currentWoodAmount < minWoodToSurvive &&
+            return currentWoodAmount < config.MinWoodToSurvive &&
                    otherHumanController.Inventory.GetItemAmount(ItemType.Wood) > currentWoodAmount + 2;
         }
 
@@ -240,7 +239,7 @@ namespace Stranger
         private void Gather()
         {
             SetReadyToShoot(false);
-            if (!target)
+            if (!target || !inventory.CanAddItem())
             {
                 state = StrangerState.Wander;
                 return;
@@ -250,7 +249,18 @@ namespace Stranger
             moveDirection = GetFreeMoveDirection(gatherDirection.SkewDirection(5));
             humanController.Move(moveDirection);
             if (humanController.CanPickUp(out var item))
+            {
                 humanController.PickUp(item);
+            }
+            else if (humanController.CanTakeItemFromContainer(ItemType.Wood, out var itemContainer))
+            {
+                if (itemContainer.GetItem(ItemType.Wood, out var woodItem))
+                {
+                    itemContainer.RemoveItem(woodItem);
+                    inventory.AddItem(woodItem);
+                    // TODO: Animation of the item getting taken?
+                }
+            }
         }
 
         private void Flee()

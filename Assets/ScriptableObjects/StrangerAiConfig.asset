@@ -25,5 +25,5 @@ MonoBehaviour:
     m_Bits: 128
   itemLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   itemGatherRadius: 15
