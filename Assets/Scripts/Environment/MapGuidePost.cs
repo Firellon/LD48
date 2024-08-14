@@ -32,6 +32,11 @@ namespace Environment
                 isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
         }
 
+        public bool CanInteract()
+        {
+            return true;
+        }
+
         public void Interact(HumanController humanController)
         {
             SignalsHub.DispatchAsync(new ShowTextInputPopupCommand(

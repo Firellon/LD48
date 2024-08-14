@@ -13,6 +13,7 @@ namespace LD48
         IMaybe<MapObject> MaybeMapObject { get; }
         GameObject GameObject { get; }
         void SetHighlight(bool isLit);
+        bool CanInteract();
         void Interact(HumanController humanController);
         void Remove();
     }

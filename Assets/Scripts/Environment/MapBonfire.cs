@@ -97,6 +97,11 @@ namespace Environment
             spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
         }
 
+        public bool CanInteract()
+        {
+            return false; // TODO: See if we should keep this way
+        }
+
         public void Interact(HumanController humanController)
         {
             // TODO: Add a burnable item to the fire if possible

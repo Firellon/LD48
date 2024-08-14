@@ -350,7 +350,10 @@ namespace Stranger
             Gizmos.color = Color.cyan;
             var transformPosition = transform.position;
             Gizmos.DrawLine(transformPosition, transformPosition + moveDirection.normalized);
-            Handles.Label(transformPosition, behaviorTree.State.TargetAction.ToString());
+            if (behaviorTree != null && behaviorTree.State != null)
+            {
+                Handles.Label(transformPosition, behaviorTree.State.TargetAction.ToString());   
+            }
         }
     }
 }

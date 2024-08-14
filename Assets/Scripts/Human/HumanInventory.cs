@@ -15,7 +15,7 @@ namespace Human
         public override int Capacity => itemSlotCount;
         public override List<Item> Items => items;
         public IMaybe<Item> HandItem => handItem;
-        public bool IsHelpless { get; set; }
+        [ShowInInspector, ReadOnly] public bool IsHelpless { get; set; }
 
         public override bool CanTakeItem()
         {

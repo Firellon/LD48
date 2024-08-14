@@ -31,6 +31,11 @@ namespace Inventory
             spriteRenderer.material = isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
         }
 
+        public bool CanInteract()
+        {
+            return true;
+        }
+
         public void Interact(HumanController humanController)
         {
             // TODO: Implement Picking it up
