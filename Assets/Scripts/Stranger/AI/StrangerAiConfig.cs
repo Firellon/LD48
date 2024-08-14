@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
+using Inventory;
 using LD48;
+using Plugins.Sirenix.Odin_Inspector.Modules;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Stranger.AI
 {
@@ -31,10 +36,20 @@ namespace Stranger.AI
         [SerializeField] private LayerMask itemLayerMask;
         [SerializeField] private LayerMask itemContainerLayerMask;
         [SerializeField] private float itemGatherRadius = 15f;
-        
+        [SerializeField] private List<InventorySpawnConfig> initialInventory = new();
+
         public int ItemLayerMask => itemLayerMask;
         public int ItemContainerLayerMask => itemContainerLayerMask;
         public float ItemGatherRadius => itemGatherRadius;
-        
+        public List<InventorySpawnConfig> InitialInventory => initialInventory;
+    }
+
+    [Serializable]
+    public class InventorySpawnConfig
+    {
+        [SerializeField] private ItemType itemType = ItemType.Wood;
+        [SerializeField] private List<int> spawnAmounts = new();
+        public ItemType ItemType => itemType;
+        public List<int> SpawnAmounts => spawnAmounts;
     }
 }

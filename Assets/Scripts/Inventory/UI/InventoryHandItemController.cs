@@ -55,9 +55,17 @@ namespace Inventory.UI
             {
                 mapActorRegistry.Player.IfPresent(player =>
                 {
-                    player.Inventory.AddItem(handItem);
-                    SetHandItem(Maybe.Empty<Item>());
-                    player.Inventory.SetHandItem(Maybe.Empty<Item>());
+                    if (player.Inventory.CanAddItem())
+                    {
+                        player.Inventory.AddItem(handItem);
+                        SetHandItem(Maybe.Empty<Item>());
+                        player.Inventory.SetHandItem(Maybe.Empty<Item>());   
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Can't Move Hand item into a full inventory!");
+                        // TODO: Drop?
+                    }
                 });
             });
         }

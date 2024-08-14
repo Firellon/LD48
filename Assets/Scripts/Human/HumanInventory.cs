@@ -36,5 +36,17 @@ namespace Human
                 return true;
             });
         }
+
+        public bool MoveHandItemToInventory()
+        {
+            return handItem.Match(item =>
+            {
+                if (!CanAddItem()) return false;
+
+                AddItem(item);
+                SetHandItem(Maybe.Empty<Item>());
+                return true;
+            }, true);
+        }
     }
 }

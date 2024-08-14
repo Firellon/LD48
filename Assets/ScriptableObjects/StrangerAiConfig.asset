@@ -26,4 +26,14 @@ MonoBehaviour:
   itemLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  itemGatherRadius: 15
+  itemContainerLayerMask:
+    serializedVersion: 2
+    m_Bits: 129
+  itemGatherRadius: 20
+  initialInventory:
+  - itemType: 1
+    spawnAmounts: 000000000000000001000000010000000100000002000000
+  - itemType: 3
+    spawnAmounts: 000000000000000001000000
+  - itemType: 4
+    spawnAmounts: 0000000001000000

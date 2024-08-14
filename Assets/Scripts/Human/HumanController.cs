@@ -541,6 +541,17 @@ namespace Human
                     interactableObject.SetHighlight(false);
                 }
 
+                if (!inventory.MoveHandItemToInventory())
+                {
+                    inventory.HandItem.IfPresent(handItem =>
+                    {
+                        TryDropItem(handItem);
+                        inventory.SetHandItem(Maybe.Empty<Item>());
+                    }).IfNotPresent(() =>
+                    {
+                        Debug.LogError("Impossible situation: MoveHandItemToInventory returned false while no hand item is present!");
+                    });
+                }
                 UpdateInventoryIsHelpless();
             }
             else

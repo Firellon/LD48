@@ -4,9 +4,11 @@ using Human;
 using Inventory;
 using LD48;
 using Stranger.AI;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using Utilities.Monads;
+using Utilities.RandomService;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -20,6 +22,7 @@ namespace Stranger
         [Inject] private IItemRegistry itemRegistry;
         [Inject] private IStrangerBehaviorTree behaviorTree;
         [Inject] private StrangerAiConfig config;
+        [Inject] private IRandomService randomService;
 
         private HumanController humanController;
         private TerrainGenerator terrainGenerator;
@@ -39,21 +42,27 @@ namespace Stranger
         private void Start()
         {
             humanController = GetComponent<HumanController>();
-            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
+            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>(); // TODO: Inkject
 
+            SetUpInitialInventory();
+        }
+
+        private void SetUpInitialInventory()
+        {
             // TODO: Set up a random inventory? Move into config?
-            var initialWoodAmount = Random.Range(1, 4);
-            itemRegistry.GetItemOrEmpty(ItemType.Wood).IfPresent(woodItem =>
+            foreach (var itemSpawnConfig in config.InitialInventory)
             {
-                for (var i = 0; i < initialWoodAmount; i++)
+                var itemAmount = randomService.Sample(itemSpawnConfig.SpawnAmounts);
+                if (itemAmount <= 0) continue;
+                itemRegistry.GetItemOrEmpty(itemSpawnConfig.ItemType).IfPresent(item =>
                 {
-                    humanController.Inventory.AddItem(woodItem);
-                }
-            });
-            itemRegistry.GetItemOrEmpty(ItemType.Pistol).IfPresent(gunItem =>
-            {
-                humanController.Inventory.AddItem(gunItem);
-            });
+                    Debug.Log($"SetUpInitialInventory > adding {itemAmount} of {itemSpawnConfig.ItemType}");
+                    for (var i = 0; i < itemAmount; i++)
+                    {
+                        humanController.Inventory.AddItem(item);
+                    }
+                });
+            }
         }
 
         private void Update()
@@ -74,12 +83,7 @@ namespace Stranger
                     SeekBonfire();
                     break;
                 case StrangerState.StartBonfire:
-                    var maybeBonfireItem = itemRegistry.GetItemOrEmpty(ItemType.Bonfire);
-                    maybeBonfireItem.IfPresent(bonfireItem =>
-                    {
-                        humanController.LightAFire(bonfireItem);
-                        state = GetCurrentState();
-                    });
+                    StartBonfire();
                     break;
                 case StrangerState.Fight:
                     Fight();
@@ -94,11 +98,21 @@ namespace Stranger
                     Wander();
                     break;
                 case StrangerState.Surrender:
-                    Yield();
+                    Surrender();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void StartBonfire()
+        {
+            var maybeBonfireItem = itemRegistry.GetItemOrEmpty(ItemType.Bonfire);
+            maybeBonfireItem.IfPresent(bonfireItem =>
+            {
+                humanController.LightAFire(bonfireItem);
+                state = GetCurrentState();
+            });
         }
 
         private StrangerState GetCurrentState()
@@ -231,9 +245,11 @@ namespace Stranger
             humanController.Act();
         }
         
-        private void Yield()
+        private void Surrender()
         {
-            throw new Exception("Not Implemented!");
+            SetReadyToShoot(false);
+            humanController.StopMovement();
+            humanController.SetIsSurrendering(true);
         }
 
         private void Gather()
@@ -266,6 +282,11 @@ namespace Stranger
         private void Flee()
         {
             SetReadyToShoot(false);
+            if (!target)
+            {
+                state = StrangerState.Wander;
+                return;
+            }
             Vector2 fleeDirection = transform.position - target.transform.position;
             moveDirection = GetFreeMoveDirection(fleeDirection.SkewDirection(10));
             humanController.Move(moveDirection);
