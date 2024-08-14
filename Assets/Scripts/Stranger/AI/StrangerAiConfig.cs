@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Inventory;
 using LD48;
-using Plugins.Sirenix.Odin_Inspector.Modules;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Stranger.AI
 {
@@ -12,7 +9,10 @@ namespace Stranger.AI
     public class StrangerAiConfig : ScriptableObject
     {
         [SerializeField] private StrangerState defaultState = StrangerState.Wander;
+        [SerializeField] private double stateCalculationProbability = 0.9f;
+        
         public StrangerState DefaultState => defaultState;
+        public double StateCalculationProbability => stateCalculationProbability;
         
         [Header("Threats")]
         [SerializeField] private float threatRadius = 10f;

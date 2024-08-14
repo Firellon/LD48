@@ -4,7 +4,6 @@ using Human;
 using Inventory;
 using LD48;
 using Stranger.AI;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using Utilities.Monads;
@@ -42,7 +41,7 @@ namespace Stranger
         private void Start()
         {
             humanController = GetComponent<HumanController>();
-            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>(); // TODO: Inkject
+            terrainGenerator = Camera.main.GetComponent<TerrainGenerator>(); // TODO: Inject
 
             SetUpInitialInventory();
         }
@@ -69,9 +68,14 @@ namespace Stranger
         {
             if (humanController.IsDead) return;
             // Reduce amount of expensive calls
-            if (Random.value > 0.9f)
+            if (Random.value > config.StateCalculationProbability)
             {
                 state = GetCurrentState();
+            }
+
+            if (state != StrangerState.Surrender && humanController.IsSurrendering)
+            {
+                humanController.SetIsSurrendering(false);
             }
 
             switch (state)

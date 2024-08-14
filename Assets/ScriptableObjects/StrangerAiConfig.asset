@@ -17,7 +17,7 @@ MonoBehaviour:
   threatLayerMask:
     serializedVersion: 2
     m_Bits: 1
-  bravery: 2
+  bravery: 1
   minWoodToSurvive: 3
   bonfireRadius: 10
   bonfireLayerMask:
