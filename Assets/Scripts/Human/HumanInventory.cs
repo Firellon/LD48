@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Inventory;
+using LD48;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Monads;
@@ -48,5 +50,27 @@ namespace Human
                 return true;
             }, true);
         }
+
+        public void IfHandItem(ItemType itemType, Action<Item> some)
+        {
+            IfHandItem(itemType, some, () => { });
+        }
+
+        public bool IsHandItem(ItemType itemType)
+        {
+            return HandItem.Match(item => item.ItemType == itemType, false);
+        }
+
+        public void IfHandItem(ItemType itemType, Action<Item> some, Action none)
+        {
+            HandItem.IfPresent(item =>
+            {
+                if (item.ItemType == itemType)
+                    some(item);
+                else
+                    none();
+            }).IfNotPresent(none);
+        }
+        
     }
 }

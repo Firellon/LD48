@@ -2,7 +2,9 @@
 using BehaviorTree;
 using BehaviorTree.Common;
 using Inventory;
+using LD48;
 using Stranger.AI.Actions;
+using Stranger.AI.Actions.IsNight;
 using UnityEngine;
 using Utilities.Monads;
 using Zenject;
@@ -42,6 +44,7 @@ namespace Stranger.AI
                     new Selector(new List<INode>
                     {
                         diContainer.Instantiate<SeekBonfireAction>(stateArgs),
+                        diContainer.Instantiate<GetHandBonfireAction>(stateArgs),
                         diContainer.Instantiate<StartBonfireAction>(stateArgs),
                     })
                 }),
@@ -68,7 +71,8 @@ namespace Stranger.AI
                 Transform = strangerTransform,
                 Inventory = inventory,
                 Threats = new List<GameObject>(),
-                MaybeTarget = Maybe.Empty<Transform>()
+                MaybeTarget = Maybe.Empty<Transform>(),
+                TargetItemType = ItemType.None
             };
         }
     }

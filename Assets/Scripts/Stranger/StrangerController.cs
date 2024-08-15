@@ -3,6 +3,7 @@ using Environment;
 using Human;
 using Inventory;
 using LD48;
+using Sirenix.OdinInspector;
 using Stranger.AI;
 using UnityEditor;
 using UnityEngine;
@@ -27,7 +28,9 @@ namespace Stranger
         private TerrainGenerator terrainGenerator;
 
         [SerializeField] private StrangerState state;
-        [SerializeField] private Transform target;
+        [ShowInInspector, ReadOnly] private Transform target;
+        [ShowInInspector, ReadOnly] private ItemType targetItemType;
+        
         [Obsolete]
         [SerializeField] private float freeMoveCheckDistance = 1f;
         [SerializeField] private LayerMask solidLayerMask;
@@ -104,6 +107,10 @@ namespace Stranger
                 case StrangerState.Surrender:
                     Surrender();
                     break;
+                case StrangerState.GetHandItem:
+                    Debug.Log($"GetHandItem > {targetItemType}");
+                    GetHandItem();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -111,11 +118,12 @@ namespace Stranger
 
         private void StartBonfire()
         {
-            var maybeBonfireItem = itemRegistry.GetItemOrEmpty(ItemType.Bonfire);
-            maybeBonfireItem.IfPresent(bonfireItem =>
+            humanController.Inventory.IfHandItem(ItemType.Bonfire, bonfireItem =>
             {
-                humanController.LightAFire(bonfireItem);
+                humanController.PlaceBonfire(bonfireItem);
                 state = GetCurrentState();
+            }, () => {
+                Debug.LogError($"{nameof(StartBonfire)} > does not have a Bonfire in hand!");
             });
         }
 
@@ -124,6 +132,7 @@ namespace Stranger
             behaviorTree.Evaluate();
 
             target = behaviorTree.State.MaybeTarget.Match(aTarget => aTarget, () => null);
+            targetItemType = behaviorTree.State.TargetItemType;
 
             return behaviorTree.State.TargetAction;
         }
@@ -140,7 +149,7 @@ namespace Stranger
             SetReadyToShoot(false);
 
             var bonfireDistance = Vector2.Distance(target.transform.position, transform.position);
-            if (bonfireDistance > humanController.fireTouchRadius)
+            if (bonfireDistance > config.ItemTouchRadius)
             {
                 Vector2 bonfireDirection = target.transform.position - transform.position;
                 moveDirection = GetFreeMoveDirection(bonfireDirection.SkewDirection(5));
@@ -155,7 +164,7 @@ namespace Stranger
 
             var bonfire = target.GetComponent<MapBonfire>();
             // TODO: Check if we have that wood item?
-            if (Random.Range(1, 10) > bonfire.GetTimeToBurn())
+            if (Random.Range(1, 10) > bonfire.GetTimeToBurn() && Random.Range(0f, 1f) > 0.9f)
             {
                 var woodItem = itemRegistry.GetItem(ItemType.Wood);
                 humanController.AddToFire(woodItem);
@@ -254,6 +263,48 @@ namespace Stranger
             SetReadyToShoot(false);
             humanController.StopMovement();
             humanController.SetIsSurrendering(true);
+        }
+        
+        private void GetHandItem()
+        {
+            if (targetItemType == ItemType.None)
+            {
+                state = StrangerState.Wander;
+                return;
+            }
+
+            if (humanController.Inventory.IsHandItem(targetItemType)) return;
+            if (humanController.Inventory.GetItem(targetItemType, out var targetItem))
+            {
+                humanController.Inventory.HandItem.IfPresent(handItem =>
+                {
+                    humanController.Inventory.RemoveItem(targetItem);
+                    humanController.Inventory.SetHandItem(targetItem.ToMaybe());
+                    humanController.Inventory.AddItem(handItem);
+                }).IfNotPresent(() =>
+                {
+                    humanController.Inventory.RemoveItem(targetItem);
+                    humanController.Inventory.SetHandItem(targetItem.ToMaybe());
+                });
+                return;
+            }
+
+            var targetRegistryItem = itemRegistry.GetItem(targetItemType);
+
+            if (targetRegistryItem.CanBeCraftedWith(humanController.Inventory))
+            {
+                CraftItem(targetRegistryItem);
+            }
+        }
+
+        private void CraftItem(Item targetRegistryItem)
+        {
+            foreach (var (itemType, itemAmount) in targetRegistryItem.CraftingRequirements)
+            {
+                humanController.Inventory.RemoveItem(itemType, itemAmount);
+            }
+
+            humanController.Inventory.AddItem(targetRegistryItem);
         }
 
         private void Gather()

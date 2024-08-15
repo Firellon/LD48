@@ -10,5 +10,6 @@
         Rob = 5,
         Flee = 6,
         Surrender = 7,
+        GetHandItem = 8
     }
 }

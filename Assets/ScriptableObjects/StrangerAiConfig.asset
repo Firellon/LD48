@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: StrangerAiConfig
   m_EditorClassIdentifier: 
   defaultState: 0
+  stateCalculationProbability: 0.8999999761581421
   threatRadius: 10
   threatLayerMask:
     serializedVersion: 2
@@ -32,7 +33,7 @@ MonoBehaviour:
   itemGatherRadius: 20
   initialInventory:
   - itemType: 1
-    spawnAmounts: 000000000000000001000000010000000100000002000000
+    spawnAmounts: 00000000010000000100000002000000020000000300000003000000
   - itemType: 3
     spawnAmounts: 000000000000000001000000
   - itemType: 4

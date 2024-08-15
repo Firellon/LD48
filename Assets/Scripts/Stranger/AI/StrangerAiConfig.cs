@@ -37,11 +37,13 @@ namespace Stranger.AI
         [SerializeField] private LayerMask itemContainerLayerMask;
         [SerializeField] private float itemGatherRadius = 15f;
         [SerializeField] private List<InventorySpawnConfig> initialInventory = new();
+        [SerializeField] private double itemTouchRadius = 1f;
 
         public int ItemLayerMask => itemLayerMask;
         public int ItemContainerLayerMask => itemContainerLayerMask;
         public float ItemGatherRadius => itemGatherRadius;
         public List<InventorySpawnConfig> InitialInventory => initialInventory;
+        public double ItemTouchRadius => itemTouchRadius;
     }
 
     [Serializable]

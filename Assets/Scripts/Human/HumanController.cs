@@ -42,7 +42,6 @@ namespace Human
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
-        public float fireTouchRadius = 1f;
         public float mapObjectTouchRadius = 1f;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -302,7 +301,7 @@ namespace Human
                     AddToFire(item);
                     return;
                 case ItemType.Bonfire:
-                    LightAFire(item);
+                    PlaceBonfire(item);
                     return;
                 case ItemType.Pistol:
                     Shoot(item);
@@ -349,9 +348,14 @@ namespace Human
             bonfire.AddBurnableItem(burnableItem);
         }
 
-        public void LightAFire(Item bonfireItem)
+        public void PlaceBonfire(Item handItem)
         {
             if (isHit || IsDead) return;
+            if (handItem.ItemType != ItemType.Bonfire)
+            {
+                Debug.LogError($"{nameof(PlaceBonfire)} < provided item {handItem} is not a Bonfire!");
+                return;
+            }
 
             var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.None())
