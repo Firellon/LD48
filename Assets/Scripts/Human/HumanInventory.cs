@@ -51,14 +51,14 @@ namespace Human
             }, true);
         }
 
-        public void IfHandItem(ItemType itemType, Action<Item> some)
-        {
-            IfHandItem(itemType, some, () => { });
-        }
-
         public bool IsHandItem(ItemType itemType)
         {
             return HandItem.Match(item => item.ItemType == itemType, false);
+        }
+        
+        public void IfHandItem(ItemType itemType, Action<Item> some)
+        {
+            IfHandItem(itemType, some, () => { });
         }
 
         public void IfHandItem(ItemType itemType, Action<Item> some, Action none)

@@ -17,8 +17,9 @@ namespace Stranger
     public class StrangerController : MonoBehaviour
     {
         private const float K_positionEpsilon = 0.1f;
+        private const float K_distanceEpsilon = 0.05f;
 
-        [Inject] private IItemContainer inventory;
+        [Inject] private IInventory inventory;
         [Inject] private IItemRegistry itemRegistry;
         [Inject] private IStrangerBehaviorTree behaviorTree;
         [Inject] private StrangerAiConfig config;
@@ -28,16 +29,14 @@ namespace Stranger
         private TerrainGenerator terrainGenerator;
 
         [SerializeField] private StrangerState state;
-        [ShowInInspector, ReadOnly] private Transform target;
-        [ShowInInspector, ReadOnly] private ItemType targetItemType;
-        
-        [Obsolete]
-        [SerializeField] private float freeMoveCheckDistance = 1f;
+        [ShowInInspector] [ReadOnly] private Transform target;
+        [ShowInInspector] [ReadOnly] private ItemType targetItemType;
+
+        [Obsolete] [SerializeField] private float freeMoveCheckDistance = 1f;
         [SerializeField] private LayerMask solidLayerMask;
-        
-        [Obsolete]
-        public float baseTimeToWander = 3f;
-        private float timeToWander = 0f;
+
+        [Obsolete] public float baseTimeToWander = 3f;
+        private float timeToWander;
         private Vector2 wanderDirection = Vector2.zero;
         private Vector3 moveDirection = Vector3.zero;
 
@@ -59,10 +58,7 @@ namespace Stranger
                 itemRegistry.GetItemOrEmpty(itemSpawnConfig.ItemType).IfPresent(item =>
                 {
                     Debug.Log($"SetUpInitialInventory > adding {itemAmount} of {itemSpawnConfig.ItemType}");
-                    for (var i = 0; i < itemAmount; i++)
-                    {
-                        humanController.Inventory.AddItem(item);
-                    }
+                    for (var i = 0; i < itemAmount; i++) humanController.Inventory.AddItem(item);
                 });
             }
         }
@@ -71,15 +67,10 @@ namespace Stranger
         {
             if (humanController.IsDead) return;
             // Reduce amount of expensive calls
-            if (Random.value > config.StateCalculationProbability)
-            {
-                state = GetCurrentState();
-            }
+            if (Random.value > config.StateCalculationProbability) state = GetCurrentState();
 
             if (state != StrangerState.Surrender && humanController.IsSurrendering)
-            {
                 humanController.SetIsSurrendering(false);
-            }
 
             switch (state)
             {
@@ -122,9 +113,7 @@ namespace Stranger
             {
                 humanController.PlaceBonfire(bonfireItem);
                 state = GetCurrentState();
-            }, () => {
-                Debug.LogError($"{nameof(StartBonfire)} > does not have a Bonfire in hand!");
-            });
+            }, () => { Debug.LogError($"{nameof(StartBonfire)} > does not have a Bonfire in hand!"); });
         }
 
         private StrangerState GetCurrentState()
@@ -137,13 +126,6 @@ namespace Stranger
             return behaviorTree.State.TargetAction;
         }
 
-        private bool DoesHumanHaveWoodILack(HumanController otherHumanController)
-        {
-            var currentWoodAmount = inventory.GetItemAmount(ItemType.Wood);
-            return currentWoodAmount < config.MinWoodToSurvive &&
-                   otherHumanController.Inventory.GetItemAmount(ItemType.Wood) > currentWoodAmount + 2;
-        }
-
         private void SeekBonfire()
         {
             SetReadyToShoot(false);
@@ -152,7 +134,7 @@ namespace Stranger
             if (bonfireDistance > config.ItemTouchRadius)
             {
                 Vector2 bonfireDirection = target.transform.position - transform.position;
-                moveDirection = GetFreeMoveDirection(bonfireDirection.SkewDirection(5));
+                moveDirection = GetFreeMoveDirection(bonfireDirection.SkewDirection(10));
                 humanController.Move(moveDirection);
                 return;
             }
@@ -160,13 +142,19 @@ namespace Stranger
             moveDirection = Vector3.zero;
             humanController.StopMovement();
 
-            if (inventory.GetItemAmount(ItemType.Wood) == 0) return;
+            // TODO: Check for burnable items instead
+            if (!inventory.HasItem(ItemType.Wood) && !inventory.IsHandItem(ItemType.Wood)) return;
 
             var bonfire = target.GetComponent<MapBonfire>();
             // TODO: Check if we have that wood item?
-            if (Random.Range(1, 10) > bonfire.GetTimeToBurn() && Random.Range(0f, 1f) > 0.9f)
+            if (Random.Range(1, 10) > bonfire.GetTimeToBurn() && Random.Range(0f, 1f) > config.StateCalculationProbability)
             {
                 var woodItem = itemRegistry.GetItem(ItemType.Wood);
+                if (inventory.IsHandItem(ItemType.Wood))
+                    inventory.SetHandItem(Maybe.Empty<Item>());
+                else
+                    inventory.RemoveItem(woodItem);
+                
                 humanController.AddToFire(woodItem);
             }
         }
@@ -228,22 +216,42 @@ namespace Stranger
 
         private void Rob()
         {
-            if (!target)
+            if (!target || targetItemType == ItemType.None)
             {
                 state = StrangerState.Wander;
                 return;
             }
 
             var targetHuman = target.GetComponent<HumanController>();
-            if (targetHuman == null || !DoesHumanHaveWoodILack(targetHuman))
+            if (targetHuman == null || !inventory.DoesHumanHaveWoodILack(config, targetHuman))
             {
                 state = StrangerState.Wander;
                 return;
             }
 
-            SetReadyToShoot(true);
+            if (targetHuman.CanRob())
+            {
+                if (targetHuman.CanTakeItemFromContainer(targetItemType, out var itemContainer))
+                    if (itemContainer.GetItem(targetItemType, out var item))
+                    {
+                        itemContainer.RemoveItem(item);
+                        inventory.AddItem(item);
+                        return;
+                    }
 
-            if (Mathf.Abs(target.position.y - transform.position.y) > 0.05f)
+                var targetPosition = target.position;
+                var transformPosition = transform.position;
+                moveDirection = GetFreeMoveDirection(new Vector2(
+                    Mathf.Sign(targetPosition.x - transformPosition.x) * 0.1f,
+                    Mathf.Sign(targetPosition.y - transformPosition.y)
+                ));
+                humanController.Move(moveDirection);
+                return;
+            }
+
+            SetReadyToShoot(true);
+            
+            if (Mathf.Abs(target.position.y - transform.position.y) > K_distanceEpsilon)
             {
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
@@ -257,14 +265,14 @@ namespace Stranger
 
             humanController.Act();
         }
-        
+
         private void Surrender()
         {
             SetReadyToShoot(false);
             humanController.StopMovement();
             humanController.SetIsSurrendering(true);
         }
-        
+
         private void GetHandItem()
         {
             if (targetItemType == ItemType.None)
@@ -291,18 +299,13 @@ namespace Stranger
 
             var targetRegistryItem = itemRegistry.GetItem(targetItemType);
 
-            if (targetRegistryItem.CanBeCraftedWith(humanController.Inventory))
-            {
-                CraftItem(targetRegistryItem);
-            }
+            if (targetRegistryItem.CanBeCraftedWith(humanController.Inventory)) CraftItem(targetRegistryItem);
         }
 
         private void CraftItem(Item targetRegistryItem)
         {
             foreach (var (itemType, itemAmount) in targetRegistryItem.CraftingRequirements)
-            {
                 humanController.Inventory.RemoveItem(itemType, itemAmount);
-            }
 
             humanController.Inventory.AddItem(targetRegistryItem);
         }
@@ -320,18 +323,14 @@ namespace Stranger
             moveDirection = GetFreeMoveDirection(gatherDirection.SkewDirection(5));
             humanController.Move(moveDirection);
             if (humanController.CanPickUp(out var item))
-            {
                 humanController.PickUp(item);
-            }
             else if (humanController.CanTakeItemFromContainer(ItemType.Wood, out var itemContainer))
-            {
                 if (itemContainer.GetItem(ItemType.Wood, out var woodItem))
                 {
                     itemContainer.RemoveItem(woodItem);
                     inventory.AddItem(woodItem);
                     // TODO: Animation of the item getting taken?
                 }
-            }
         }
 
         private void Flee()
@@ -342,6 +341,7 @@ namespace Stranger
                 state = StrangerState.Wander;
                 return;
             }
+
             Vector2 fleeDirection = transform.position - target.transform.position;
             moveDirection = GetFreeMoveDirection(fleeDirection.SkewDirection(10));
             humanController.Move(moveDirection);
@@ -402,9 +402,7 @@ namespace Stranger
             var transformPosition = transform.position;
             Gizmos.DrawLine(transformPosition, transformPosition + moveDirection.normalized);
             if (behaviorTree != null && behaviorTree.State != null)
-            {
-                Handles.Label(transformPosition, behaviorTree.State.TargetAction.ToString());   
-            }
+                Handles.Label(transformPosition, behaviorTree.State.TargetAction.ToString());
         }
     }
 }

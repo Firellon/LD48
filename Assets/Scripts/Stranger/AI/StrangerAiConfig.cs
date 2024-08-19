@@ -14,7 +14,7 @@ namespace Stranger.AI
         public StrangerState DefaultState => defaultState;
         public double StateCalculationProbability => stateCalculationProbability;
         
-        [Header("Threats")]
+        [Header("Threat")]
         [SerializeField] private float threatRadius = 10f;
         [SerializeField] private LayerMask threatLayerMask;
         [SerializeField] private int bravery = 2;
@@ -22,6 +22,13 @@ namespace Stranger.AI
         public float ThreatRadius => threatRadius;
         public int ThreatLayerMask => threatLayerMask;
         public int Bravery => bravery;
+
+        [Header("Rob")] 
+        [SerializeField] private float robRadius = 15f;
+        [SerializeField] private LayerMask robLayerMask;
+        
+        public float RobRadius => robRadius;
+        public int RobLayerMask => robLayerMask;
 
         [Header("Bonfire")]
         [SerializeField] private int minWoodToSurvive = 3;

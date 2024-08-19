@@ -13,12 +13,16 @@ MonoBehaviour:
   m_Name: StrangerAiConfig
   m_EditorClassIdentifier: 
   defaultState: 0
-  stateCalculationProbability: 0.8999999761581421
+  stateCalculationProbability: 0.9
   threatRadius: 10
   threatLayerMask:
     serializedVersion: 2
     m_Bits: 1
   bravery: 1
+  robRadius: 15
+  robLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
   minWoodToSurvive: 3
   bonfireRadius: 10
   bonfireLayerMask:
@@ -33,8 +37,9 @@ MonoBehaviour:
   itemGatherRadius: 20
   initialInventory:
   - itemType: 1
-    spawnAmounts: 00000000010000000100000002000000020000000300000003000000
+    spawnAmounts: 00000000010000000100000002000000
   - itemType: 3
-    spawnAmounts: 000000000000000001000000
+    spawnAmounts: 000000000100000001000000
   - itemType: 4
     spawnAmounts: 0000000001000000
+  itemTouchRadius: 1

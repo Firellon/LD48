@@ -642,9 +642,9 @@ namespace Human
 
         public bool CanPickUp(out IInteractable item)
         {
-            item = interactableObjects.FirstOrDefault();
+            item = interactableObjects.FirstOrDefault(obj => obj.CanBePickedUp);
 
-            return item is {CanBePickedUp: true};
+            return item != null;
         }
 
         public bool CanTakeItemFromContainer(ItemType itemType, out IItemContainer itemContainer)
@@ -653,8 +653,11 @@ namespace Human
                 .FirstOrDefault(container => container.CanTakeItem() && container.HasItem(itemType));
 
             return itemContainer != null;
+        }
 
-
+        public bool CanRob()
+        {
+            return inventory.CanTakeItem() && (isSurrendering || isHit);
         }
 
         #region IInteractable

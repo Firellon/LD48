@@ -1,6 +1,5 @@
 using System.Linq;
 using BehaviorTree;
-using Environment;
 using Inventory;
 using LD48;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace Stranger.AI
     {
         [Inject] private StrangerAiConfig config;
         [Inject] private Transform transform;
+        [Inject] private IItemContainer inventory;
 
         private readonly StrangerAICalculationState aiState;
 
@@ -24,7 +24,7 @@ namespace Stranger.AI
         public override NodeState Evaluate()
         {
             State = NodeState.Failure;
-            
+
             var closestWood = Physics2D
                 .OverlapCircleAll(transform.position, config.ItemGatherRadius, config.ItemLayerMask)
                 .Select(collider => collider.gameObject.GetComponent<ItemController>())
@@ -43,13 +43,16 @@ namespace Stranger.AI
                 var closestContainersWithWood = Physics2D
                     .OverlapCircleAll(transform.position, config.ItemGatherRadius, config.ItemContainerLayerMask)
                     .Select(collider => collider.gameObject.GetComponent<IItemContainer>())
-                    .Where(itemContainer => itemContainer != null && itemContainer.HasItem(ItemType.Wood) && itemContainer.CanTakeItem())
+                    .Where(itemContainer => itemContainer != null && itemContainer != inventory &&
+                                            itemContainer.HasItem(ItemType.Wood) && itemContainer.CanTakeItem())
                     .OrderBy(container => Vector2.Distance(transform.position, container.Transform.position))
                     .ToList();
                 if (closestContainersWithWood.Any())
                 {
-                    aiState.MaybeTarget = closestContainersWithWood.Select(itemContainer => itemContainer.Transform).FirstOrEmpty();
+                    aiState.MaybeTarget = closestContainersWithWood.Select(itemContainer => itemContainer.Transform)
+                        .FirstOrEmpty();
                     aiState.TargetAction = StrangerState.Gather;
+                    aiState.TargetItemType = ItemType.Wood;
                     State = NodeState.Success;
                 }
             }
