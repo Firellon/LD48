@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using LD48;
 using UnityEngine;
 
@@ -7,9 +9,12 @@ namespace Stranger.AI
     public class StrangerAiConfig : ScriptableObject
     {
         [SerializeField] private StrangerState defaultState = StrangerState.Wander;
-        public StrangerState DefaultState => defaultState;
+        [SerializeField] private double stateCalculationProbability = 0.9f;
         
-        [Header("Threats")]
+        public StrangerState DefaultState => defaultState;
+        public double StateCalculationProbability => stateCalculationProbability;
+        
+        [Header("Threat")]
         [SerializeField] private float threatRadius = 10f;
         [SerializeField] private LayerMask threatLayerMask;
         [SerializeField] private int bravery = 2;
@@ -18,20 +23,42 @@ namespace Stranger.AI
         public int ThreatLayerMask => threatLayerMask;
         public int Bravery => bravery;
 
+        [Header("Rob")] 
+        [SerializeField] private float robRadius = 15f;
+        [SerializeField] private LayerMask robLayerMask;
+        
+        public float RobRadius => robRadius;
+        public int RobLayerMask => robLayerMask;
+
         [Header("Bonfire")]
         [SerializeField] private int minWoodToSurvive = 3;
-        [SerializeField] private float bonfireRadius;
+        [SerializeField] private float bonfireRadius = 10f;
         [SerializeField] private LayerMask bonfireLayerMask;
 
         public int MinWoodToSurvive => minWoodToSurvive;
         public int BonfireLayerMask => bonfireLayerMask;
-        public float BonfireRadius => bonfireRadius = 10f;
+        public float BonfireRadius => bonfireRadius;
         
         [Header("Item")] 
         [SerializeField] private LayerMask itemLayerMask;
-        [SerializeField] private float itemGatherRadius;
-        
+        [SerializeField] private LayerMask itemContainerLayerMask;
+        [SerializeField] private float itemGatherRadius = 15f;
+        [SerializeField] private List<InventorySpawnConfig> initialInventory = new();
+        [SerializeField] private double itemTouchRadius = 1f;
+
         public int ItemLayerMask => itemLayerMask;
-        public float ItemGatherRadius => itemGatherRadius = 15f;
+        public int ItemContainerLayerMask => itemContainerLayerMask;
+        public float ItemGatherRadius => itemGatherRadius;
+        public List<InventorySpawnConfig> InitialInventory => initialInventory;
+        public double ItemTouchRadius => itemTouchRadius;
+    }
+
+    [Serializable]
+    public class InventorySpawnConfig
+    {
+        [SerializeField] private ItemType itemType = ItemType.Wood;
+        [SerializeField] private List<int> spawnAmounts = new();
+        public ItemType ItemType => itemType;
+        public List<int> SpawnAmounts => spawnAmounts;
     }
 }

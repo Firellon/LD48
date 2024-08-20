@@ -12,6 +12,7 @@ namespace Stranger.AI
         public IInventory Inventory { get; set; }
         public List<GameObject> Threats { get; set; } = new();
         public StrangerState TargetAction { get; set; }
-        public IMaybe<Transform> MaybeTarget { get; set; }
+        public IMaybe<Transform> MaybeTarget { get; set; } = Maybe.Empty<Transform>();
+        public ItemType TargetItemType { get; set; } = ItemType.None;
     }
 }

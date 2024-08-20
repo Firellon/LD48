@@ -19,7 +19,7 @@ namespace Stranger.AI
         {
             State = NodeState.Failure;
 
-            if (aiState.Threats.Count > config.Bravery)
+            if (aiState.Threats.Count >= config.Bravery)
             {
                 aiState.TargetAction = StrangerState.Surrender;
                 State = NodeState.Success;

@@ -20,11 +20,11 @@ namespace Stranger.AI.Actions
         {
             State = NodeState.Failure;
 
-            if (inventory.GetItemAmount(ItemType.Wood) > 0)
+            inventory.IfHandItem(ItemType.Bonfire, _ =>
             {
                 aiState.TargetAction = StrangerState.StartBonfire;
                 State = NodeState.Success;
-            }
+            });
 
             return State;
         }

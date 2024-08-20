@@ -24,10 +24,12 @@ namespace Stranger.AI.Actions
         {
             State = NodeState.Failure;
 
+            // TODO: Check for fuel instead
+            var hasWood = aiState.Inventory.HasItem(ItemType.Wood);
             var closestBonfires = Physics2D
                 .OverlapCircleAll(transform.position, config.BonfireRadius, config.BonfireLayerMask)
                 .Select(otherCollider => otherCollider.gameObject.GetComponent<MapBonfire>())
-                .Where(bonfire => bonfire != null && bonfire.IsBurning())
+                .Where(bonfire => bonfire != null && (bonfire.IsBurning() || hasWood))
                 .OrderBy(bonfire => Vector2.Distance(transform.position, bonfire.transform.position))
                 .ToList();
 

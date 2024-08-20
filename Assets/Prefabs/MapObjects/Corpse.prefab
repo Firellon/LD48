@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapObject: {fileID: 11400000, guid: 06eaee41e47e2be4c8b2382f0f1688d3, type: 2}
-  spriteRenderer: {fileID: 241581296046243404}
 --- !u!114 &4926377219162670675
 MonoBehaviour:
   m_ObjectHideFlags: 0

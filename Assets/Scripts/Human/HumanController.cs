@@ -13,6 +13,7 @@ using LD48;
 using LD48.CharacterController2D;
 using Map;
 using Signals;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -22,7 +23,7 @@ using Random = UnityEngine.Random;
 namespace Human
 {
     [RequireComponent(typeof(PlayerMovement2D))]
-    public class HumanController : MonoBehaviour, IHittable
+    public class HumanController : MonoBehaviour, IHittable, IInteractable
     {
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IInventory inventory;
@@ -41,7 +42,6 @@ namespace Human
         public float moveSpeed = 2.5f;
         public Vector2 bulletPosition;
         public GameObject bulletPrefab;
-        public float fireTouchRadius = 1f;
         public float mapObjectTouchRadius = 1f;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -70,7 +70,7 @@ namespace Human
         private bool isResting = false;
         public bool IsResting => isResting;
 
-        private readonly List<IInteractable> interactableObjects = new();
+        [ShowInInspector, ReadOnly] private readonly List<IInteractable> interactableObjects = new();
 
         #region Audio
 
@@ -168,10 +168,14 @@ namespace Human
                 else
                 {
                     isHit = false;
+                    UpdateInventoryIsHelpless();
                     humanAnimator.SetBool(IsHitAnimation, false);
                     foreach (var interactableObject in interactableObjects)
                     {
-                        interactableObject.SetHighlight(true);
+                        if (interactableObject.CanInteract())
+                        {
+                            interactableObject.SetHighlight(true);    
+                        }
                     }
                 }
             }
@@ -216,7 +220,7 @@ namespace Human
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Item") || other.gameObject.CompareTag("MapObject"))
+            if (IsInteractable(other))
             {
                 var interactable = other.gameObject.GetComponent<IInteractable>();
                 if (interactable == null)
@@ -227,13 +231,15 @@ namespace Human
                 }
 
                 interactable.SetHighlight(true);
+
+                if (interactableObjects.Contains(interactable)) return;
                 interactableObjects.Add(interactable);
             }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Item") || other.gameObject.CompareTag("MapObject"))
+            if (IsInteractable(other))
             {
                 var interactable = other.gameObject.GetComponent<IInteractable>();
                 if (interactable == null)
@@ -247,6 +253,13 @@ namespace Human
                 interactableObjects.Remove(interactable);
                 SignalsHub.DispatchAsync(new InteractableExitEvent(this, interactable));
             }
+        }
+
+        private bool IsInteractable(Collider2D other)
+        {
+            return other.gameObject.CompareTag("Item") ||
+                   other.gameObject.CompareTag("MapObject") ||
+                   other.gameObject.CompareTag("Human");
         }
 
         public void Move(Vector2 moveDirection)
@@ -290,7 +303,7 @@ namespace Human
                     AddToFire(item);
                     return;
                 case ItemType.Bonfire:
-                    LightAFire(item);
+                    PlaceBonfire(item);
                     return;
                 case ItemType.Pistol:
                     Shoot(item);
@@ -337,9 +350,14 @@ namespace Human
             bonfire.AddBurnableItem(burnableItem);
         }
 
-        public void LightAFire(Item bonfireItem)
+        public void PlaceBonfire(Item handItem)
         {
             if (isHit || IsDead) return;
+            if (handItem.ItemType != ItemType.Bonfire)
+            {
+                Debug.LogError($"{nameof(PlaceBonfire)} < provided item {handItem} is not a Bonfire!");
+                return;
+            }
 
             var bonfires = GetClosestMapObjects<MapBonfire>();
             if (bonfires.None())
@@ -474,6 +492,7 @@ namespace Human
             if (isHit || IsDead) return;
 
             isSurrendering = newIsSurrendering;
+            UpdateInventoryIsHelpless();
             StopMovement();
             humanAnimator.SetBool(IsSurrenderingAnimation, newIsSurrendering);
         }
@@ -499,9 +518,10 @@ namespace Human
 
         public void Interact()
         {
-            if (interactableObjects.Any())
+            var trueInteractableObjects = interactableObjects.Where(obj => obj.CanInteract());
+            if (trueInteractableObjects.Any())
             {
-                var firstInteractableObject = interactableObjects.First();
+                var firstInteractableObject = trueInteractableObjects.First();
                 // TODO: Implement other ways to interact with objects
                 if (firstInteractableObject.CanBePickedUp)
                 {
@@ -538,11 +558,29 @@ namespace Human
                 {
                     interactableObject.SetHighlight(false);
                 }
+
+                if (!inventory.MoveHandItemToInventory())
+                {
+                    inventory.HandItem.IfPresent(handItem =>
+                    {
+                        TryDropItem(handItem);
+                        inventory.SetHandItem(Maybe.Empty<Item>());
+                    }).IfNotPresent(() =>
+                    {
+                        Debug.LogError("Impossible situation: MoveHandItemToInventory returned false while no hand item is present!");
+                    });
+                }
+                UpdateInventoryIsHelpless();
             }
             else
             {
                 Die();
             }
+        }
+
+        private void UpdateInventoryIsHelpless()
+        {
+            inventory.IsHelpless = isHit || isSurrendering;
         }
 
         public void Die()
@@ -606,9 +644,68 @@ namespace Human
 
         public bool CanPickUp(out IInteractable item)
         {
-            item = interactableObjects.FirstOrDefault();
+            item = interactableObjects.FirstOrDefault(obj => obj.CanBePickedUp);
 
-            return item is {CanBePickedUp: true};
+            return item != null;
         }
+
+        public bool CanTakeItemFromContainer(ItemType itemType, out IItemContainer itemContainer)
+        {
+            itemContainer = interactableObjects.OfType<IItemContainer>()
+                .FirstOrDefault(container => container.CanTakeItem() && container.HasItem(itemType));
+
+            if (itemContainer == null)
+                itemContainer = interactableObjects.OfType<HumanController>().Where(human => human.CanRob())
+                    .Select(human => human.Inventory).FirstOrDefault();
+
+            return itemContainer != null;
+        }
+
+        public bool CanRob()
+        {
+            return inventory.CanTakeItem() && (isSurrendering || isHit);
+        }
+
+        #region IInteractable
+
+        public bool CanBePickedUp => false;
+        public IMaybe<Item> MaybeItem => Maybe.Empty<Item>();
+        public IMaybe<MapObject> MaybeMapObject => Maybe.Empty<MapObject>();
+        public GameObject GameObject => gameObject;
+        public void SetHighlight(bool isLit)
+        {
+            if (inventory.CanTakeItem())
+            {
+                spriteRenderer.material = isLit 
+                    ? visualsConfig.HighlightedInteractableShader 
+                    : visualsConfig.RegularInteractableShader;    
+            }
+            else
+            {
+                spriteRenderer.material = visualsConfig.RegularInteractableShader;
+            }
+            
+        }
+
+        public bool CanInteract()
+        {
+            return inventory.CanTakeItem();
+        }
+
+        public void Interact(HumanController humanController)
+        {
+            if (CanInteract())
+            {
+                SignalsHub.DispatchAsync(new ToggleItemContainerCommand(inventory, GameObject));
+                SignalsHub.DispatchAsync(new ShowInventoryCommand());   
+            }
+        }
+
+        public void Remove()
+        {
+            throw new NotImplementedException("Can't remove HumanController via Interaction!");
+        }
+        
+        #endregion
     }
 }
