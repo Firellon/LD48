@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using AudioTools.Sound;
 using Day;
 using DITools;
 using FunkyCode;
 using Inventory;
 using LD48;
+using LD48.AudioTool;
 using Map;
 using Map.Actor;
 using UnityEngine;
@@ -49,6 +51,8 @@ namespace DI
             Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();
             Container.BindInterfacesTo<ItemRegistry>().FromInstance(itemRegistry).AsSingle();
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
+
+            Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle();
 
             Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();
         }
