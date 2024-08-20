@@ -231,13 +231,12 @@ namespace Stranger
 
             if (targetHuman.CanRob())
             {
-                if (targetHuman.CanTakeItemFromContainer(targetItemType, out var itemContainer))
-                    if (itemContainer.GetItem(targetItemType, out var item))
-                    {
-                        itemContainer.RemoveItem(item);
-                        inventory.AddItem(item);
-                        return;
-                    }
+                var targetInventory = targetHuman.Inventory;
+                if (targetInventory.GetItem(targetItemType, out var item)) {
+                    targetInventory.RemoveItem(item);
+                    inventory.AddItem(item);
+                    return;
+                }
 
                 var targetPosition = target.position;
                 var transformPosition = transform.position;
@@ -323,14 +322,18 @@ namespace Stranger
             moveDirection = GetFreeMoveDirection(gatherDirection.SkewDirection(5));
             humanController.Move(moveDirection);
             if (humanController.CanPickUp(out var item))
+            {
                 humanController.PickUp(item);
+            } 
             else if (humanController.CanTakeItemFromContainer(ItemType.Wood, out var itemContainer))
+            {
                 if (itemContainer.GetItem(ItemType.Wood, out var woodItem))
                 {
                     itemContainer.RemoveItem(woodItem);
                     inventory.AddItem(woodItem);
                     // TODO: Animation of the item getting taken?
                 }
+            }
         }
 
         private void Flee()

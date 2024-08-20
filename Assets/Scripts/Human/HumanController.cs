@@ -231,6 +231,8 @@ namespace Human
                 }
 
                 interactable.SetHighlight(true);
+
+                if (interactableObjects.Contains(interactable)) return;
                 interactableObjects.Add(interactable);
             }
         }
@@ -651,6 +653,10 @@ namespace Human
         {
             itemContainer = interactableObjects.OfType<IItemContainer>()
                 .FirstOrDefault(container => container.CanTakeItem() && container.HasItem(itemType));
+
+            if (itemContainer == null)
+                itemContainer = interactableObjects.OfType<HumanController>().Where(human => human.CanRob())
+                    .Select(human => human.Inventory).FirstOrDefault();
 
             return itemContainer != null;
         }

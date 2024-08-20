@@ -19,7 +19,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   bravery: 1
-  robRadius: 15
+  robRadius: 20
   robLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -34,7 +34,7 @@ MonoBehaviour:
   itemContainerLayerMask:
     serializedVersion: 2
     m_Bits: 129
-  itemGatherRadius: 20
+  itemGatherRadius: 15
   initialInventory:
   - itemType: 1
     spawnAmounts: 00000000010000000100000002000000
