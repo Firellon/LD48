@@ -4,6 +4,7 @@ using System.Linq;
 using Environment;
 using Inventory;
 using Inventory.Signals;
+using Journal;
 using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
@@ -29,8 +30,8 @@ namespace Map
         [Inject] private IRandomService randomService;
         [Inject] private IMapObjectRegistry mapObjectRegistry;
         [Inject] private IItemRegistry itemRegistry;
+        [Inject] private IJournalEntryRegistry journalEntryRegistry;
 
-        [SerializeField] private int totalDiaryCount = 30; // TODO: Implement the actual count based on the amount of written Diary texts
         [SerializeField] private Vector2Int halfMapSize = new(20, 20);
         [SerializeField] private Vector2Int mapSegmentSize = new(10, 10);
 
@@ -174,7 +175,7 @@ namespace Map
             var minDistanceBetweenKeyAndExit = Mathf.Max(halfMapSize.x / 2, halfMapSize.y / 2);
             keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
             exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
-            diaryMapSegmentPositions = GetRandomMapSegmentPositions(totalDiaryCount);
+            diaryMapSegmentPositions = GetRandomMapSegmentPositions(journalEntryRegistry.Entries.Count);
             while (Vector2Int.Distance(keyMapSegmentPosition, exitMapSegmentPosition) < minDistanceBetweenKeyAndExit)
             {
                 exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();

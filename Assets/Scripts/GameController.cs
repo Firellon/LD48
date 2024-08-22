@@ -28,7 +28,7 @@ namespace LD48
                 Application.Quit();
             }
             #endif
-            
+
             if (isEnabled && (Input.GetKey(KeyCode.R) || Input.GetButtonDown("Fire3")))
             {
                 Debug.Log("Restart");
@@ -36,7 +36,7 @@ namespace LD48
                 SceneManager.LoadScene(scene.name);
             }
         }
-        
+
         private void OnPlayerInputEnabled(PlayerInputEnabledEvent evt)
         {
             isEnabled = evt.IsEnabled;
