@@ -18,7 +18,7 @@ MonoBehaviour:
   threatLayerMask:
     serializedVersion: 2
     m_Bits: 1
-  bravery: 1
+  bravery: 2
   robRadius: 20
   robLayerMask:
     serializedVersion: 2
@@ -39,7 +39,7 @@ MonoBehaviour:
   - itemType: 1
     spawnAmounts: 00000000010000000100000002000000
   - itemType: 3
-    spawnAmounts: 000000000100000001000000
+    spawnAmounts: 010000000100000001000000
   - itemType: 4
     spawnAmounts: 0000000001000000
   itemTouchRadius: 1

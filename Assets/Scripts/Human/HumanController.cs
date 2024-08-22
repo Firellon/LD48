@@ -477,14 +477,17 @@ namespace Human
 
             humanAnimator.SetTrigger(IsPickingUpAnimation);
 
-            if (!inventory.CanAddItem()) return;
+            interactable.MaybeItem.IfPresent(item =>
+            {
+                if (!inventory.CanAddItem()) return;
 
-            if (itemPickupSound)
-                audio.PlayOneShot(itemPickupSound);
+                if (itemPickupSound)
+                    audio.PlayOneShot(itemPickupSound);
 
-            interactable.MaybeItem.IfPresent(item => inventory.AddItem(item));
-            interactableObjects.Remove(interactable);
-            interactable.Remove();
+                inventory.AddItem(item);
+                interactableObjects.Remove(interactable);
+                interactable.Remove();
+            });
         }
 
         public void SetIsSurrendering(bool newIsSurrendering)

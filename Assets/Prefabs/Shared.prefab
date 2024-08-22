@@ -138,6 +138,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 06eaee41e47e2be4c8b2382f0f1688d3, type: 2}
   - {fileID: 11400000, guid: c896cacdff9a5e94a8bd0050555c7330, type: 2}
   - {fileID: 11400000, guid: c5e468b37dfdaaa4ea1cad4a1ea60509, type: 2}
+  - {fileID: 11400000, guid: 2380dfc63680e8645adcd98396fe2cfd, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,6 +179,7 @@ Transform:
   - {fileID: 2086277358901509390}
   - {fileID: 5615235357629526986}
   - {fileID: 5042157423292267896}
+  - {fileID: 3950166929047258605}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2201146596934307437
@@ -402,6 +404,54 @@ MonoBehaviour:
     MoveSpeed: 0
     Options:
       StepsDelay: 0
+--- !u!1 &4427771139405611229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3950166929047258605}
+  - component: {fileID: 636003808652036791}
+  m_Layer: 0
+  m_Name: JournalEntryRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3950166929047258605
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427771139405611229}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214609521494742059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &636003808652036791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427771139405611229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bb8502b17f4ae48e5156c3c60e4b21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - {fileID: 11400000, guid: b2a37d434f744074ea5dd35cd0bfe5a6, type: 2}
+  - {fileID: 11400000, guid: 513491d4bd9027a4aa13ab66dd6b55f1, type: 2}
+  - {fileID: 11400000, guid: 6dfbc041ce59fde4d9c49cc680dce91f, type: 2}
 --- !u!1 &4516522281272598058
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,12 +638,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489386c9df294da6b57898b109bf5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalDiaryCount: 10
   halfMapSize: {x: 5, y: 5}
   mapSegmentSize: {x: 12, y: 8}
   trailsTilemapPrefab: {fileID: 7773584424159345862, guid: 700cb9a4f4548db4ebc4ec87fec0a43e, type: 3}
   trailRuleTile: {fileID: 11400000, guid: a687057b5280f6849a62e617a3da8fce, type: 2}
-  noiseScale: 0.2
-  noiseBorder: 0.37
+  trailNoiseScale: 0.2
+  trailNoiseBorder: 0.37
   treeParent: {fileID: 0}
   treeDensity: {x: 2, y: 2}
   treeSpawnProbability: 0.5
@@ -756,6 +807,7 @@ MonoBehaviour:
   prefabPool: {fileID: 189264895322273740}
   mapActorRegistry: {fileID: 2528578677819702300}
   mapObjectRegistry: {fileID: 1512119536165743883}
+  journalEntryRegistry: {fileID: 636003808652036791}
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
   lightCycle: {fileID: 6385964874880517366}
@@ -847,7 +899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: time
-      value: 0.527
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4682696337894818106, guid: f297dfea26f4f4744a828b59aa2c08c1, type: 3}
       propertyPath: maxDayLighting

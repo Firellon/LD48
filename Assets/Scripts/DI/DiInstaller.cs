@@ -3,6 +3,7 @@ using Day;
 using DITools;
 using FunkyCode;
 using Inventory;
+using Journal;
 using LD48;
 using Map;
 using Map.Actor;
@@ -19,6 +20,7 @@ namespace DI
         [SerializeField] private PrefabPool prefabPool;
         [SerializeField] private MapActorRegistry mapActorRegistry;
         [SerializeField] private MapObjectRegistry mapObjectRegistry;
+        [SerializeField] private JournalEntryRegistry journalEntryRegistry;
         [SerializeField] private ItemRegistry itemRegistry;
         [SerializeField] private DayNightCycle dayNightCycle;
         [SerializeField] private LightCycle lightCycle;
@@ -48,6 +50,8 @@ namespace DI
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
             Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();
             Container.BindInterfacesTo<ItemRegistry>().FromInstance(itemRegistry).AsSingle();
+            Container.BindInterfacesTo<JournalEntryRegistry>().FromInstance(journalEntryRegistry).AsSingle();
+                
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
 
             Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();

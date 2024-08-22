@@ -10,5 +10,6 @@ namespace Map
         Crate = 5,
         Corpse = 6,
         GuidePost = 7,
+        Diary = 8,
     }
 }
