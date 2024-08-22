@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LD48.AudioTool
+﻿namespace LD48.AudioTool
 {
     public enum SoundType
     {

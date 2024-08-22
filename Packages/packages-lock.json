@@ -16,13 +16,6 @@
       },
       "hash": "ba720c2469967531274f1fde81e68ede4b59fbb6"
     },
-    "com.nebulateme.audiotools": {
-      "version": "https://github.com/Nebulate-me/Audio-Tools.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "b80a1169ab5b773ec4148bc4603e15ed33dcbdd8"
-    },
     "com.nebulateme.behaviortree": {
       "version": "https://github.com/Nebulate-me/Behavior-Tree.git",
       "depth": 0,

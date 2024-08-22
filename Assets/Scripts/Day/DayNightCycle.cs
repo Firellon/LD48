@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
+using LD48.AudioTool;
 using Signals;
 using TMPro;
 using UI.Signals;
@@ -32,9 +33,13 @@ namespace Day
 
         private DayTime currentCycle = DayTime.Day;
 
+        public DayTime CurrentCycle => currentCycle;
+
         private int currentDay = 1;
 
         private LightCycle lightCycle;
+
+        public float TargetIntensity { get; }
 
         void Start()
         {
@@ -57,15 +62,15 @@ namespace Day
 
         private IEnumerator DayNightCycleProcess()
         {
-            SetDarknessLevel(GetTargetLightIntensity(currentCycle));
+            SetDarknessLevel(GetTargetLightIntensity(CurrentCycle));
 
             while (true)
             {
-                if (currentCycle == DayTime.DayComing || currentCycle == DayTime.NightComing)
+                if (CurrentCycle == DayTime.DayComing || CurrentCycle == DayTime.NightComing)
                 {
-                    var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(currentCycle));
+                    var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(CurrentCycle));
                     
-                    var currentCycleTime = GetCycleLength(currentCycle);
+                    var currentCycleTime = GetCycleLength(CurrentCycle);
 
                     yield return DOVirtual
                         .Float(GetDarknessLevel(), nextLightIntensity, currentCycleTime, SetDarknessLevel)
@@ -73,25 +78,38 @@ namespace Day
                 }
                 else
                 {
-                    var currentCycleTime = GetCycleLength(currentCycle);
+                    var currentCycleTime = GetCycleLength(CurrentCycle);
                     yield return new WaitForSeconds(currentCycleTime);
                 }
 
-                currentCycle = GetNextCycle(currentCycle);
+                currentCycle = GetNextCycle(CurrentCycle);
 
-                ShowCycleMessage(currentCycle);
+                ShowCycleMessage(CurrentCycle);
 
-                if (currentCycle == DayTime.DayComing)
+                if (CurrentCycle == DayTime.DayComing)
                 {
                     currentDay++;
                     terrainGenerator.DestroyGhosts();
                 }
 
-                if (currentCycle == DayTime.Night)
+                if (CurrentCycle == DayTime.Night)
                 {
                     terrainGenerator.GenerateGhosts();
                     // terrainGenerator.GenerateItems(0.05f); // TODO: Only generate renewable items here
                     terrainGenerator.GenerateStrangers(0.05f);
+
+                    SignalsHub.DispatchAsync(new PlayMusicSignal
+                    {
+                        Type = MusicType.NightMusic,
+                    });
+                }
+
+                if (CurrentCycle == DayTime.Day)
+                {
+                    SignalsHub.DispatchAsync(new PlayMusicSignal
+                    {
+                        Type = MusicType.DayMusic,
+                    });
                 }
             }
         }
@@ -167,10 +185,8 @@ namespace Day
 
         public DayTime GetCurrentCycle()
         {
-            return currentCycle;
+            return CurrentCycle;
         }
-
-        public float TargetIntensity { get; }
     }
 
     [Serializable]

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3690148165153316789, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
       propertyPath: m_Name
-      value: MusicSource
+      value: DayMusicSample
       objectReference: {fileID: 0}
     - target: {fileID: 7476380156171023244, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -53,13 +53,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8484395602477621676, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
+      propertyPath: isLooped
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8484395602477621676, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
       propertyPath: soundType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8484395602477621676, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
+      propertyPath: audioClips.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8484395602477621676, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
       propertyPath: outputAudioMixerGroup
       value: 
       objectReference: {fileID: 4677152421441812855, guid: 0b537b8be4b60431aaeeb984eb35f4fb, type: 2}
+    - target: {fileID: 8484395602477621676, guid: 81cd4d5821012d34d82fdfa8b3094b6b, type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 85843728ede7d2f468bbb5c7ff8da126, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

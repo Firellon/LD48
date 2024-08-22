@@ -621,6 +621,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 119920525317006118}
+  - component: {fileID: 5955199551761647002}
   - component: {fileID: 7805325710931177205}
   m_Layer: 0
   m_Name: SoundContainer
@@ -644,6 +645,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1214609521494742059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5955199551761647002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6112098194733277904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb76ca051d94f8ba0ce11cf78016a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dayMusic: {fileID: 3904440943210791185, guid: a82487d0b4da3e44f808870907bea6a3, type: 3}
+  nightMusic: {fileID: 3904440943210791185, guid: f1e0fbf1fc89efc44992648c077f850b, type: 3}
+  chasingMusic: {fileID: 3904440943210791185, guid: f1a4708b8f16d1e43a6ff434f1f07c00, type: 3}
 --- !u!114 &7805325710931177205
 MonoBehaviour:
   m_ObjectHideFlags: 0

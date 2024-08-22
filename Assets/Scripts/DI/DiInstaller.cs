@@ -52,7 +52,7 @@ namespace DI
             Container.BindInterfacesTo<ItemRegistry>().FromInstance(itemRegistry).AsSingle();
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
 
-            Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle();
+            Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle().NonLazy();
 
             Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();
         }
