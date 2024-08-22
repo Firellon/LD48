@@ -16,6 +16,13 @@
       },
       "hash": "ba720c2469967531274f1fde81e68ede4b59fbb6"
     },
+    "com.nebulateme.audiotools": {
+      "version": "https://github.com/Nebulate-me/Audio-Tools.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f79c5aff7d72f1ec102cacdd60935370ec9a0905"
+    },
     "com.nebulateme.behaviortree": {
       "version": "https://github.com/Nebulate-me/Behavior-Tree.git",
       "depth": 0,
@@ -62,8 +69,8 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.common": "6.0.6",
         "com.unity.2d.sprite": "1.0.0",
+        "com.unity.2d.common": "6.0.6",
         "com.unity.mathematics": "1.2.6",
         "com.unity.modules.animation": "1.0.0"
       },
@@ -74,11 +81,11 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.7.3",
         "com.unity.2d.sprite": "1.0.0",
         "com.unity.mathematics": "1.1.0",
+        "com.unity.modules.uielements": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.uielements": "1.0.0"
+        "com.unity.burst": "1.7.3"
       },
       "url": "https://packages.unity.com"
     },
@@ -94,9 +101,9 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
+        "com.unity.2d.animation": "9.1.1",
         "com.unity.2d.common": "8.0.2",
-        "com.unity.2d.sprite": "1.0.0",
-        "com.unity.2d.animation": "9.1.1"
+        "com.unity.2d.sprite": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -111,8 +118,8 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.common": "8.0.3",
         "com.unity.mathematics": "1.1.0",
+        "com.unity.2d.common": "8.0.3",
         "com.unity.modules.physics2d": "1.0.0"
       },
       "url": "https://packages.unity.com"
@@ -296,9 +303,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ugui": "1.0.0",
+        "com.unity.settings-manager": "1.0.3",
         "com.unity.mathematics": "1.2.1",
-        "com.unity.settings-manager": "1.0.3"
+        "com.unity.ugui": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -343,9 +350,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
