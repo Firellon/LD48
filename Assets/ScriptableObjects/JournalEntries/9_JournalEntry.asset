@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 9_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry9
+  entryOrder: 9
+  entryName: The Abandoned
+  entryDescription: "I had to leave some of my gear behind. The weight was slowing
+    me down, and I can\u2019t afford to be anything less than fast. The shadows are
+    growing longer, even though the sun hasn\u2019t set yet. It\u2019s like time
+    itself is warping around me. I can\u2019t shake the feeling that the forest is
+    closing in, that whatever I summoned is shaping the world around me. The fear
+    is starting to eat away at my sanity, and I\u2019m not sure how much longer I
+    can keep moving. I think I\u2019m being hunted, and every instinct is telling
+    me to run, but there\u2019s nowhere left to go."

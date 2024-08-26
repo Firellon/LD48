@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 8_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry8
+  entryOrder: 8
+  entryName: Lost in the Dark
+  entryDescription: "I\u2019ve been trying to make my way back, but nothing looks
+    familiar anymore. The forest is different\u2014darker, more twisted. The paths
+    I took earlier are gone, replaced by dense underbrush and trees that seem to
+    loom closer with every step. The light is fading fast, and the darkness feels
+    like it\u2019s alive, pressing in from all sides. And that presence\u2014it\u2019s
+    still with me. I can feel it, just out of sight, watching, waiting. Every time
+    I stop, I hear footsteps that aren\u2019t mine, growing closer, then stopping
+    when I move again. I\u2019m trapped out here, with no way to know which direction
+    leads to safety."

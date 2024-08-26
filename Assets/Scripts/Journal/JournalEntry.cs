@@ -8,7 +8,7 @@ namespace Journal
         [SerializeField] private string entryKey;
         [SerializeField] private int entryOrder;
         [SerializeField] private string entryName;
-        [TextArea, SerializeField] private string entryDescription; 
+        [TextArea(minLines: 5, maxLines: 20), SerializeField] private string entryDescription; 
         
         public string EntryKey => entryKey;
         public int EntryOrder => entryOrder;

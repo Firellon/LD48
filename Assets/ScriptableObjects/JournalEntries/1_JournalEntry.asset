@@ -13,6 +13,14 @@ MonoBehaviour:
   m_Name: 1_JournalEntry
   m_EditorClassIdentifier: 
   entryKey: entry1
-  entryOrder: 0
-  entryName: Entry #1. Lost
-  entryDescription: Entry #1 Text
+  entryOrder: 1
+  entryName: The Gathering
+  entryDescription: "Found the first ingredient near the creek, just as the book
+    said. The plant was exactly where it was supposed to be, nestled between two
+    moss-covered rocks. But as soon as I plucked it, everything around me fell silent.
+    The birds stopped singing, and even the insects seemed to vanish. I could feel
+    the weight of the silence pressing down on me, like the forest itself was holding
+    its breath. I tried to shake it off, telling myself it was just a coincidence,
+    but the feeling lingers. Maybe it's just nerves\u2014after all, I\u2019ve never
+    done anything like this before. I need to keep moving, the clearing can\u2019t
+    be too far now. I can\u2019t afford to let my imagination get the best of me."

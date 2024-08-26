@@ -13,6 +13,14 @@ MonoBehaviour:
   m_Name: 3_JournalEntry
   m_EditorClassIdentifier: 
   entryKey: entry3
-  entryOrder: 0
-  entryName: Entry #3. Anger
-  entryDescription: Entry #3 Text
+  entryOrder: 3
+  entryName: The Marked Tree
+  entryDescription: "I came across something strange today\u2014a tree marked with
+    ancient symbols. They\u2019re carved deep into the bark, worn by time but still
+    visible. They\u2019re not in the book, and I\u2019ve never seen anything like
+    them before. The symbols almost seem to hum with energy, like they\u2019re alive
+    somehow. I reached out to touch one, and for a moment, it felt like the ground
+    shifted beneath me. I don\u2019t know if it\u2019s connected to the altar or
+    the ritual, but something about it feels important. I\u2019ve marked the tree\u2019s
+    location on my map, just in case. Maybe I\u2019ll come back to it later, after
+    the ritual is done."

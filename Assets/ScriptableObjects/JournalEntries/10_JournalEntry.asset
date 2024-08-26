@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 10_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry10
+  entryOrder: 10
+  entryName: Final Words
+  entryDescription: "This is it\u2014my last note. If you\u2019re reading this, please,
+    don\u2019t follow the path I took. I didn\u2019t mean for any of this to happen.
+    I just wanted to speak to her one last time, but instead, I\u2019ve brought something
+    terrible into the world. I can hear it now, getting closer with every breath
+    I take. The darkness is so thick, it\u2019s like a living thing, wrapping around
+    me, pulling me down. I\u2019m so cold, so tired. I don\u2019t think I can keep
+    running. It\u2019s almost here, and I don\u2019t want to know what happens when
+    it catches me. Please, forgive me for what I\u2019ve done."
