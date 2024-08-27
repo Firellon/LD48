@@ -12,7 +12,7 @@ namespace Journal
         
         public void SetUp(JournalEntry journalEntry)
         {
-            entryNameText.text = journalEntry.EntryName;
+            entryNameText.text = journalEntry.EntryShortName;
             entryButton.onClick.RemoveAllListeners();
             entryButton.onClick.AddListener(() => OpenJournalEntry(journalEntry));
         }

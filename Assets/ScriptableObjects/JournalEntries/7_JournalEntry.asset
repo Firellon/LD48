@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entryKey: entry7
   entryOrder: 7
-  entryName: The Presence
-  entryDescription: "The ritual didn\u2019t go as planned. I did everything by the
-    book, but instead of summoning Grandma, I felt something else\u2014something
-    ancient and filled with rage. The air around me grew colder, and the light from
-    the candles flickered and nearly went out. I felt a pressure in my chest, like
-    something was trying to push me out of the clearing. I called out to Grandma,
-    but there was no answer\u2014only a deep, resonating silence that felt more like
-    a presence than an absence. I\u2019m packing up to leave, but I can\u2019t shake
-    the feeling that I\u2019ve disturbed something that was meant to stay buried.
-    I need to get out of here before it\u2019s too late."
+  entryTitle: The Presence
+  entryDescription: "09-10-2009, 09:00\n\nThe ritual didn\u2019t go as planned. I
+    did everything by the book, but instead of summoning Grandma, I felt something
+    else\u2014something ancient and filled with rage. The air around me grew colder,
+    and the light from the candles flickered and nearly went out. I felt a pressure
+    in my chest, like something was trying to push me out of the clearing. I called
+    out to Grandma, but there was no answer\u2014only a deep, resonating silence
+    that felt more like a presence than an absence. I\u2019m packing up to leave,
+    but I can\u2019t shake the feeling that I\u2019ve disturbed something that was
+    meant to stay buried. I need to get out of here before it\u2019s too late."

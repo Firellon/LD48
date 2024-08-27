@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entryKey: entry4
   entryOrder: 4
-  entryName: Whispers in the Wind
-  entryDescription: "It\u2019s getting harder to think straight out here. I keep
-    hearing whispers, soft and almost inaudible, but persistent. They\u2019re like
-    the wind, except there\u2019s no breeze\u2014nothing to carry a sound. I\u2019ve
-    tried to follow them, to pinpoint where they\u2019re coming from, but they seem
-    to be everywhere and nowhere at once. It\u2019s like the forest is speaking to
-    me, but I can\u2019t understand what it\u2019s saying. Every time I stop to listen,
-    I get this creeping sensation at the back of my neck, like something\u2019s standing
-    right behind me. I\u2019ve started moving faster, trying to outrun the feeling,
-    but it\u2019s always there, just at the edge of my awareness."
+  entryTitle: Whispers in the Wind
+  entryDescription: "08-10-2009, 20:04\n\nIt\u2019s getting harder to think straight
+    out here. I keep hearing whispers, soft and almost inaudible, but persistent.
+    They\u2019re like the wind, except there\u2019s no breeze\u2014nothing to carry
+    a sound. I\u2019ve tried to follow them, to pinpoint where they\u2019re coming
+    from, but they seem to be everywhere and nowhere at once. It\u2019s like the
+    forest is speaking to me, but I can\u2019t understand what it\u2019s saying.
+    Every time I stop to listen, I get this creeping sensation at the back of my
+    neck, like something\u2019s standing right behind me. I\u2019ve started moving
+    faster, trying to outrun the feeling, but it\u2019s always there, just at the
+    edge of my awareness."

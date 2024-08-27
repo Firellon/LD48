@@ -79,6 +79,11 @@ namespace Journal
                 var journalEntryView = prefabPool.Spawn(journalEntryPrefab, journalPanelContent);
                 journalEntryView.GetComponent<JournalEntryView>().SetUp(journalEntry);
             }
+
+            if (unlockedJournalEntries.Any())
+            {
+                OpenJournalEntry(new OpenJournalEntryCommand(unlockedJournalEntries.First()));
+            }
         }
     }
 }

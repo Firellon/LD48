@@ -1,4 +1,7 @@
+using Sirenix.OdinInspector;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Journal
 {
@@ -7,12 +10,13 @@ namespace Journal
     {
         [SerializeField] private string entryKey;
         [SerializeField] private int entryOrder;
-        [SerializeField] private string entryName;
-        [TextArea(minLines: 5, maxLines: 20), SerializeField] private string entryDescription; 
+        [FormerlySerializedAs("entryName")] [SerializeField] private string entryTitle;
+        [TextArea(minLines: 5, maxLines: 20), SerializeField, InspectorTextArea] private string entryDescription; 
         
         public string EntryKey => entryKey;
         public int EntryOrder => entryOrder;
-        public string EntryName => entryName;
+       [ShowInInspector,ReadOnly] public string EntryShortName => $"#{entryOrder}";
+        public string EntryTitle => entryTitle;
         public string EntryDescription => entryDescription;
 
         public bool Equals(JournalEntry entry)
