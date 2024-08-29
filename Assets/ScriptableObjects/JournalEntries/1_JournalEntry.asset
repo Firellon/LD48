@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 1_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry1
+  entryOrder: 1
+  entryTitle: The Gathering
+  entryDescription: "08-10-2009, 12:07\n\nFound the first ingredient near the creek,
+    just as the book said. The plant was exactly where it was supposed to be, nestled
+    between two moss-covered rocks. But as soon as I plucked it, everything around
+    me fell silent. The birds stopped singing, and even the insects seemed to vanish.
+    I could feel the weight of the silence pressing down on me, like the forest itself
+    was holding its breath. I tried to shake it off, telling myself it was just a
+    coincidence, but the feeling lingers. Maybe it's just nerves\u2014after all,
+    I\u2019ve never done anything like this before. I need to keep moving, the clearing
+    can\u2019t be too far now. I can\u2019t afford to let my imagination get the
+    best of me."

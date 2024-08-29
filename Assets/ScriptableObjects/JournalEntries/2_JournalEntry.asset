@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 2_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry2
+  entryOrder: 2
+  entryTitle: Eyes in the Trees
+  entryDescription: "08-10-2009, 14:30\n\nThe deeper I go, the more the forest seems
+    to close in around me. The trees are so dense now, their branches interlocking
+    overhead, blocking out most of the light. It\u2019s like the forest is trying
+    to swallow me whole. I keep feeling like there are eyes on me, watching my every
+    move. Every rustle in the underbrush, every crack of a twig, makes my heart skip
+    a beat. I can\u2019t help but glance over my shoulder every few steps, but there\u2019s
+    never anything there. It\u2019s just the trees, the shadows... or at least that\u2019s
+    what I keep telling myself. The path is getting harder to follow, but I know
+    I\u2019m close to the clearing. I have to be."

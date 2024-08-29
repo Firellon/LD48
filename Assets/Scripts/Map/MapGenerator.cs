@@ -4,6 +4,7 @@ using System.Linq;
 using Environment;
 using Inventory;
 using Inventory.Signals;
+using Journal;
 using LD48;
 using Map.Actor;
 using Plugins.Sirenix.Odin_Inspector.Modules;
@@ -17,6 +18,8 @@ using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Map
 {
@@ -27,6 +30,7 @@ namespace Map
         [Inject] private IRandomService randomService;
         [Inject] private IMapObjectRegistry mapObjectRegistry;
         [Inject] private IItemRegistry itemRegistry;
+        [Inject] private IJournalEntryRegistry journalEntryRegistry;
 
         [SerializeField] private Vector2Int halfMapSize = new(20, 20);
         [SerializeField] private Vector2Int mapSegmentSize = new(10, 10);
@@ -106,18 +110,21 @@ namespace Map
 
         [ShowInInspector, ReadOnly] private Vector2Int keyMapSegmentPosition;
         [ShowInInspector, ReadOnly] private Vector2Int exitMapSegmentPosition;
+        [ShowInInspector, ReadOnly] private List<Vector2Int> diaryMapSegmentPositions;
         [ShowInInspector, ReadOnly] private bool keyHasBeenSpawned;
 
         private void OnEnable()
         {
             SignalsHub.AddListener<MapObjectAddedEvent>(OnMapObjectAdded);
             SignalsHub.AddListener<MapItemRemovedEvent>(OnMapItemRemoved);
+            SignalsHub.AddListener<MapObjectRemovedEvent>(OnMapObjectRemoved);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<MapObjectAddedEvent>(OnMapObjectAdded);
             SignalsHub.RemoveListener<MapItemRemovedEvent>(OnMapItemRemoved);
+            SignalsHub.RemoveListener<MapObjectRemovedEvent>(OnMapObjectRemoved);
         }
 
         private void OnMapObjectAdded(MapObjectAddedEvent evt)
@@ -143,6 +150,19 @@ namespace Map
 
             Destroy(evt.GameObject);
         }
+        
+        private void OnMapObjectRemoved(MapObjectRemovedEvent evt)
+        {
+            var mapObjectPosition = ConvertWorldPositionToSegmentPosition(evt.GameObject.transform.position);
+            if (positionsToMapSegmentKeys.TryGetValue(mapObjectPosition, out var mapObjectSegmentKey) &&
+                mapSegmentKeysToMapSegments.TryGetValue(mapObjectSegmentKey, out var mapObjectSegment))
+            {
+                Debug.Log($"{nameof(OnMapObjectRemoved)} > remove map object {evt.ObjectType} from segment {mapObjectSegmentKey}");
+                mapObjectSegment.MapObjects.Remove(evt.GameObject);
+            }
+
+            Destroy(evt.GameObject);
+        }
 
         private void Awake()
         {
@@ -155,6 +175,7 @@ namespace Map
             var minDistanceBetweenKeyAndExit = Mathf.Max(halfMapSize.x / 2, halfMapSize.y / 2);
             keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
             exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
+            diaryMapSegmentPositions = GetRandomMapSegmentPositions(journalEntryRegistry.Entries.Count);
             while (Vector2Int.Distance(keyMapSegmentPosition, exitMapSegmentPosition) < minDistanceBetweenKeyAndExit)
             {
                 exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
@@ -242,6 +263,22 @@ namespace Map
             var segmentPositionY = randomService.Int(-halfMapSize.y, halfMapSize.y);
 
             return new Vector2Int(segmentPositionX, segmentPositionY);
+        }
+
+        private List<Vector2Int> GetRandomMapSegmentPositions(int positionCount)
+        {
+            var mapPositions = new List<Vector2Int>();
+            while (mapPositions.Count < positionCount)
+            {
+                var segmentPositionX = randomService.Int(-halfMapSize.x, halfMapSize.x);
+                var segmentPositionY = randomService.Int(-halfMapSize.y, halfMapSize.y);
+                var newPosition = new Vector2Int(segmentPositionX, segmentPositionY);
+                
+                if (mapPositions.Any(position => position.x == newPosition.x && position.y == newPosition.y)) continue;
+                mapPositions.Add(newPosition);    
+            }
+
+            return mapPositions;
         }
 
         private MapSegment GetMapSegment(Vector2Int segmentPosition)
@@ -350,7 +387,6 @@ namespace Map
 
             mapObjects.AddRange(GenerateTrees(topLeftCorner, bottomRightCorner));
             mapObjects.AddRange(GenerateGrass(topLeftCorner, bottomRightCorner));
-
             mapObjects.Add(GenerateTrails(segmentPosition));
 
             if (segmentPosition == exitMapSegmentPosition)
@@ -368,6 +404,12 @@ namespace Map
                 itemObjects.Add(GenerateItem(ItemType.Key, topLeftCorner, bottomRightCorner));
                 keyHasBeenSpawned = true;
             }
+
+            // if (diaryMapSegmentPositions.Contains(segmentPosition))
+            // {
+                Debug.Log($"Generate Diary at {segmentPosition}");
+                mapObjects.Add(GenerateDiary(topLeftCorner, bottomRightCorner));
+            // }
 
             var mapSegmentKey = MapSegment.ToMapSegmentCoordinatesKey(segmentPosition);
             var mapSegmentNeighboursKeys = FindAdjacentSegments(segmentPosition, out var openNeighbourKeys);
@@ -480,7 +522,7 @@ namespace Map
             return mapObjects;
         }
 
-        public List<GameObject> GenerateItems(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        private List<GameObject> GenerateItems(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
             var itemObjects = new List<GameObject>();
             if (spawnItemTypes.None())
@@ -639,6 +681,20 @@ namespace Map
             exit.transform.position = exitPosition;
 
             return exit;
+        }
+
+        private GameObject GenerateDiary(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            var cornerDiff = bottomRightCorner - topLeftCorner;
+            var diaryMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Diary);
+            var diaryPosition = new Vector2(topLeftCorner.x + randomService.Int(cornerDiff.x),
+                topLeftCorner.y + randomService.Int(cornerDiff.y));
+
+            var diary = prefabPool.Spawn(diaryMapObject.Prefab, mapObjectParent);
+            diary.GetComponent<MapObjectController>().SetMapObject(diaryMapObject);
+            diary.transform.position = diaryPosition;
+
+            return diary;
         }
 
         private GameObject GenerateItem(ItemType key, Vector2Int topLeftCorner, Vector2Int bottomRightCorner)

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c03b6223d64e95a6701e8b62445e3f, type: 3}
+  m_Name: 5_JournalEntry
+  m_EditorClassIdentifier: 
+  entryKey: entry5
+  entryOrder: 5
+  entryTitle: The Unsettling Clearing
+  entryDescription: "08-10-2009, 23:55\n\nI finally found the clearing, but it\u2019s
+    nothing like I expected. The air here is thick, almost suffocating, and there\u2019s
+    this strange smell\u2014like damp earth and something else I can\u2019t quite
+    place. The stone altar stands in the center, ancient and weathered, but the carvings
+    on it are still sharp, almost as if they\u2019ve been recently made. I thought
+    I would feel relieved finding the place, but instead, I\u2019m filled with this
+    deep sense of unease. The silence is even more oppressive here, like the forest
+    itself is holding its breath. I\u2019ve set up the ingredients, but my hands
+    are shaking. I\u2019ve come too far to turn back now, but something about this
+    place feels... wrong."
