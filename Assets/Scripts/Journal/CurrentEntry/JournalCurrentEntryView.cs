@@ -1,29 +1,30 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using Utilities.Monads;
+using UnityEngine.UI;
 
-namespace Journal
+namespace Journal.JournalCurrentEntry
 {
-    public class JournalCurrentEntryController : MonoBehaviour
+    public class JournalCurrentEntryView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI entryNameText;
         [SerializeField] private TextMeshProUGUI entryDescriptionText;
         [SerializeField] private RectTransform entryContainer;
+        [SerializeField] private Button previousPageButton;
+        [SerializeField] private Button nextPageButton;
 
-        public void SetUp(IMaybe<JournalEntry> maybeJournalEntry)
+        public TextMeshProUGUI EntryNameText => entryNameText;
+        public TextMeshProUGUI EntryDescriptionText => entryDescriptionText;
+        public RectTransform EntryContainer => entryContainer;
+        public Button PreviousPageButton => previousPageButton;
+        public Button NextPageButton => nextPageButton;
+
+        public void Refresh()
         {
-            maybeJournalEntry.IfPresent(journalEntry =>
+            if (gameObject.activeInHierarchy)
             {
-                entryNameText.text = journalEntry.EntryTitle;
-                entryDescriptionText.text = journalEntry.EntryDescription;
-            }).IfNotPresent(() =>
-            {
-                entryNameText.text = string.Empty;
-                entryDescriptionText.text = string.Empty;
-            });
-
-            if (gameObject.activeInHierarchy) StartCoroutine(RecalculateHeightCoroutine());
+                StartCoroutine(RecalculateHeightCoroutine());
+            }
         }
 
         private IEnumerator RecalculateHeightCoroutine()
