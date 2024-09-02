@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.9686275, g: 0.94117653, b: 0.8705883, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 8474920154050356607}
   - component: {fileID: 8845290271879386091}
   - component: {fileID: 2263228201312358431}
+  - component: {fileID: 5862297861506098577}
   m_Layer: 0
   m_Name: Picture
   m_TagString: Untagged
@@ -105,14 +106,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3655348425485452664}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000026584, y: 100.24}
-  m_SizeDelta: {x: 1018.8145, y: 592.5175}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8845290271879386091
 CanvasRenderer:
@@ -142,7 +143,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7972cc3f929cee14b8f69dc3b4d3abfb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -152,6 +153,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5862297861506098577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637572774301559565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 3
+  m_AspectRatio: 1
 --- !u!1 &3158658653618600917
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,7 +448,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2240776643271037581}
   - component: {fileID: 6775742556941434659}
-  - component: {fileID: 1955426533233878160}
   m_Layer: 0
   m_Name: CutsceneManager
   m_TagString: Untagged
@@ -472,24 +486,6 @@ MonoBehaviour:
   cutscenes:
   - cutsceneType: 0
     cutsceneObject: {fileID: 8665131288676227567}
---- !u!114 &1955426533233878160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370307355177241828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 0}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &8665131288676227567
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,15 +495,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6094419454889409457}
-  - component: {fileID: 6792606891604457186}
+  - component: {fileID: 157538976014737456}
   - component: {fileID: 8966788268586368881}
+  - component: {fileID: 4138735685899333991}
+  - component: {fileID: 6792606891604457186}
   m_Layer: 0
   m_Name: IntroCutscene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6094419454889409457
 Transform:
   m_ObjectHideFlags: 0
@@ -524,6 +522,105 @@ Transform:
   - {fileID: 8129608127446545908}
   m_Father: {fileID: 8274694179040131129}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &157538976014737456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665131288676227567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb8f1c6a1c5f4633bb187d09a0287884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frames:
+  - Sprite: {fileID: 21300000, guid: 7972cc3f929cee14b8f69dc3b4d3abfb, type: 3}
+    Text: "Lorem ipsum doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado.
+      Sed faru la temporon, ke la laboro kaj doloro fari\u011Du grandaj. Lorem ipsum
+      doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado. Sed faru
+      la temporon, ke la laboro kaj"
+  - Sprite: {fileID: 21300000, guid: a72af953573c05d46b2de74c595e8996, type: 3}
+    Text: "Lorem ipsum doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado.
+      Sed faru la temporon, ke la laboro kaj doloro fari\u011Du grandaj. Lorem ipsum
+      doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado. Sed faru
+      la temporon, ke la laboro kaj"
+  - Sprite: {fileID: 21300000, guid: d1ae4bb29a02d714d950885103febb30, type: 3}
+    Text: "Lorem ipsum doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado.
+      Sed faru la temporon, ke la laboro kaj doloro fari\u011Du grandaj. Lorem ipsum
+      doloro sidu amet, koncerni\u011Du pri la alta kvalito de lernado. Sed faru
+      la temporon, ke la laboro kaj"
+  textTypewriterSpeed: 50
+  picture: {fileID: 2263228201312358431}
+  monologueText: {fileID: 1513739136105226044}
+--- !u!95 &8966788268586368881
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665131288676227567}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 86c1b5e9f4b120441b41c9112d6bc542, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4138735685899333991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665131288676227567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: d3aea5d094558a14cac747063c6593d2, type: 2}
+    - {fileID: 11400000, guid: 8199103a3f89cfe48bf9af1e54d67c3c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 157538976014737456}
+          m_TargetAssemblyTypeName: LD48.Cutscenes.SimpleCutscene.SimpleCutscene,
+            Assembly-CSharp
+          m_MethodName: SwitchToTheNextFrame
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 157538976014737456}
+          m_TargetAssemblyTypeName: LD48.Cutscenes.SimpleCutscene.SimpleCutscene,
+            Assembly-CSharp
+          m_MethodName: OnEnd
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &6792606891604457186
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -539,28 +636,9 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: -4735777449825846168, guid: 83459c4e726a37e4b813ff32d633856c, type: 2}
+  - key: {fileID: 9143112265633701853, guid: 83459c4e726a37e4b813ff32d633856c, type: 2}
     value: {fileID: 8966788268586368881}
+  - key: {fileID: 1712212890594871111, guid: 83459c4e726a37e4b813ff32d633856c, type: 2}
+    value: {fileID: 4138735685899333991}
   m_ExposedReferences:
     m_References: []
---- !u!95 &8966788268586368881
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8665131288676227567}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0

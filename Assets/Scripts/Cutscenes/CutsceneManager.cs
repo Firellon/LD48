@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LD48.Cutscenes.SimpleCutscene;
 using Signals;
 using UnityEngine;
 
@@ -25,7 +26,6 @@ namespace LD48.Cutscenes
         [SerializeField] private List<CutsceneData> cutscenes = new();
 
         public static Dictionary<CutsceneType, GameObject> cutsceneDataBase = new();
-
         public static GameObject activeCutscene;
 
         private void Awake()
@@ -35,6 +35,15 @@ namespace LD48.Cutscenes
             foreach (var cutscene in cutsceneDataBase)
             {
                 cutscene.Value.SetActive(false);
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                Debug.LogWarning(1234);
+                StartCutscene(CutsceneType.Intro);
             }
         }
 
@@ -88,12 +97,16 @@ namespace LD48.Cutscenes
 
             activeCutscene = cutsceneDataBase[cutsceneKey];
 
-            foreach (var cutscene in cutsceneDataBase)
+            foreach (var kvp in cutsceneDataBase)
             {
-                cutscene.Value.SetActive(false);
+                kvp.Value.SetActive(false);
             }
 
-            cutsceneDataBase[cutsceneKey].SetActive(true);
+            var cutsceneGO = cutsceneDataBase[cutsceneKey];
+            cutsceneGO.SetActive(true);
+
+            var cutscene = cutsceneGO.GetComponent<ICutscene>();
+            cutscene?.OnStart();
         }
 
         private void StopCutscene()
