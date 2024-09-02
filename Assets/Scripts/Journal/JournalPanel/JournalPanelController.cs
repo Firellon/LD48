@@ -7,17 +7,17 @@ using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
-namespace Journal
+namespace Journal.JournalPanel
 {
     public class JournalPanelController : MonoBehaviour, IJournalPanelController
     {
         [SerializeField] private GameObject journalPanel;
         [SerializeField] private RectTransform journalPanelContent;
         [SerializeField] private GameObject journalEntryPrefab;
-        [SerializeField] private JournalCurrentEntryController journalCurrentEntryController;
 
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IJournalModel journalModel;
+        [Inject] private JournalCurrentEntryController journalCurrentEntryController;
         public bool IsVisible  => journalPanel.activeSelf;
 
         private List<JournalEntry> unlockedJournalEntries = new();
