@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using LD48.Cutscenes.SimpleCutscene;
 using Signals;
 using UnityEngine;
+using Utilities.TimeManagement;
+using Zenject;
 
 namespace LD48.Cutscenes
 {
@@ -27,6 +29,8 @@ namespace LD48.Cutscenes
 
         public static Dictionary<CutsceneType, GameObject> cutsceneDataBase = new();
         public static GameObject activeCutscene;
+
+        [Inject] private ITimeManager timeManager;
 
         private void Awake()
         {
@@ -107,6 +111,8 @@ namespace LD48.Cutscenes
 
             var cutscene = cutsceneGO.GetComponent<ICutscene>();
             cutscene?.OnStart();
+
+            timeManager.PauseGame();
         }
 
         private void StopCutscene()
@@ -116,6 +122,8 @@ namespace LD48.Cutscenes
                 activeCutscene.SetActive(false);
                 activeCutscene = null;
             }
+
+            timeManager.RunGame();
         }
     }
 

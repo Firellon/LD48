@@ -13,6 +13,7 @@ using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
 using Utilities.RandomService;
+using Utilities.TimeManagement;
 using Zenject;
 
 namespace DI
@@ -59,6 +60,8 @@ namespace DI
             Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle().NonLazy();
 
             Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();
+
+            Container.BindInterfacesTo<TimeManager>().AsSingle().NonLazy();
         }
 
         private void OnDisable()
