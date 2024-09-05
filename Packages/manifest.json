@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.coffee.softmask-for-ugui": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
     "com.h8man.2d.navmeshplus": "https://github.com/h8man/NavMeshPlus.git#master",
     "com.hibzz.dependencyresolver": "https://github.com/hibzzgames/Hibzz.DependencyResolver.git",
     "com.nebulateme.audiotools": "https://github.com/Nebulate-me/Audio-Tools.git",
