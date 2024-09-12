@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d0a7a52b7215cf442b16bcb376786eba
+guid: 5fee0652bc3eacb4893ec33906df8e9e
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,16 +123,16 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: ui
     originalName: 
-    pivot: {x: 0.5, y: -2.4444444}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 32
-      height: 27
-    spriteID: 742400f12a77bb74b8b3b5636850de7a
+      width: 480
+      height: 101
+    spriteID: 5457106dff7d68e4ebe68936a2b90df7
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -154,15 +154,15 @@ ScriptedImporter:
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 48
-        y: 66
-        width: 32
-        height: 27
-      spriteId: 742400f12a77bb74b8b3b5636850de7a
+        x: 0
+        y: 0
+        width: 480
+        height: 101
+      spriteId: 5457106dff7d68e4ebe68936a2b90df7
     linkedCells: []
     parentIndex: -1
   platformSettings: []
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 128, y: 128}
+  canvasSize: {x: 480, y: 270}
