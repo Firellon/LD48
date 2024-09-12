@@ -1,10 +1,12 @@
-﻿namespace Dialogue
+﻿using Dialogue.Entry;
+
+namespace Dialogue
 {
     public class ShowDialogueEntryCommand
     {
-        public DialogueEntry DialogueEntry { get; }
+        public IDialogueEntry DialogueEntry { get; }
         
-        public ShowDialogueEntryCommand(DialogueEntry dialogueEntry)
+        public ShowDialogueEntryCommand(IDialogueEntry dialogueEntry)
         {
             DialogueEntry = dialogueEntry;
         }

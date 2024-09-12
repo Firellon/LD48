@@ -2,10 +2,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Dialogue
+namespace Dialogue.Entry
 {
     [CreateAssetMenu(menuName = "LD48/Create DialogueEntry SO", fileName = "New Dialogue Entry", order = 0)]
-    public class DialogueEntry : ScriptableObject
+    public class DialogueEntry : ScriptableObject, IDialogueEntry
     {
         [SerializeField] private string entryKey;
         [SerializeField] private string entryTitle;

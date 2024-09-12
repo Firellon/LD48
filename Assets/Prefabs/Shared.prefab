@@ -181,6 +181,7 @@ Transform:
   - {fileID: 5042157423292267896}
   - {fileID: 119920525317006118}
   - {fileID: 8655600837922180297}
+  - {fileID: 5707781799326722492}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2201146596934307437
@@ -874,6 +875,7 @@ MonoBehaviour:
   prefabPool: {fileID: 189264895322273740}
   mapActorRegistry: {fileID: 2528578677819702300}
   mapObjectRegistry: {fileID: 1512119536165743883}
+  characterRegistry: {fileID: 1213436703541669535}
   journalEntryRegistry: {fileID: 5343087918741375329}
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
@@ -912,6 +914,53 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
+--- !u!1 &7411183540333629050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5707781799326722492}
+  - component: {fileID: 1213436703541669535}
+  m_Layer: 0
+  m_Name: CharacterRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5707781799326722492
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7411183540333629050}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214609521494742059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1213436703541669535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7411183540333629050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab9911ee1796435fbd4aaa7abf159fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCharacter: {fileID: 11400000, guid: 1f3addc1e7794c743b8b4c1c0a351f41, type: 2}
+  characters:
+  - {fileID: 11400000, guid: 1f3addc1e7794c743b8b4c1c0a351f41, type: 2}
 --- !u!1001 &1757466782984979916
 PrefabInstance:
   m_ObjectHideFlags: 0
