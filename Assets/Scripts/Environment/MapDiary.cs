@@ -1,16 +1,19 @@
-﻿using Human;
+﻿using Dialogue;
+using Dialogue.Entry;
+using Human;
 using Inventory;
 using LD48;
 using Map;
 using Player;
 using Signals;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities.Monads;
 using Zenject;
 
 namespace Environment
 {
-    public class MapDiary : MonoBehaviour, IInteractable
+    public class MapDiary : MonoBehaviour, IInteractable, IPointerClickHandler
     {
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
@@ -50,5 +53,20 @@ namespace Environment
         {
             SignalsHub.DispatchAsync(new MapObjectRemovedEvent(GameObject, mapObjectController.MapObject.ObjectType));
         }
+        
+        #region Dialogue
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(dialogueEntry));
+        }
+
+        private readonly IDialogueEntry dialogueEntry = new SerializedDialogueEntry
+        {
+            EntryDescription =
+                "Someone left a note lying on a ground. I better pick it up before the rains wash it away."
+        };
+
+        #endregion
     }
 }

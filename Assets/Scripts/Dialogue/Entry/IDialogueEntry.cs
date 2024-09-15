@@ -1,3 +1,5 @@
+using System;
+using JetBrains.Annotations;
 using Stranger;
 
 namespace Dialogue.Entry
@@ -7,6 +9,6 @@ namespace Dialogue.Entry
         string EntryKey { get; }
         string EntryTitle { get; }
         string EntryDescription { get; }
-        Character EntryCharacter { get; }
+        [CanBeNull] Character EntryCharacter { get; }
     }
 }

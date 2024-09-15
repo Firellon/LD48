@@ -1,20 +1,25 @@
 ﻿using System;
-using Journal;
+using System.Threading.Tasks;
 using Signals;
-using Unity.VisualScripting;
+using Stranger;
 using Zenject;
-using IInitializable = Zenject.IInitializable;
 
 namespace Dialogue
 {
     public class DialogueController : IInitializable, IDisposable
     {
         private readonly DialogueView view;
+        private readonly ICharacterRegistry characterRegistry;
+        
+        private bool shouldHide = false;
 
+        private const double KShowDialogueDurationSeconds = 3;
+        
         [Inject]
-        private DialogueController(DialogueView view)
+        private DialogueController(DialogueView view, ICharacterRegistry characterRegistry)
         {
             this.view = view;
+            this.characterRegistry = characterRegistry;
             
             view.gameObject.SetActive(false);
         }
@@ -31,20 +36,41 @@ namespace Dialogue
             SignalsHub.RemoveListener<HideDialogueEntryCommand>(OnHideDialogueEntry);
         }
         
-        private void OnShowDialogueEntry(ShowDialogueEntryCommand command)
+        private async void OnShowDialogueEntry(ShowDialogueEntryCommand command)
         {
             var entry = command.DialogueEntry;
 
             view.gameObject.SetActive(true); // TODO: Fade-in animation
+            shouldHide = true;
+
+            if (entry.EntryCharacter == null && characterRegistry.PlayerCharacter.IsNotPresent)
+            {
+                throw new Exception(
+                    "No Player Character found to replace the null provided in the Show Dialogue command!");
+            }
             
-            view.CharacterNameText.text = entry.EntryTitle;
+            view.CharacterPortraitImage.sprite = entry.EntryCharacter != null 
+                ? entry.EntryCharacter.Portrait 
+                : characterRegistry.PlayerCharacter.ValueOrDefault().Portrait;
+            view.CharacterNameText.text = entry.EntryTitle != string.Empty 
+                ? entry.EntryTitle
+                : characterRegistry.PlayerCharacter.ValueOrDefault().CharacterName;;
             view.CharacterLineText.text = entry.EntryDescription;
-            view.CharacterPortraitImage.sprite = entry.EntryCharacter.Portrait;
+
+            await Task.Delay(TimeSpan.FromSeconds(KShowDialogueDurationSeconds));
+            HideDialogueEntry();
         }
 
         private void OnHideDialogueEntry(HideDialogueEntryCommand command)
         {
+            HideDialogueEntry();
+        }
+
+        private void HideDialogueEntry()
+        {
+            if (!shouldHide) return;
             view.gameObject.SetActive(false); // TODO: Fade-out animation
+            shouldHide = false;
         }
     }
 }
