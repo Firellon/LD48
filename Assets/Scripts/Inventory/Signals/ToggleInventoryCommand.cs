@@ -1,3 +1,5 @@
+using Human;
+
 namespace Inventory.Signals
 {
     public class ShowInventoryCommand
@@ -14,5 +16,11 @@ namespace Inventory.Signals
 
     public class PlayerInventoryUpdatedEvent
     {
+        public PlayerHumanInventory PlayerInventory { get; }
+        
+        public PlayerInventoryUpdatedEvent(PlayerHumanInventory inventory)
+        {
+            PlayerInventory = inventory;
+        }
     }
 }

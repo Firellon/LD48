@@ -40,16 +40,6 @@ namespace Environment
             UpdateDialogueEntry();
         }
 
-        private void UpdateDialogueEntry()
-        {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription =  GuidePostText != string.Empty 
-                    ? $"This post says: \"{GuidePostText}\". I wonder what's the meaning of this..."
-                    : "This post is empty."
-            };
-        }
-
         public void SetHighlight(bool isLit)
         {
             spriteRenderer.material =
@@ -74,10 +64,23 @@ namespace Environment
             SignalsHub.DispatchAsync(new MapObjectRemovedEvent(GameObject, mapObjectController.MapObject.ObjectType));
         }
 
+        #region Dialogue
+        
+        private void UpdateDialogueEntry()
+        {
+            DialogueEntry = new SerializedDialogueEntry
+            {
+                EntryDescription = GuidePostText != string.Empty 
+                    ? $"This post says: \"{GuidePostText}\". I wonder what's the meaning of this..."
+                    : "This post is empty."
+            };
+        }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
         public void OnPointerClick(PointerEventData eventData)
         {
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
         }
+        
+        #endregion
     }
 }
