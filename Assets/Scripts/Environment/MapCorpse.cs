@@ -19,6 +19,8 @@ namespace Environment
         [SerializeField] private Sprite maleSprite;
         [SerializeField] private Sprite femaleSprite;
         [SerializeField] private List<ItemType> startingItemTypes;
+        [SerializeField] private int startingItemAmountMin = 0;
+        [SerializeField] private int startingItemAmountMax = 4;
 
         [Inject] private IRandomService randomService;
         [Inject] private IItemRegistry itemRegistry;
@@ -41,7 +43,7 @@ namespace Environment
         {
             if (isSetUp) return;
             SetHumanGender(randomService.Sample(new List<HumanGender> {HumanGender.Female, HumanGender.Male}));
-            var startingItemAmount = randomService.Int(0, 3);
+            var startingItemAmount = randomService.Int(startingItemAmountMin, startingItemAmountMax);
             for (var i = 0; i < startingItemAmount; i++)
             {
                 var itemType = randomService.Sample(startingItemTypes);

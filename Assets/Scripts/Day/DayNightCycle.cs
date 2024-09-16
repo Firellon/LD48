@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
@@ -23,13 +24,15 @@ namespace Day
         [SerializeField] private float nightIntensity = 1f;
 
         [SerializeField] private DayTimeToDayTimeDictionary nextDayTime;
-        [SerializeField] private DayTimeToStringDictionary dayTimeMessages = new()
+        private DayTimeToStringDictionary dayTimeMessages = new()
         {
-            {DayTime.DayComing, "Day grows in power..."},
-            {DayTime.Day, "Sunset approaches..."},
-            {DayTime.NightComing, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
-            {DayTime.Night, "Night has passed.\n Dawn of Day {0}"},
+            {DayTime.DayComing,"The Night has passed.\n Dawn of Day {0}"},
+            {DayTime.Day, "The Day grows in power..."},
+            {DayTime.NightComing, "The Sunset approaches..."},
+            {DayTime.Night, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
         };
+
+        [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
         private DayTime currentCycle = DayTime.Day;
 
@@ -92,11 +95,11 @@ namespace Day
                     terrainGenerator.DestroyGhosts();
                 }
 
-                if (CurrentCycle == DayTime.Night)
+                if (ghostSpawnDayTimes.Contains(CurrentCycle))
                 {
                     terrainGenerator.GenerateGhosts();
                     // terrainGenerator.GenerateItems(0.05f); // TODO: Only generate renewable items here
-                    terrainGenerator.GenerateStrangers(0.05f);
+                    // terrainGenerator.GenerateStrangers(0.05f);
 
                     SignalsHub.DispatchAsync(new PlayMusicSignal
                     {

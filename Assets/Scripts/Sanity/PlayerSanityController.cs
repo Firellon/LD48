@@ -1,4 +1,5 @@
-﻿using Day;
+﻿using System.Collections.Generic;
+using Day;
 using FunkyCode;
 using Human;
 using LD48;
@@ -41,8 +42,7 @@ namespace Sanity
                 }
                 else
                 {
-                    if (dayNightCycle.GetCurrentCycle() != DayTime.Night ||
-                        lightEventListener.visability > darknessVisibilityThreshold)
+                    if (lightEventListener.visability > darknessVisibilityThreshold)
                     {
                         timeInDarkness = 0;
                         CheckSanityRestoration();

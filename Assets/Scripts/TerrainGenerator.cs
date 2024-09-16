@@ -19,6 +19,8 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Inject] private IMapActorRegistry mapActorRegistry;
     [Inject] private IPrefabPool prefabPool;
+    
+    [SerializeField] private int baseGhostSpawnProbability = 4;
 
     private DayNightCycle dayNightCycle;
     public Vector2Int levelSize = new(10, 10);
@@ -57,7 +59,6 @@ public class TerrainGenerator : MonoBehaviour
     #region Ghosts
 
     public Transform ghostParent;
-    [SerializeField] private int baseGhostSpawnProbability = 4;
     private List<GameObject> ghosts = new();
 
     #endregion
@@ -117,7 +118,8 @@ public class TerrainGenerator : MonoBehaviour
         var playerState = mapActorRegistry.Player.Match(player => player.State.ToMaybe(), Maybe.Empty<HumanState>());
         var playerSanity = playerState.Match(state => (float) state.Sanity / (state.MaxSanity - state.MinSanity), 1f);
         var ghostMapActor = mapActorRegistry.GetMapActor(MapActorType.Ghost);
-        var ghostSpawnProbability = (1 - playerSanity) * (float) dayNightCycle.GetCurrentDay() / (baseGhostSpawnProbability + dayNightCycle.GetCurrentDay());
+        var currentDay = dayNightCycle.GetCurrentDay();
+        var ghostSpawnProbability = (1 - playerSanity) * (float) currentDay / (baseGhostSpawnProbability + currentDay);
         foreach (var dead in deads)
         {
             if (dead == null) continue;

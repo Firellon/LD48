@@ -178,7 +178,7 @@ MonoBehaviour:
   itemContainer: {fileID: 4926377219162670675}
   maleSprite: {fileID: -1457070783, guid: d1fc7be84d497c844a223a7f510f1e2a, type: 3}
   femaleSprite: {fileID: -180903842, guid: fee1a89699f990b4985ab8f7a75d4763, type: 3}
-  startingItemTypes: 01000000010000000100000004000000
+  startingItemTypes: 01000000010000000100000004000000040000000100000001000000
 --- !u!114 &380486583842244887
 MonoBehaviour:
   m_ObjectHideFlags: 0
