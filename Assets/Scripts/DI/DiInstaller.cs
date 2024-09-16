@@ -62,6 +62,9 @@ namespace DI
             Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle().NonLazy();
 
             Container.Bind<ILightCycle>().FromInstance(lightCycle).AsSingle();
+            
+            var playerInput = new PlayerControls();
+            Container.Bind<PlayerControls>().FromInstance(playerInput).AsSingle();
         }
 
         private void OnDisable()

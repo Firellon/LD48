@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Signals;
 using Stranger;
+using UnityEngine.InputSystem;
 using Zenject;
 
 namespace Dialogue
@@ -11,17 +11,25 @@ namespace Dialogue
         private readonly DialogueView view;
         private readonly ICharacterRegistry characterRegistry;
         
-        private bool shouldHide = false;
+        private bool isShown = false;
 
         private const double KShowDialogueDurationSeconds = 3;
         
         [Inject]
-        private DialogueController(DialogueView view, ICharacterRegistry characterRegistry)
+        private DialogueController(DialogueView view, ICharacterRegistry characterRegistry, PlayerControls playerInput)
         {
             this.view = view;
             this.characterRegistry = characterRegistry;
             
             view.gameObject.SetActive(false);
+            
+            playerInput.UI.Enable();
+            playerInput.UI.Click.performed += OnMouseClick;
+        }
+
+        private void OnMouseClick(InputAction.CallbackContext obj)
+        {
+            if (isShown) HideDialogueEntry();
         }
 
         public void Initialize()
@@ -36,12 +44,12 @@ namespace Dialogue
             SignalsHub.RemoveListener<HideDialogueEntryCommand>(OnHideDialogueEntry);
         }
         
-        private async void OnShowDialogueEntry(ShowDialogueEntryCommand command)
+        private void OnShowDialogueEntry(ShowDialogueEntryCommand command)
         {
             var entry = command.DialogueEntry;
 
             view.gameObject.SetActive(true); // TODO: Fade-in animation
-            shouldHide = true;
+            isShown = true;
 
             if (entry.EntryCharacter == null && characterRegistry.PlayerCharacter.IsNotPresent)
             {
@@ -56,9 +64,6 @@ namespace Dialogue
                 ? entry.EntryTitle
                 : characterRegistry.PlayerCharacter.ValueOrDefault().CharacterName;;
             view.CharacterLineText.text = entry.EntryDescription;
-
-            await Task.Delay(TimeSpan.FromSeconds(KShowDialogueDurationSeconds));
-            HideDialogueEntry();
         }
 
         private void OnHideDialogueEntry(HideDialogueEntryCommand command)
@@ -68,9 +73,9 @@ namespace Dialogue
 
         private void HideDialogueEntry()
         {
-            if (!shouldHide) return;
+            if (!isShown) return;
             view.gameObject.SetActive(false); // TODO: Fade-out animation
-            shouldHide = false;
+            isShown = false;
         }
     }
 }
