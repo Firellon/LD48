@@ -1,30 +1,44 @@
-﻿using Human;
+﻿using Dialogue;
+using Dialogue.Entry;
+using Human;
 using Inventory;
 using LD48;
 using Map;
 using Signals;
-using UI;
 using UI.Signals;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities.Monads;
 using Zenject;
 
 namespace Environment
 {
-    public class MapGuidePost : MonoBehaviour, IInteractable, IHoverTooltipTarget
+    public class MapGuidePost : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
         [Inject] private SpriteRenderer spriteRenderer;
-        
-        [SerializeField] private Vector2 leftBottomTooltipOffset;
-        [SerializeField] private Vector2 rightTopTooltipOffset;
 
         public bool CanBePickedUp => false;
         public IMaybe<Item> MaybeItem => Maybe.Empty<Item>();
         public IMaybe<MapObject> MaybeMapObject => mapObjectController.MapObject.ToMaybe();
         public GameObject GameObject => gameObject;
-        public string GuidePostText { get; set; } = string.Empty;
+
+        private string guidePostText = string.Empty;
+        public string GuidePostText
+        {
+            get => guidePostText;
+            set
+            {
+                guidePostText = value;
+                UpdateDialogueEntry();
+            }
+        }
+
+        public void Start()
+        {
+            UpdateDialogueEntry();
+        }
 
         public void SetHighlight(bool isLit)
         {
@@ -42,7 +56,7 @@ namespace Environment
             SignalsHub.DispatchAsync(new ShowTextInputPopupCommand(
                 GuidePostText,
                 "Guidepost sign:",
-                newGuidePostText => GuidePostText = newGuidePostText));
+                newGuidePostText => GuidePostText = newGuidePostText.Trim()));
         }
 
         public void Remove()
@@ -50,8 +64,23 @@ namespace Environment
             SignalsHub.DispatchAsync(new MapObjectRemovedEvent(GameObject, mapObjectController.MapObject.ObjectType));
         }
 
-        public string TooltipText => GuidePostText;
-        public Vector2 LeftBottomTooltipOffset => leftBottomTooltipOffset;
-        public Vector2 RightTopTooltipOffset => rightTopTooltipOffset;
+        #region Dialogue
+        
+        private void UpdateDialogueEntry()
+        {
+            DialogueEntry = new SerializedDialogueEntry
+            {
+                EntryDescription = GuidePostText != string.Empty 
+                    ? $"This post says: \"{GuidePostText}\". I wonder what's the meaning of this..."
+                    : "This post is empty."
+            };
+        }
+        public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
+        }
+        
+        #endregion
     }
 }

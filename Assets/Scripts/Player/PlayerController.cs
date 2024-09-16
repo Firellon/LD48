@@ -17,10 +17,10 @@ namespace Player
     {
         [Inject] private HumanController humanController;
         [Inject] private IInventory humanInventory;
+        [Inject] private PlayerControls playerInput;
 
         [SerializeField] private List<Item> initialInventoryItems = new();
 
-        private PlayerControls playerInput;
         private float horizontal;
         private float vertical;
         
@@ -92,7 +92,6 @@ namespace Player
         {
             clickData = new PointerEventData(EventSystem.current);
             
-            playerInput = new PlayerControls();
             playerInput.HumanPlayer.Enable();
 
             playerInput.HumanPlayer.Move.performed += OnMove;

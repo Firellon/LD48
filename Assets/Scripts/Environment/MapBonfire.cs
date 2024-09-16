@@ -1,17 +1,20 @@
 using System.Collections.Generic;
+using Dialogue;
+using Dialogue.Entry;
 using Human;
 using Inventory;
 using LD48;
 using Map;
 using Signals;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using Utilities.Monads;
 using Zenject;
 
 namespace Environment
 {
-    public class MapBonfire : MonoBehaviour, IInteractable
+    public class MapBonfire : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
         [SerializeField] private float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
@@ -50,12 +53,14 @@ namespace Environment
                 timeToBurn -= Time.deltaTime;
                 SetFireStrength();
                 Burn();
+                UpdateDialogueEntry();
             }
             else
             {
                 isBurning = false;
                 SetFireStrength();
                 fireSound.Stop();
+                UpdateDialogueEntry();
             }
         }
 
@@ -110,6 +115,28 @@ namespace Environment
         public void Remove()
         {
             SignalsHub.DispatchAsync(new MapObjectRemovedEvent(GameObject, mapObjectController.MapObject.ObjectType));
+        }
+        
+        #endregion
+
+        #region Dialogue
+        
+        private void UpdateDialogueEntry()
+        {
+            DialogueEntry = new SerializedDialogueEntry
+            {
+                EntryDescription = isBurning
+                    ? timeToBurn < burnTimePerWood
+                        ? "Looks like the fire's dying down. Won’t last much longer."
+                        : "This fire's putting on quite the show!"
+                    : "Only the embers are left here."
+            };
+        }
+
+        public IDialogueEntry DialogueEntry { get; set; } = new SerializedDialogueEntry();
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
         }
         
         #endregion

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using LD48;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Inventory
 {
@@ -10,6 +12,7 @@ namespace Inventory
         public Transform Transform => transform;
         public abstract int Capacity { get; }
         public abstract List<Item> Items { get; }
+        public virtual UnityEvent ItemsUpdatedEvent { get; } = new UnityEvent();
 
         public virtual bool CanTakeItem()
         {
@@ -28,6 +31,7 @@ namespace Inventory
 
             Items.Add(item);
 
+            ItemsUpdatedEvent.Invoke();
             return true;
         }
 
@@ -37,6 +41,8 @@ namespace Inventory
                 return false;
 
             Items.Remove(item);
+            
+            ItemsUpdatedEvent.Invoke();
             return true;
         }
 
@@ -52,11 +58,13 @@ namespace Inventory
                 if (!RemoveItem(itemToRemove)) return false;
             }
 
+            ItemsUpdatedEvent.Invoke();
             return true;
         }
         public virtual void RemoveItems()
         {
             Items.Clear();
+            ItemsUpdatedEvent.Invoke();
         }
 
         public bool HasItem(Item item)
