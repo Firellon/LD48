@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Dialogue;
+using Dialogue.Entry;
 using Human;
 using Inventory;
 using LD48;
+using Signals;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utilities.RandomService;
 using Zenject;
 
 namespace Environment
 {
-    public class MapCorpse : MonoBehaviour
+    public class MapCorpse : MonoBehaviour, IClickDialogueTarget
     {
         [SerializeField] private MapCrate itemContainer; // TODO Inject IItemContainer
         [SerializeField] private Sprite maleSprite;
@@ -17,9 +22,21 @@ namespace Environment
 
         [Inject] private IRandomService randomService;
         [Inject] private IItemRegistry itemRegistry;
-        [Inject] private SpriteRenderer spriteRenderer; // TODO: inject
+        [Inject] private SpriteRenderer spriteRenderer;
 
         private bool isSetUp = false;
+        private HumanGender gender = HumanGender.Male;
+
+        private void OnEnable()
+        {
+            itemContainer.ItemsUpdatedEvent.AddListener(UpdateDialogueEntry);
+        }
+
+        private void OnDisable()
+        {
+            itemContainer.ItemsUpdatedEvent.RemoveListener(UpdateDialogueEntry);
+        }
+
         public void Start()
         {
             if (isSetUp) return;
@@ -31,13 +48,16 @@ namespace Environment
                 var item = itemRegistry.GetItem(itemType);
                 itemContainer.AddItem(item);
             }
+            UpdateDialogueEntry();
         }
 
-        public void SetHumanGender(HumanGender gender)
+        public void SetHumanGender(HumanGender newGender)
         {
-            if (gender == HumanGender.Male) spriteRenderer.sprite = maleSprite;
-            if (gender == HumanGender.Female) spriteRenderer.sprite = femaleSprite;
+            gender = newGender;
+            if (newGender == HumanGender.Male) spriteRenderer.sprite = maleSprite;
+            if (newGender == HumanGender.Female) spriteRenderer.sprite = femaleSprite;
 
+            UpdateDialogueEntry();
             isSetUp = true;
         }
 
@@ -48,8 +68,29 @@ namespace Environment
             {
                 itemContainer.AddItem(item);
             }
+
+            UpdateDialogueEntry();
             
             isSetUp = true;
         }
+
+        #region Dialogue
+        
+        private void UpdateDialogueEntry()
+        {
+            DialogueEntry = new SerializedDialogueEntry
+            {
+                EntryDescription = itemContainer.Items.Any() 
+                     ? $"This unlucky fellow seems to have something of value on {(gender == HumanGender.Male ? "him" : "her")}"
+                     : "Poor soul..."
+            };
+        }
+        public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
+        }
+        
+        #endregion
     }
 }

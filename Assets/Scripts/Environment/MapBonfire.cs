@@ -14,7 +14,7 @@ using Zenject;
 
 namespace Environment
 {
-    public class MapBonfire : MonoBehaviour, IInteractable, IPointerClickHandler
+    public class MapBonfire : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
         [SerializeField] private float burnTimePerWood = 20f;
         [FormerlySerializedAs("audio")] public AudioSource fireSound;
@@ -133,7 +133,7 @@ namespace Environment
             };
         }
 
-        private IDialogueEntry DialogueEntry { get; set; } = new SerializedDialogueEntry();
+        public IDialogueEntry DialogueEntry { get; set; } = new SerializedDialogueEntry();
         public void OnPointerClick(PointerEventData eventData)
         {
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));

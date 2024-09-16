@@ -11,7 +11,7 @@ using Zenject;
 
 namespace Environment
 {
-    public class MapExit : MonoBehaviour, IClickDialogueTarget, IPointerClickHandler
+    public class MapExit : MonoBehaviour, IClickDialogueTarget
     {
         [Inject] private IMapActorRegistry mapActorRegistry; 
         private void OnEnable()

@@ -13,7 +13,7 @@ using Zenject;
 
 namespace Environment
 {
-    public class MapDiary : MonoBehaviour, IInteractable, IPointerClickHandler
+    public class MapDiary : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
@@ -58,10 +58,10 @@ namespace Environment
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(dialogueEntry));
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
         }
 
-        private readonly IDialogueEntry dialogueEntry = new SerializedDialogueEntry
+        public IDialogueEntry DialogueEntry { get; } = new SerializedDialogueEntry
         {
             EntryDescription =
                 "Someone left a note lying on a ground. I better pick it up before the rains wash it away."

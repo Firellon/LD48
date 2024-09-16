@@ -13,7 +13,7 @@ using Zenject;
 
 namespace Environment
 {
-    public class MapGuidePost : MonoBehaviour, IInteractable, IClickDialogueTarget, IPointerClickHandler
+    public class MapGuidePost : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
