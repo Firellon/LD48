@@ -61,16 +61,18 @@ namespace LD48.Cutscenes.SimpleCutscene
             {
                 // 1. animate image
                 // 2. animate text
-                ResetImageAndText();
+                ResetImageAndText(frame);
 
-                yield return frameAnimation.AnimateFadeIn().WaitForCompletion();
+                if (frame.Sprite != null)
+                    yield return frameAnimation.AnimateFadeIn().WaitForCompletion();
 
-                yield return monologueText
-                    .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
-                    .SetEase(Ease.Linear)
-                    .SetLink(gameObject, LinkBehaviour.KillOnDisable)
-                    .SetUpdate(UpdateType.Normal, true)
-                    .WaitForCompletion();
+                if (!string.IsNullOrWhiteSpace(frame.Text))
+                    yield return monologueText
+                        .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
+                        .SetEase(Ease.Linear)
+                        .SetLink(gameObject, LinkBehaviour.KillOnDisable)
+                        .SetUpdate(UpdateType.Normal, true)
+                        .WaitForCompletion();
 
                 yield return new WaitForSecondsRealtime(1f);
 
@@ -81,12 +83,16 @@ namespace LD48.Cutscenes.SimpleCutscene
             OnEnd();
         }
 
-        private void ResetImageAndText()
+        private void ResetImageAndText(CutsceneFrame currentFrame)
         {
-            frameAnimation.ResetAnimation();
+            if (currentFrame.Sprite != null)
+                frameAnimation.ResetAnimation();
 
-            monologueText.DOKill();
-            monologueText.maxVisibleCharacters = 0;
+            if (!string.IsNullOrWhiteSpace(currentFrame.Text))
+            {
+                monologueText.DOKill();
+                monologueText.maxVisibleCharacters = 0;
+            }
         }
 
         public void OnEnd()
@@ -101,20 +107,11 @@ namespace LD48.Cutscenes.SimpleCutscene
 
             var nextFrame = frames[currentFrameIndex];
 
-            picture.sprite = nextFrame.Sprite;
-            monologueText.text = nextFrame.Text;
+            if (nextFrame.Sprite != null)
+                picture.sprite = nextFrame.Sprite;
 
-            StartTextAnimation();
-        }
-
-        public void StartTextAnimation()
-        {
-            monologueText.DOKill();
-            monologueText
-                .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
-                .SetEase(Ease.Linear)
-                .SetLink(gameObject, LinkBehaviour.KillOnDisable)
-                .SetUpdate(UpdateType.Normal, true);
+            if (!string.IsNullOrWhiteSpace(nextFrame.Text))
+                monologueText.text = nextFrame.Text;
         }
     }
 }
