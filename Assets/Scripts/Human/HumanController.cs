@@ -230,7 +230,7 @@ namespace Human
                     return;
                 }
 
-                interactable.SetHighlight(true);
+                interactable.SetHighlight(true); // TODO: Show an "E" button to Interact with the Interactable instead
 
                 if (interactableObjects.Contains(interactable)) return;
                 interactableObjects.Add(interactable);
@@ -249,7 +249,7 @@ namespace Human
                     return;
                 }
 
-                interactable.SetHighlight(false);
+                interactable.SetHighlight(false); // TODO: Hide an "E" button to Interact with the Interactable instead
                 interactableObjects.Remove(interactable);
                 SignalsHub.DispatchAsync(new InteractableExitEvent(this, interactable));
             }

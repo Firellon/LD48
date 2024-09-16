@@ -15,7 +15,7 @@ namespace Environment
 {
     public class MapCorpse : MonoBehaviour, IClickDialogueTarget
     {
-        [SerializeField] private MapCrate itemContainer; // TODO Inject IItemContainer
+        [SerializeField] private MapCrate itemContainer; // TODO: Inject IItemContainer instead of this
         [SerializeField] private Sprite maleSprite;
         [SerializeField] private Sprite femaleSprite;
         [SerializeField] private List<ItemType> startingItemTypes;
@@ -86,6 +86,11 @@ namespace Environment
             };
         }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
+        public void SetHighlight(bool isLit)
+        {
+            itemContainer.SetHighlight(isLit);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));

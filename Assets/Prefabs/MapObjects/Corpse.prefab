@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -8551982333944625844}
   - component: {fileID: 4926377219162670675}
   - component: {fileID: 2276775032157319986}
+  - component: {fileID: 380486583842244887}
   - component: {fileID: 2671688099738641969}
   m_Layer: 0
   m_Name: Corpse
@@ -178,6 +179,18 @@ MonoBehaviour:
   maleSprite: {fileID: -1457070783, guid: d1fc7be84d497c844a223a7f510f1e2a, type: 3}
   femaleSprite: {fileID: -180903842, guid: fee1a89699f990b4985ab8f7a75d4763, type: 3}
   startingItemTypes: 01000000010000000100000004000000
+--- !u!114 &380486583842244887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8517205137437858493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e278c1db304c369a413da80837109e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!70 &2671688099738641969
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -13,7 +13,10 @@ namespace Environment
 {
     public class MapExit : MonoBehaviour, IClickDialogueTarget
     {
-        [Inject] private IMapActorRegistry mapActorRegistry; 
+        [Inject] private SpriteRenderer spriteRenderer;
+        [Inject] private VisualsConfig visualsConfig;
+        [Inject] private IMapActorRegistry mapActorRegistry;
+        
         private void OnEnable()
         {
             SignalsHub.AddListener<PlayerInventoryUpdatedEvent>(OnPlayerInventoryUpdated);
@@ -37,6 +40,12 @@ namespace Environment
             });
             
         }
+        
+        public void SetHighlight(bool isLit)
+        {
+            spriteRenderer.material =
+                isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
+        }
 
         #region Dialogue
         
@@ -50,6 +59,7 @@ namespace Environment
             };
         }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
+
         public void OnPointerClick(PointerEventData eventData)
         {
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));

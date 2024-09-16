@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2694507812269662056}
   - component: {fileID: 4405225850342510393}
   - component: {fileID: -572411631985468027}
+  - component: {fileID: -4106753944120743349}
   - component: {fileID: 4191005214743361497}
   - component: {fileID: 6649743728803296774}
   - component: {fileID: 240403883343159843}
@@ -153,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapObject: {fileID: 11400000, guid: cab9c2a52fee0b8459b8f071a1df4f94, type: 2}
-  spriteRenderer: {fileID: 5667914319977949752}
 --- !u!114 &-572411631985468027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,6 +172,18 @@ MonoBehaviour:
   - {fileID: 6483027018624014086}
   - {fileID: 222230931864439769}
   fireEffect: {fileID: 6483027018642814692}
+--- !u!114 &-4106753944120743349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667914319977949734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e278c1db304c369a413da80837109e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &4191005214743361497
 AudioSource:
   m_ObjectHideFlags: 0
