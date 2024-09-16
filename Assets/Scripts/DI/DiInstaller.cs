@@ -14,6 +14,7 @@ using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
 using Utilities.RandomService;
+using Utilities.TimeManagement;
 using Zenject;
 
 namespace DI
@@ -65,6 +66,8 @@ namespace DI
             
             var playerInput = new PlayerControls();
             Container.Bind<PlayerControls>().FromInstance(playerInput).AsSingle();
+
+            Container.BindInterfacesTo<TimeManager>().AsSingle().NonLazy();
         }
 
         private void OnDisable()

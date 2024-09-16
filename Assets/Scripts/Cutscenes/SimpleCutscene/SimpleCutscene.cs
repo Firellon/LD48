@@ -75,6 +75,7 @@ namespace LD48.Cutscenes.SimpleCutscene
                 .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
                 .SetEase(Ease.Linear)
                 .SetLink(gameObject, LinkBehaviour.KillOnDisable)
+                .SetUpdate(UpdateType.Normal, true)
                 .OnComplete(OnTextAnimationEnd);
         }
 
