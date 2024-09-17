@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Day;
-using FunkyCode;
+﻿using FunkyCode;
 using Human;
+using Journal.JournalPanel;
 using LD48;
 using Signals;
 using UnityEngine;
+using Utilities.Monads;
 using Zenject;
 
 namespace Sanity
@@ -12,7 +12,6 @@ namespace Sanity
     public class PlayerSanityController : MonoBehaviour
     {
         [Inject] private HumanController humanController;
-        [Inject] private IDayNightCycle dayNightCycle;
 
         [SerializeField] private LightEventListener lightEventListener;
         [SerializeField] private float sanityLossInterval = 5f;
@@ -22,6 +21,29 @@ namespace Sanity
 
         private float timeInDarkness;
         private float timeSpentReading;
+        private bool journalPanelShown;
+
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<JournalPanelShownEvent>(OnJournalPanelShown);
+            SignalsHub.AddListener<JournalPanelHiddenEvent>(OnJournalPanelHidden);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<JournalPanelShownEvent>(OnJournalPanelShown);
+            SignalsHub.RemoveListener<JournalPanelHiddenEvent>(OnJournalPanelHidden);
+        }
+
+        private void OnJournalPanelShown(JournalPanelShownEvent evt)
+        {
+            journalPanelShown = true;
+        }
+        
+        private void OnJournalPanelHidden(JournalPanelHiddenEvent evt)
+        {
+            journalPanelShown = false;
+        }
 
         private void Start()
         {
@@ -65,15 +87,15 @@ namespace Sanity
                 return;
             }
 
-            humanController.Inventory.HandItem.IfPresent(item =>
+            var isReading = humanController.Inventory.HandItem.Match(handItem => handItem.ItemType == ItemType.Book, false) 
+                            || journalPanelShown;
+
+            if (isReading)
             {
-                if (item.ItemType == ItemType.Book)
-                {
-                    humanController.State.Sanity += sanityGain;
-                    SignalsHub.DispatchAsync(new PlayerSanityUpdatedEvent(humanController.State.Sanity));
-                    timeSpentReading -= sanityLossInterval;
-                }
-            });
+                humanController.State.Sanity += sanityGain;
+                SignalsHub.DispatchAsync(new PlayerSanityUpdatedEvent(humanController.State.Sanity));
+                timeSpentReading -= sanityLossInterval;
+            }
         }
 
         private void CheckSanityDeath()

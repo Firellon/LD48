@@ -18,7 +18,7 @@ namespace Journal.JournalPanel
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IJournalModel journalModel;
         [Inject] private JournalCurrentEntryController journalCurrentEntryController;
-        public bool IsVisible  => journalPanel.activeSelf;
+        public bool IsVisible => journalPanel.activeSelf;
 
         private List<JournalEntry> unlockedJournalEntries = new();
         private IMaybe<JournalEntry> currentUnlockedEntry = Maybe.Empty<JournalEntry>();
@@ -61,6 +61,8 @@ namespace Journal.JournalPanel
             journalPanel.SetActive(true);
 
             UpdateJournalPanelItems();
+            
+            SignalsHub.DispatchAsync(new JournalPanelShownEvent());
         }
 
         public void Hide()
@@ -68,6 +70,7 @@ namespace Journal.JournalPanel
             if (!IsVisible) return;
 
             journalPanel.SetActive(false);
+            SignalsHub.DispatchAsync(new JournalPanelHiddenEvent());
         }
         
         private void UpdateJournalPanelItems()
