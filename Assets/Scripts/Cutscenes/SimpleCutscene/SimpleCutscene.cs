@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Signals;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace LD48.Cutscenes.SimpleCutscene
     [Serializable]
     public class CutsceneFrame
     {
-        public Sprite Sprite;
+        [PreviewField(Height = 100)] public Sprite Sprite;
         [TextArea] public string Text;
     }
 
@@ -74,7 +75,7 @@ namespace LD48.Cutscenes.SimpleCutscene
                         .SetUpdate(UpdateType.Normal, true)
                         .WaitForCompletion();
 
-                yield return new WaitForSecondsRealtime(1f);
+                yield return new WaitForSecondsRealtime(5f);
 
                 currentFrameIndex++;
                 UpdateImageAndText();
