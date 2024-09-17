@@ -75,7 +75,7 @@ namespace LD48.Cutscenes.SimpleCutscene
                         .SetUpdate(UpdateType.Normal, true)
                         .WaitForCompletion();
 
-                yield return new WaitForSecondsRealtime(5f);
+                yield return new WaitForSecondsRealtime(2f);
 
                 currentFrameIndex++;
                 UpdateImageAndText();
