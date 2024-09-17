@@ -2,6 +2,7 @@
 using System.Linq;
 using Environment;
 using Journal.ToggleButton;
+using Player;
 using Signals;
 using Zenject;
 
@@ -29,6 +30,8 @@ namespace Journal
             view.JournalButton.onClick.AddListener(ToggleJournal);
             
             SignalsHub.AddListener<MapDiaryCollectedSignal>(OnDiaryCollected);
+            SignalsHub.AddListener<PlayerMovedEvent>(OnPlayerMovedEvent);
+            SignalsHub.AddListener<PlayerActedEvent>(OnPlayerActedEvent);
 
             UpdateViewVisibility();
         }
@@ -38,12 +41,30 @@ namespace Journal
             view.JournalButton.onClick.RemoveListener(ToggleJournal);
             
             SignalsHub.RemoveListener<MapDiaryCollectedSignal>(OnDiaryCollected);
+            SignalsHub.RemoveListener<PlayerMovedEvent>(OnPlayerMovedEvent);
+            SignalsHub.RemoveListener<PlayerActedEvent>(OnPlayerActedEvent);
         }
 
         private void OnDiaryCollected(MapDiaryCollectedSignal signal)
         {
             // Show a notification over the journal entry button?
             UpdateViewVisibility();
+        }
+        
+        private void OnPlayerMovedEvent(PlayerMovedEvent signal)
+        {
+            if (panelController.IsVisible)
+            {
+                panelController.Hide();
+            }
+        }
+        
+        private void OnPlayerActedEvent(PlayerActedEvent signal)
+        {
+            if (panelController.IsVisible)
+            {
+                panelController.Hide();
+            }
         }
 
         private void UpdateViewVisibility()

@@ -44,6 +44,8 @@ namespace Player
                 return;
             }
             
+            OnPlayerMoved();
+            
             var moveAmount = ctx.ReadValue<Vector2>(); 
             horizontal = moveAmount.x;
             vertical = moveAmount.y;
@@ -55,6 +57,7 @@ namespace Player
             if (IsPointerOverUIElement())
                 return;
 
+            OnPlayerActed();
             humanController.Act();
         }
 
@@ -66,12 +69,15 @@ namespace Player
         public void OnInteract(InputAction.CallbackContext ctx)
         {
             if (!isEnabled) return;
+
+            OnPlayerActed();
             humanController.Interact();
         }
 
         public void OnInventory(InputAction.CallbackContext ctx)
         {
             if (!isEnabled) return;
+            
             SignalsHub.DispatchAsync(new ToggleInventoryCommand());
         }
         
@@ -86,6 +92,16 @@ namespace Player
             var isPointerOverUIElement = clickResults.Count > 0 &&
                                          clickResults.Any(it => it.gameObject.layer == LayerMask.NameToLayer("UI"));
             return isPointerOverUIElement;
+        }
+        
+        private void OnPlayerMoved()
+        {
+            SignalsHub.DispatchAsync(new PlayerMovedEvent());
+        }
+        
+        private void OnPlayerActed()
+        {
+            SignalsHub.DispatchAsync(new PlayerActedEvent());
         }
 
         private void Awake()
