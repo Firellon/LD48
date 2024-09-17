@@ -1,6 +1,8 @@
 ﻿using System;
+using Player;
 using Signals;
 using Stranger;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
@@ -12,9 +14,9 @@ namespace Dialogue
         private readonly ICharacterRegistry characterRegistry;
         
         private bool isShown = false;
+        private float dialogueShownAt;
+        private const double HideDialogueOnPlayerMoveSeconds = 1;
 
-        private const double KShowDialogueDurationSeconds = 3;
-        
         [Inject]
         private DialogueController(DialogueView view, ICharacterRegistry characterRegistry, PlayerControls playerInput)
         {
@@ -25,6 +27,8 @@ namespace Dialogue
             
             playerInput.UI.Enable();
             playerInput.UI.Click.performed += OnMouseClick;
+            
+            SignalsHub.AddListener<PlayerMovedEvent>(OnPlayerMoved);
         }
 
         private void OnMouseClick(InputAction.CallbackContext obj)
@@ -36,6 +40,7 @@ namespace Dialogue
         {
             SignalsHub.AddListener<ShowDialogueEntryCommand>(OnShowDialogueEntry);
             SignalsHub.AddListener<HideDialogueEntryCommand>(OnHideDialogueEntry);
+            
         }
 
         public void Dispose()
@@ -50,6 +55,7 @@ namespace Dialogue
 
             view.gameObject.SetActive(true); // TODO: Fade-in animation
             isShown = true;
+            dialogueShownAt = Time.time;
 
             if (entry.EntryCharacter == null && characterRegistry.PlayerCharacter.IsNotPresent)
             {
@@ -69,6 +75,14 @@ namespace Dialogue
         private void OnHideDialogueEntry(HideDialogueEntryCommand command)
         {
             HideDialogueEntry();
+        }
+        
+        private void OnPlayerMoved(PlayerMovedEvent evt)
+        {
+            if (Time.time >= dialogueShownAt + HideDialogueOnPlayerMoveSeconds)
+            {
+                HideDialogueEntry();
+            }
         }
 
         private void HideDialogueEntry()
