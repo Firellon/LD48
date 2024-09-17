@@ -5,6 +5,7 @@ using System.Linq;
 using Day;
 using DG.Tweening;
 using Environment;
+using Hint;
 using Human.Signal;
 using Inventory;
 using Inventory.Signals;
@@ -30,6 +31,7 @@ namespace Human
         [Inject] private IMapObjectRegistry mapObjectRegistry;
         [Inject] private VisualsConfig visualsConfig;
 
+        public bool IsPlayer => inventory is PlayerHumanInventory;
         public IInventory Inventory => inventory;
         public HumanState State { get; } = new();
 
@@ -72,6 +74,8 @@ namespace Human
 
         [ShowInInspector, ReadOnly] private readonly List<IInteractable> interactableObjects = new();
 
+        public IReadOnlyList<IInteractable> InteractableObjects => interactableObjects;
+
         #region Audio
 
         public AudioSource audio;
@@ -103,12 +107,14 @@ namespace Human
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
+            if (IsPlayer)
+                SignalsHub.AddListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
         }
 
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
+            if (IsPlayer)
+                SignalsHub.RemoveListener<PlayerHandItemUpdatedEvent>(OnPlayerItemUpdated);
         }
 
         private void OnPlayerItemUpdated(PlayerHandItemUpdatedEvent evt)
@@ -174,7 +180,7 @@ namespace Human
                     {
                         if (interactableObject.CanInteract())
                         {
-                            interactableObject.SetHighlight(true);    
+                            interactableObject.SetHighlight(true); // TODO: Should we emit InteractableEnter events instead?    
                         }
                     }
                 }
@@ -229,11 +235,10 @@ namespace Human
                         $"OnCollisionEnter2D > {other.gameObject} has Item/MapObject tag and lacks IInteractable component!");
                     return;
                 }
-
-                interactable.SetHighlight(true); // TODO: Show an "E" button to Interact with the Interactable instead
-
+                
                 if (interactableObjects.Contains(interactable)) return;
                 interactableObjects.Add(interactable);
+                SignalsHub.DispatchAsync(new InteractableEnterEvent(this, interactable));
             }
         }
 
@@ -249,7 +254,6 @@ namespace Human
                     return;
                 }
 
-                interactable.SetHighlight(false); // TODO: Hide an "E" button to Interact with the Interactable instead
                 interactableObjects.Remove(interactable);
                 SignalsHub.DispatchAsync(new InteractableExitEvent(this, interactable));
             }
@@ -557,9 +561,10 @@ namespace Human
                 // DropItems();
                 // TODO: Update Collider on other and on recover
                 if (hitSound) audio.PlayOneShot(hitSound);
+                
                 foreach (var interactableObject in interactableObjects)
                 {
-                    interactableObject.SetHighlight(false);
+                    interactableObject.SetHighlight(false); // TODO: Should we emit InteractableExit events instead?
                 }
 
                 if (!inventory.MoveHandItemToInventory())
