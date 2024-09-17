@@ -85,7 +85,7 @@ namespace Journal.JournalPanel
 
             if (unlockedJournalEntries.Any())
             {
-                OpenJournalEntry(new OpenJournalEntryCommand(unlockedJournalEntries.First()));
+                SignalsHub.DispatchAsync(new OpenJournalEntryCommand(unlockedJournalEntries.First()));
             }
         }
     }

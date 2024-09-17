@@ -78,7 +78,7 @@ namespace Map
 
         public bool ContainsItem(ItemType itemType)
         {
-            return ItemObjects.Any(item => item.GetComponent<ItemController>().Item.ItemType == itemType);
+            return ItemObjects.Any(item => item != null && item.GetComponent<ItemController>().Item.ItemType == itemType);
         }
     }
 

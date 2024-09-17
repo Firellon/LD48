@@ -188,6 +188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entryNameText: {fileID: 1872414164834346849}
   entryButton: {fileID: 8421510543821959754}
+  selectedTextColor: {r: 0.8705883, g: 0.61960787, b: 0.2509804, a: 1}
+  unselectedTextColor: {r: 0.9960785, g: 0.9960785, b: 0.9960785, a: 1}
 --- !u!114 &8421510543821959754
 MonoBehaviour:
   m_ObjectHideFlags: 0
