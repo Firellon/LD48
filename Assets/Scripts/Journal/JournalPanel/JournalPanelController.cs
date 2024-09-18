@@ -38,6 +38,16 @@ namespace Journal.JournalPanel
         private void OnJournalEntryUnlocked(JournalEntryUnlockedSignal signal)
         {
             UpdateJournalPanelItems();
+
+            if (IsVisible)
+            {
+                OpenJournalEntry(new OpenJournalEntryCommand(signal.UnlockedEntry));
+            }
+            else
+            {
+                Show();
+                OpenJournalEntry(new OpenJournalEntryCommand(signal.UnlockedEntry));
+            }
         }
         
         private void OpenJournalEntry(OpenJournalEntryCommand signal)
@@ -58,7 +68,7 @@ namespace Journal.JournalPanel
         {
             if (IsVisible) return;
 
-            journalPanel.SetActive(true);
+            journalPanel.SetActive(true); // TODO: Show animation
 
             UpdateJournalPanelItems();
             
@@ -69,7 +79,7 @@ namespace Journal.JournalPanel
         {
             if (!IsVisible) return;
 
-            journalPanel.SetActive(false);
+            journalPanel.SetActive(false); // TODO: Hide animation
             SignalsHub.DispatchAsync(new JournalPanelHiddenEvent());
         }
         
