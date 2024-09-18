@@ -1,3 +1,5 @@
+using System;
+using LD48.Cutscenes;
 using Player;
 using Signals;
 using UnityEngine;
@@ -8,6 +10,16 @@ namespace LD48
     public class GameController: MonoBehaviour
     {
         private bool isEnabled = true;
+
+        private void Start()
+        {
+            #if !UNITY_EDITOR
+            SignalsHub.DispatchAsync(new StartCutsceneSignal
+            {
+                Type = CutsceneType.Intro,
+            });
+            #endif
+        }
 
         private void OnEnable()
         {
