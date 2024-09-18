@@ -2,6 +2,7 @@
 
 namespace Journal.JournalPanel
 {
+    // NOT USED: remove?
     public class JournalPanelView : MonoBehaviour
     {
         [SerializeField] private GameObject journalPanel;

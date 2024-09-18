@@ -1,4 +1,5 @@
-﻿using Journal.JournalCurrentEntry;
+﻿using Dialogue.Entry;
+using Journal.JournalCurrentEntry;
 using Journal.JournalPanel;
 using Journal.ToggleButton;
 using UnityEngine;
@@ -11,7 +12,8 @@ namespace Journal
         [SerializeField] private JournalToggleButtonView journalButtonView;
         [SerializeField] private JournalPanelController journalPanelController;
         [SerializeField] private JournalCurrentEntryView journalCurrentEntryView;
-        
+        [SerializeField] private DialogueEntry tooDarkCantReadDialogueEntry;
+
         public override void InstallBindings()
         {
             Container.BindInterfacesTo<JournalModel>().AsSingle();
@@ -25,7 +27,8 @@ namespace Journal
             
             Container.BindInterfacesTo<JournalPanelController>()
                 .FromInstance(journalPanelController);
-            
+
+            Container.Bind<IDialogueEntry>().FromInstance(tooDarkCantReadDialogueEntry).AsSingle();
         }
     }
 }

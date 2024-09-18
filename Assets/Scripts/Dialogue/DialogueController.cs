@@ -52,6 +52,11 @@ namespace Dialogue
         private void OnShowDialogueEntry(ShowDialogueEntryCommand command)
         {
             var entry = command.DialogueEntry;
+            if (entry == null)
+            {
+                throw new Exception(
+                    "No Dialogue Entry provided!!");
+            }
 
             view.gameObject.SetActive(true); // TODO: Fade-in animation
             isShown = true;

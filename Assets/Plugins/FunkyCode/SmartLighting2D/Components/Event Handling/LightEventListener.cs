@@ -65,9 +65,9 @@ namespace FunkyCode
         {
             visability = 0;
 
-            if (CollisionInfo == null)
+            if (CollisionInfo == null )
             {
-                if (addDayLight)
+                if (addDayLight && lightCycle != null)
                 {
                     visability = 1f - lightCycle.Time;
                 }

@@ -2,6 +2,7 @@
 using Human;
 using Journal.JournalPanel;
 using LD48;
+using Sanity.Signals;
 using Signals;
 using UnityEngine;
 using Utilities.Monads;
@@ -66,12 +67,20 @@ namespace Sanity
                 {
                     if (lightEventListener.visability > darknessVisibilityThreshold)
                     {
+                        if (timeInDarkness > 0)
+                        {
+                            SignalsHub.DispatchAsync(new PlayerLitEvent());
+                        }
                         timeInDarkness = 0;
                         CheckSanityRestoration();
                     }
                     else
                     {
                         // Debug.Log($"Visability {lightEventListener.visability} < {darknessVisibilityThreshold}");
+                        if (timeInDarkness <= 0)
+                        {
+                            SignalsHub.DispatchAsync(new PlayerUnlitEvent());
+                        }
                         timeInDarkness += Time.deltaTime;
                     }
                 }

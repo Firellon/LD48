@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Dialogue;
+using Dialogue.Entry;
 using Environment;
 using Journal.ToggleButton;
 using Player;
+using Sanity.Signals;
 using Signals;
 using Zenject;
 
@@ -13,16 +16,21 @@ namespace Journal
         private readonly JournalToggleButtonView view;
         private readonly IJournalModel model;
         private readonly IJournalPanelController panelController;
+        private readonly IDialogueEntry tooDarkCantReadDialogueEntry;
+
+        private bool playerIsLit = true;
 
         [Inject]
         public JournalToggleButtonController(
             JournalToggleButtonView view,
             IJournalModel model,
-            IJournalPanelController panelController)
+            IJournalPanelController panelController,
+            IDialogueEntry tooDarkCantReadDialogueEntry)
         {
             this.view = view;
             this.model = model;
             this.panelController = panelController;
+            this.tooDarkCantReadDialogueEntry = tooDarkCantReadDialogueEntry;
         }
         
         public void Initialize()
@@ -32,6 +40,8 @@ namespace Journal
             SignalsHub.AddListener<MapDiaryCollectedSignal>(OnDiaryCollected);
             SignalsHub.AddListener<PlayerMovedEvent>(OnPlayerMovedEvent);
             SignalsHub.AddListener<PlayerActedEvent>(OnPlayerActedEvent);
+            SignalsHub.AddListener<PlayerLitEvent>(OnPlayerLit);
+            SignalsHub.AddListener<PlayerUnlitEvent>(OnPlayerUnlit);
 
             UpdateViewVisibility();
         }
@@ -43,6 +53,8 @@ namespace Journal
             SignalsHub.RemoveListener<MapDiaryCollectedSignal>(OnDiaryCollected);
             SignalsHub.RemoveListener<PlayerMovedEvent>(OnPlayerMovedEvent);
             SignalsHub.RemoveListener<PlayerActedEvent>(OnPlayerActedEvent);
+            SignalsHub.RemoveListener<PlayerLitEvent>(OnPlayerLit);
+            SignalsHub.RemoveListener<PlayerUnlitEvent>(OnPlayerUnlit);
         }
 
         private void OnDiaryCollected(MapDiaryCollectedSignal signal)
@@ -66,6 +78,21 @@ namespace Journal
                 panelController.Hide();
             }
         }
+        
+        private void OnPlayerLit(PlayerLitEvent signal)
+        {
+            playerIsLit = true;
+        }
+        
+        private void OnPlayerUnlit(PlayerUnlitEvent signal)
+        {
+            playerIsLit = false;
+            if (panelController.IsVisible)
+            {
+                panelController.Hide();
+                SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(tooDarkCantReadDialogueEntry));
+            }
+        }
 
         private void UpdateViewVisibility()
         {
@@ -80,7 +107,14 @@ namespace Journal
             }
             else
             {
-                panelController.Show();
+                if (playerIsLit)
+                {
+                    panelController.Show();   
+                }
+                else
+                {
+                    SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(tooDarkCantReadDialogueEntry));
+                }
             }
         }
     }
