@@ -496,7 +496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5033056818928372962}
   - component: {fileID: 146866376786529458}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
