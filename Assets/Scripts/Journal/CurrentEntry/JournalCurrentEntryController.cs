@@ -1,5 +1,7 @@
 using Journal.JournalCurrentEntry;
+using LD48.AudioTool;
 using Pagination;
+using Signals;
 using Utilities.Monads;
 
 namespace Journal
@@ -43,12 +45,14 @@ namespace Journal
         private void OnPreviousPage(int pageIndex)
         {
             // TODO: FadeIn/FadeOut Animation
+            SignalsHub.DispatchAsync(new PlaySoundSignal{ Name = SoundName.FlipPageSound });
             view.EntryDescriptionText.text = journalEntry.EntryDescriptions[pageIndex];
         }
 
         private void OnNextPage(int pageIndex)
         {
             // TODO: FadeIn/FadeOut Animation
+            SignalsHub.DispatchAsync(new PlaySoundSignal{ Name = SoundName.FlipPageSound });
             view.EntryDescriptionText.text = journalEntry.EntryDescriptions[pageIndex];
         }
     }

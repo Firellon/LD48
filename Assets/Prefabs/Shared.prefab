@@ -647,7 +647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489386c9df294da6b57898b109bf5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfMapSize: {x: 5, y: 5}
+  halfMapSize: {x: 10, y: 10}
   mapSegmentSize: {x: 12, y: 8}
   trailsTilemapPrefab: {fileID: 7773584424159345862, guid: 700cb9a4f4548db4ebc4ec87fec0a43e, type: 3}
   trailRuleTile: {fileID: 11400000, guid: a687057b5280f6849a62e617a3da8fce, type: 2}
@@ -662,10 +662,10 @@ MonoBehaviour:
   mapObjectParent: {fileID: 0}
   mapObjectDensity: {x: 4, y: 4}
   mapObjectSpawnProbability: 0.1
-  spawnMapObjectTypes: 06000000040000000600000006000000
+  spawnMapObjectTypes: 060000000400000006000000
   itemParent: {fileID: 0}
   itemDensity: {x: 4, y: 4}
-  itemSpawnProbability: 0.25
+  itemSpawnProbability: 0.35
   spawnItemTypes: 040000000100000001000000010000000100000001000000010000000100000001000000
   minGateConnectivity: 3
   minGateDistance: 3
@@ -680,6 +680,7 @@ GameObject:
   m_Component:
   - component: {fileID: 119920525317006118}
   - component: {fileID: 5955199551761647002}
+  - component: {fileID: 796171507303323841}
   - component: {fileID: 7805325710931177205}
   m_Layer: 0
   m_Name: SoundContainer
@@ -718,6 +719,22 @@ MonoBehaviour:
   dayMusic: {fileID: 3904440943210791185, guid: a82487d0b4da3e44f808870907bea6a3, type: 3}
   nightMusic: {fileID: 3904440943210791185, guid: f1e0fbf1fc89efc44992648c077f850b, type: 3}
   chasingMusic: {fileID: 3904440943210791185, guid: f1a4708b8f16d1e43a6ff434f1f07c00, type: 3}
+--- !u!114 &796171507303323841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6112098194733277904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91166cfb3a404d358caa0f4aa457815f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundSamples:
+    keyData: 0a000000
+    valueData:
+    - {fileID: 3904440943210791185, guid: 1f496652aadc1a14d84b34fedbd3d184, type: 3}
 --- !u!114 &7805325710931177205
 MonoBehaviour:
   m_ObjectHideFlags: 0
