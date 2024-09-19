@@ -2,11 +2,11 @@ namespace Environment
 {
     public class MapDiaryCollectedSignal
     {
-        public MapDialogueEntry MapDialogueEntry { get; }
+        public MapJournalEntry MapJournalEntry { get; }
 
-        public MapDiaryCollectedSignal(MapDialogueEntry mapDialogueEntry)
+        public MapDiaryCollectedSignal(MapJournalEntry mapJournalEntry)
         {
-            MapDialogueEntry = mapDialogueEntry;
+            MapJournalEntry = mapJournalEntry;
         }
     }
 }

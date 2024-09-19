@@ -38,20 +38,15 @@ namespace Journal.JournalPanel
         private void OnJournalEntryUnlocked(JournalEntryUnlockedSignal signal)
         {
             UpdateJournalPanelItems();
-
-            if (IsVisible)
-            {
-                OpenJournalEntry(new OpenJournalEntryCommand(signal.UnlockedEntry));
-            }
-            else
-            {
-                Show();
-                OpenJournalEntry(new OpenJournalEntryCommand(signal.UnlockedEntry));
-            }
         }
         
         private void OpenJournalEntry(OpenJournalEntryCommand signal)
         {
+            if (!IsVisible)
+            {
+                Show();
+            }
+            
             currentUnlockedEntry = unlockedJournalEntries.Contains(signal.Entry) 
                 ? Maybe.Of(signal.Entry) 
                 : Maybe.Empty<JournalEntry>();
@@ -71,6 +66,10 @@ namespace Journal.JournalPanel
             journalPanel.SetActive(true); // TODO: Show animation
 
             UpdateJournalPanelItems();
+            if (unlockedJournalEntries.Any())
+            {
+                SignalsHub.DispatchAsync(new OpenJournalEntryCommand(unlockedJournalEntries.First()));
+            }
             
             SignalsHub.DispatchAsync(new JournalPanelShownEvent());
         }
@@ -91,11 +90,6 @@ namespace Journal.JournalPanel
             {
                 var journalEntryView = prefabPool.Spawn(journalEntryPrefab, journalPanelContent);
                 journalEntryView.GetComponent<JournalEntryView>().SetUp(journalEntry);
-            }
-
-            if (unlockedJournalEntries.Any())
-            {
-                SignalsHub.DispatchAsync(new OpenJournalEntryCommand(unlockedJournalEntries.First()));
             }
         }
     }

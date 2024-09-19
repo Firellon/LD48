@@ -1,3 +1,4 @@
+using System.Collections;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -9,10 +10,13 @@ namespace Sanity
     {
         [SerializeField] private TextMeshProUGUI sanityText;
         [SerializeField] private Image sanityImage;
+        [Space]
         [SerializeField] private GameObject sanityGrowthArrow;
         [SerializeField] private GameObject sanityLossArrow;
+        [SerializeField] private float arrowShowSeconds = 1f;
 
         private int lastPlayerSanity = 0;
+        private Coroutine hideHighlightCoroutine;
 
         private void OnEnable()
         {
@@ -38,14 +42,28 @@ namespace Sanity
             {
                 sanityGrowthArrow.SetActive(false);
                 sanityLossArrow.SetActive(true);
+                
+                if (hideHighlightCoroutine != null) StopCoroutine(hideHighlightCoroutine);
+                hideHighlightCoroutine = StartCoroutine(HideHighlightCoroutine());
             } 
             else if (lastPlayerSanity < evt.Sanity)
             {
                 sanityGrowthArrow.SetActive(true);
                 sanityLossArrow.SetActive(false); 
+                
+                if (hideHighlightCoroutine != null) StopCoroutine(hideHighlightCoroutine);
+                hideHighlightCoroutine = StartCoroutine(HideHighlightCoroutine());
             }
 
             lastPlayerSanity = evt.Sanity;
+        }
+
+        private IEnumerator HideHighlightCoroutine()
+        {
+            yield return new WaitForSeconds(arrowShowSeconds);
+            
+            sanityGrowthArrow.SetActive(false);
+            sanityLossArrow.SetActive(false);
         }
     }
 }

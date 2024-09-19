@@ -69,6 +69,7 @@ namespace Sanity
                     {
                         if (timeInDarkness > 0)
                         {
+                            Debug.Log($"Visability {lightEventListener.visability} > {darknessVisibilityThreshold} => playerLit");
                             SignalsHub.DispatchAsync(new PlayerLitEvent());
                         }
                         timeInDarkness = 0;
@@ -76,9 +77,10 @@ namespace Sanity
                     }
                     else
                     {
-                        // Debug.Log($"Visability {lightEventListener.visability} < {darknessVisibilityThreshold}");
+                        
                         if (timeInDarkness <= 0)
                         {
+                            Debug.Log($"Visability {lightEventListener.visability} <= {darknessVisibilityThreshold} => playerUnlit");
                             SignalsHub.DispatchAsync(new PlayerUnlitEvent());
                         }
                         timeInDarkness += Time.deltaTime;
