@@ -42,15 +42,6 @@ namespace LD48.Cutscenes
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Debug.LogWarning(1234);
-                StartCutscene(CutsceneType.Intro);
-            }
-        }
-
         private void OnEnable()
         {
             SignalsHub.AddListener<StartCutsceneSignal>(OnStartCutsceneSignal);
