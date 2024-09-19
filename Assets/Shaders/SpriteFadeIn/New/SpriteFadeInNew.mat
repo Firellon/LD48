@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SpriteFadeIn
-  m_Shader: {fileID: 4800000, guid: 51c40d89103df7e4e9724ce7d1278e21, type: 3}
+  m_Name: SpriteFadeInNew
+  m_Shader: {fileID: 4800000, guid: 958086a3eaeb142c6b849d34dc95a935, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,11 +28,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BorderMask:
-        m_Texture: {fileID: 2800000, guid: 5705dda99c4a74c43a85c7568a787ef9, type: 3}
+        m_Texture: {fileID: 2800000, guid: fa139b66269864b73abbe4643ecbc1c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DiagonalMask:
-        m_Texture: {fileID: 2800000, guid: 55b6460a240e249829a9d91814c649e8, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: eeb1b24255644bc4aaa483a1269cfa53, type: 3}
+        m_Texture: {fileID: 2800000, guid: 55b6460a240e249829a9d91814c649e8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SketchMask:
@@ -64,7 +64,8 @@ Material:
     - _FadeValue: 0
     - _Float0: 0
     - _Float1: 1
-    - _Float2: -1
+    - _Float2: 0
+    - _Float3: 1
     - _MaskOffset: -1
     - _Stencil: 0
     - _StencilComp: 8

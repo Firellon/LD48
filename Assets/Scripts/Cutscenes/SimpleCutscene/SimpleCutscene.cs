@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using LD48.AudioTool;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -51,6 +52,7 @@ namespace LD48.Cutscenes.SimpleCutscene
         public void OnStart()
         {
             StartCoroutine(nameof(CutsceneProcess));
+            SignalsHub.DispatchAsync(new PlayMusicSignal { Type = MusicType.Cutscene });
         }
 
         private IEnumerator CutsceneProcess()

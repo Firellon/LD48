@@ -33,6 +33,16 @@ namespace LD48
 
         private void Update()
         {
+            #if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                SignalsHub.DispatchAsync(new StartCutsceneSignal
+                {
+                    Type = CutsceneType.Intro,
+                });
+            }
+            #endif
+
             #if !UNITY_WEBGL && !UNITY_EDITOR
             if (Input.GetKey(KeyCode.Escape) || Input.GetButtonDown("Cancel"))
             {

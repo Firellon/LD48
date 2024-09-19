@@ -14,6 +14,7 @@ namespace LD48.AudioTool
         DayMusic,
         NightMusic,
         FollowingMusic,
+        Cutscene,
     }
 
     public struct PlayMusicSignal
@@ -36,6 +37,7 @@ namespace LD48.AudioTool
         [SerializeField] private SoundSample dayMusic;
         [SerializeField] private SoundSample nightMusic;
         [SerializeField] private SoundSample chasingMusic;
+        [SerializeField] private SoundSample cutsceneMusic;
 
         [Inject] private ISoundManager<SoundType> soundManager;
 
@@ -126,6 +128,7 @@ namespace LD48.AudioTool
                 MusicType.DayMusic => dayMusic,
                 MusicType.NightMusic => nightMusic,
                 MusicType.FollowingMusic => chasingMusic,
+                MusicType.Cutscene => cutsceneMusic,
             };
         }
 
