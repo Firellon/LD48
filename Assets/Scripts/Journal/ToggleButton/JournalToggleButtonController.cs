@@ -7,6 +7,7 @@ using Journal.ToggleButton;
 using Player;
 using Sanity.Signals;
 using Signals;
+using UnityEngine;
 using Zenject;
 
 namespace Journal
@@ -38,6 +39,7 @@ namespace Journal
             view.JournalButton.onClick.AddListener(ToggleJournal);
             
             SignalsHub.AddListener<MapDiaryCollectedSignal>(OnDiaryCollected);
+            SignalsHub.AddListener<JournalEntryUnlockedSignal>(OnJournalEntryUnlocked);
             SignalsHub.AddListener<PlayerMovedEvent>(OnPlayerMovedEvent);
             SignalsHub.AddListener<PlayerActedEvent>(OnPlayerActedEvent);
             SignalsHub.AddListener<PlayerLitEvent>(OnPlayerLit);
@@ -51,6 +53,7 @@ namespace Journal
             view.JournalButton.onClick.RemoveListener(ToggleJournal);
             
             SignalsHub.RemoveListener<MapDiaryCollectedSignal>(OnDiaryCollected);
+            SignalsHub.RemoveListener<JournalEntryUnlockedSignal>(OnJournalEntryUnlocked);
             SignalsHub.RemoveListener<PlayerMovedEvent>(OnPlayerMovedEvent);
             SignalsHub.RemoveListener<PlayerActedEvent>(OnPlayerActedEvent);
             SignalsHub.RemoveListener<PlayerLitEvent>(OnPlayerLit);
@@ -61,6 +64,15 @@ namespace Journal
         {
             // Show a notification over the journal entry button?
             UpdateViewVisibility();
+        }
+        
+        private void OnJournalEntryUnlocked(JournalEntryUnlockedSignal signal)
+        {
+            if (playerIsLit)
+            {
+                Debug.Log("OnJournalEntryUnlocked > playerIsLit, opening the Journal");
+                SignalsHub.DispatchAsync(new OpenJournalEntryCommand(signal.UnlockedEntry));   
+            }
         }
         
         private void OnPlayerMovedEvent(PlayerMovedEvent signal)
