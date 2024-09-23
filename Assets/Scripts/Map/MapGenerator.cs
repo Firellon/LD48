@@ -96,13 +96,10 @@ namespace Map
 
         #region Segments
 
-        /**
-         * How Many empty segments should a segment have to warrant a gate creation?
-         */
-        [SerializeField] private int minGateConnectivity = 3;
-
-        [SerializeField] private float minGateDistance = 3f;
         [SerializeField] private TextMeshProUGUI playerSegmentText;
+
+        [SerializeField] private List<Vector2Int> potentialKeySegments = new List<Vector2Int>();
+        [SerializeField] private List<Vector2Int> potentialExitSegments = new List<Vector2Int>();
 
         #endregion
 
@@ -173,9 +170,11 @@ namespace Map
         private void Start()
         {
             var minDistanceBetweenKeyAndExit = Mathf.Max(halfMapSize.x / 2, halfMapSize.y / 2);
-            keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
-            exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
             diaryMapSegmentPositions = GetRandomMapSegmentPositions(journalEntryRegistry.Entries.Count);
+                
+            keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
+            exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();;
+            // TODO: Replace with choosing one point of the list of preset positions
             while (Vector2Int.Distance(keyMapSegmentPosition, exitMapSegmentPosition) < minDistanceBetweenKeyAndExit)
             {
                 exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
@@ -334,16 +333,6 @@ namespace Map
             return neighbours;
         }
 
-        private IMaybe<MapSegment> FindGateSegment(Vector2Int segmentPosition, MapSegmentNeighbour neighbour)
-        {
-            var openSegments = mapSegmentKeysToMapSegments.Values
-                .Where(segment => !segment.MapSegmentNeighbourKeys.ContainsKey(neighbour) &&
-                                  GetShortestDistance(segmentPosition, segment.Key) >= minGateDistance).ToList();
-            if (openSegments.None()) return Maybe.Empty<MapSegment>();
-
-            return randomService.Sample(openSegments).ToMaybe();
-        }
-
         private float GetShortestDistance(Vector2Int segmentPosition, string segmentKey)
         {
             return positionsToMapSegmentKeys
@@ -405,28 +394,14 @@ namespace Map
                 keyHasBeenSpawned = true;
             }
 
-            // if (diaryMapSegmentPositions.Contains(segmentPosition))
-            // {
+            if (diaryMapSegmentPositions.Contains(segmentPosition))
+            {
                 Debug.Log($"Generate Diary at {segmentPosition}");
                 mapObjects.Add(GenerateDiary(topLeftCorner, bottomRightCorner));
-            // }
+            }
 
             var mapSegmentKey = MapSegment.ToMapSegmentCoordinatesKey(segmentPosition);
             var mapSegmentNeighboursKeys = FindAdjacentSegments(segmentPosition, out var openNeighbourKeys);
-
-            if (openNeighbourKeys.Count >= minGateConnectivity)
-            {
-                var openNeighbour = openNeighbourKeys[randomService.Int(0, openNeighbourKeys.Count)];
-                var oppositeNeighbour = openNeighbour.GetOpposite();
-                var maybeGateSegment = FindGateSegment(segmentPosition, oppositeNeighbour);
-                maybeGateSegment.IfPresent(gateSegment =>
-                {
-                    Debug.Log(
-                        $"{nameof(CreateMapSegment)} > {openNeighbour}-{oppositeNeighbour} gate in {segmentPosition}={gateSegment.Position}");
-                    mapSegmentNeighboursKeys.Add(openNeighbour, gateSegment.Key);
-                    positionsToMapSegmentKeys.Add(segmentPosition + openNeighbour.GetPosition(), gateSegment.Key);
-                });
-            }
 
             var mapSegment = new MapSegment
             {

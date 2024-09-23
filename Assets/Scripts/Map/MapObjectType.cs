@@ -11,5 +11,6 @@ namespace Map
         Corpse = 6,
         GuidePost = 7,
         Diary = 8,
+        Pentagram = 9,
     }
 }
