@@ -139,6 +139,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c896cacdff9a5e94a8bd0050555c7330, type: 2}
   - {fileID: 11400000, guid: c5e468b37dfdaaa4ea1cad4a1ea60509, type: 2}
   - {fileID: 11400000, guid: 2380dfc63680e8645adcd98396fe2cfd, type: 2}
+  - {fileID: 11400000, guid: cef12275847885c44acdc8b37a6a1631, type: 2}
 --- !u!1 &1993651754517214296
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,9 +668,17 @@ MonoBehaviour:
   itemDensity: {x: 4, y: 4}
   itemSpawnProbability: 0.35
   spawnItemTypes: 040000000100000001000000010000000100000001000000010000000100000001000000
-  minGateConnectivity: 3
-  minGateDistance: 3
   playerSegmentText: {fileID: 0}
+  potentialKeySegments:
+  - {x: -5, y: -5}
+  - {x: 5, y: -5}
+  - {x: 5, y: 5}
+  - {x: -5, y: 5}
+  potentialExitSegments:
+  - {x: 7, y: -3}
+  - {x: 3, y: -7}
+  - {x: -7, y: 3}
+  - {x: -3, y: 7}
 --- !u!1 &6112098194733277904
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +728,7 @@ MonoBehaviour:
   dayMusic: {fileID: 3904440943210791185, guid: a82487d0b4da3e44f808870907bea6a3, type: 3}
   nightMusic: {fileID: 3904440943210791185, guid: f1e0fbf1fc89efc44992648c077f850b, type: 3}
   chasingMusic: {fileID: 3904440943210791185, guid: f1a4708b8f16d1e43a6ff434f1f07c00, type: 3}
+  cutsceneMusic: {fileID: 0}
 --- !u!114 &796171507303323841
 MonoBehaviour:
   m_ObjectHideFlags: 0

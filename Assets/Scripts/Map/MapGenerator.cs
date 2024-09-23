@@ -14,7 +14,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utilities;
-using Utilities.Monads;
 using Utilities.Prefabs;
 using Utilities.RandomService;
 using Zenject;
@@ -98,8 +97,8 @@ namespace Map
 
         [SerializeField] private TextMeshProUGUI playerSegmentText;
 
-        [SerializeField] private List<Vector2Int> potentialKeySegments = new List<Vector2Int>();
-        [SerializeField] private List<Vector2Int> potentialExitSegments = new List<Vector2Int>();
+        [SerializeField] private List<Vector2Int> potentialKeySegments = new();
+        [SerializeField] private List<Vector2Int> potentialExitSegments = new();
 
         #endregion
 
@@ -107,6 +106,7 @@ namespace Map
 
         [ShowInInspector, ReadOnly] private Vector2Int keyMapSegmentPosition;
         [ShowInInspector, ReadOnly] private Vector2Int exitMapSegmentPosition;
+        [ShowInInspector, ReadOnly] private List<Vector2Int> waypointMapPositions = new();
         [ShowInInspector, ReadOnly] private List<Vector2Int> diaryMapSegmentPositions;
         [ShowInInspector, ReadOnly] private bool keyHasBeenSpawned;
 
@@ -169,16 +169,13 @@ namespace Map
 
         private void Start()
         {
-            var minDistanceBetweenKeyAndExit = Mathf.Max(halfMapSize.x / 2, halfMapSize.y / 2);
             diaryMapSegmentPositions = GetRandomMapSegmentPositions(journalEntryRegistry.Entries.Count);
-                
-            keyMapSegmentPosition = GetRandomDistantMapSegmentPosition();
-            exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();;
-            // TODO: Replace with choosing one point of the list of preset positions
-            while (Vector2Int.Distance(keyMapSegmentPosition, exitMapSegmentPosition) < minDistanceBetweenKeyAndExit)
-            {
-                exitMapSegmentPosition = GetRandomDistantMapSegmentPosition();
-            }
+
+            keyMapSegmentPosition = randomService.Sample(potentialKeySegments);
+            exitMapSegmentPosition = randomService.Sample(potentialExitSegments);
+
+            waypointMapPositions = potentialExitSegments.Where(position => !position.Equals(exitMapSegmentPosition))
+                .Union(potentialKeySegments.Where(position => !position.Equals(keyMapSegmentPosition))).ToList();
         }
 
         private void RegenerateMaze()
@@ -292,9 +289,17 @@ namespace Map
                 if (segmentPosition == exitMapSegmentPosition && !mapSegment.ContainsMapObject<MapExit>())
                 {
                     Debug.Log($"Segment {mapSegment} does not have a MapExit, adding one!");
-                    var exit = GenerateExit(segmentPosition * mapSegmentSize,
+                    var exit = GenerateMapExit(segmentPosition * mapSegmentSize,
                         segmentPosition * mapSegmentSize + mapSegmentSize);
                     mapSegment.MapObjects.Add(exit);
+                }
+
+                if (waypointMapPositions.Contains(segmentPosition) && !mapSegment.ContainsMapObject<MapWaypoint>())
+                {
+                    Debug.Log($"Segment {mapSegment} does not have a MapWaypoint, adding one!");
+                    var waypoint = GenerateMapWaypoint(segmentPosition * mapSegmentSize,
+                        segmentPosition * mapSegmentSize + mapSegmentSize);
+                    mapSegment.MapObjects.Add(waypoint);
                 }
 
                 if (!keyHasBeenSpawned && segmentPosition == keyMapSegmentPosition &&
@@ -306,7 +311,7 @@ namespace Map
                     mapSegment.ItemObjects.Add(key);
                     keyHasBeenSpawned = true;
                 }
-
+                
                 return mapSegment;
             }
 
@@ -381,7 +386,7 @@ namespace Map
             if (segmentPosition == exitMapSegmentPosition)
             {
                 Debug.Log($"Generate Exit at {segmentPosition}!");
-                mapObjects.Add(GenerateExit(topLeftCorner, bottomRightCorner));
+                mapObjects.Add(GenerateMapExit(topLeftCorner, bottomRightCorner));
             }
             mapObjects.AddRange(GenerateMapObjects(topLeftCorner, bottomRightCorner));
 
@@ -644,7 +649,22 @@ namespace Map
             return trailsTilemap.gameObject;
         }
 
-        private GameObject GenerateExit(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        private GameObject GenerateMapWaypoint(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
+        {
+            var cornerDiff = bottomRightCorner - topLeftCorner;
+            var waypointMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Waypoint);
+            var waypointPosition = new Vector2(topLeftCorner.x + randomService.Int(cornerDiff.x),
+                topLeftCorner.y + randomService.Int(cornerDiff.y));
+            
+            var wayPoint = prefabPool.Spawn(waypointMapObject.Prefab, mapObjectParent);
+            wayPoint.GetComponent<MapObjectController>().SetMapObject(waypointMapObject);
+            wayPoint.transform.position = waypointPosition;
+
+            return wayPoint;
+
+        }
+
+        private GameObject GenerateMapExit(Vector2Int topLeftCorner, Vector2Int bottomRightCorner)
         {
             var cornerDiff = bottomRightCorner - topLeftCorner;
             var exitMapObject = mapObjectRegistry.GetMapObject(MapObjectType.Exit);

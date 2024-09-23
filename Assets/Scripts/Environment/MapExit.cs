@@ -38,7 +38,6 @@ namespace Environment
             {
                 UpdateDialogueEntry(player.Inventory);
             });
-            
         }
         
         public void SetHighlight(bool isLit)
