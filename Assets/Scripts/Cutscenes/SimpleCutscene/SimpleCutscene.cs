@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using LD48.AudioTool;
 using Signals;
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,23 +10,11 @@ using Utils;
 
 namespace LD48.Cutscenes.SimpleCutscene
 {
-    [Serializable]
-    public class CutsceneFrame
-    {
-        [PreviewField(Height = 100)] public Sprite Sprite;
-        [TextArea] public string Text;
-    }
-
-    public interface ICutscene
-    {
-        void OnStart();
-    }
-
     public class SimpleCutscene : MonoBehaviour, ICutscene
     {
         [SerializeField] private List<CutsceneFrame> frames;
 
-        [SerializeField] private float textTypewriterSpeed = 50;
+        [SerializeField] private float textTypewriterSpeed = 25;
 
         [SerializeField] private Image picture;
         [SerializeField] private TMP_Text monologueText;

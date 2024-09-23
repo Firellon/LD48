@@ -19,14 +19,16 @@ namespace LD48.Cutscenes.SimpleCutscene
         {
             var sequence = DOTween.Sequence();
 
+            var duration = 1f;
+
             sequence
-                .Append(DOVirtual.Float(0f, 1f, 1.8f, (value) =>
+                .Append(DOVirtual.Float(0f, 1f, duration, (value) =>
                     {
                         image.material.SetFloat(materialFieldName1, value);
                     })
                     .SetEase(Ease.Linear)
                 )
-                .Append(DOVirtual.Float(drawEffectStroke, 0f, 0.2f, (value) =>
+                .Append(DOVirtual.Float(1f, 0f, duration, (value) =>
                     {
                         image.material.SetFloat(materialFieldName2, value);
                     })
@@ -48,8 +50,8 @@ namespace LD48.Cutscenes.SimpleCutscene
         public void ResetAnimation()
         {
             image.DOKill();
+            image.material.SetFloat(materialFieldName2, 1f);
             image.material.SetFloat(materialFieldName1, 0f);
-            image.material.SetFloat(materialFieldName2, drawEffectStroke);
         }
     }
 }

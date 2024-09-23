@@ -51,8 +51,8 @@ Material:
     - _StripeWidth: 0
     - _StrokeDensity: 1
     - _Threshold: 0.05
-    - _Threshold1: 0.05
-    - _Threshold2: 0.07
+    - _Threshold1: 0.12
+    - _Threshold2: 0.12
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

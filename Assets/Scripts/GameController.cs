@@ -1,4 +1,3 @@
-using System;
 using LD48.Cutscenes;
 using Player;
 using Signals;

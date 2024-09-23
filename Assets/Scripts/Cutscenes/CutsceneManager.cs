@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LD48.Cutscenes.SimpleCutscene;
 using Signals;
 using UnityEngine;
@@ -8,21 +7,6 @@ using Zenject;
 
 namespace LD48.Cutscenes
 {
-    public enum CutsceneType
-    {
-        Intro,
-    }
-
-    public struct StartCutsceneSignal
-    {
-        public CutsceneType Type;
-    }
-
-    public struct StopCutsceneSignal
-    {
-        
-    }
-
     public class CutsceneManager : MonoBehaviour
     {
         [SerializeField] private List<CutsceneData> cutscenes = new();
@@ -116,12 +100,5 @@ namespace LD48.Cutscenes
 
             timeManager.RunGame();
         }
-    }
-
-    [Serializable]
-    public struct CutsceneData
-    {
-        public CutsceneType cutsceneType;
-        public GameObject cutsceneObject;
     }
 }
