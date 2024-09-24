@@ -22,7 +22,7 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Map
 {
-    public class MapGenerator : MonoBehaviour
+    public class MapGenerator : MonoBehaviour, IMapGenerator
     {
         [Inject] private IMapActorRegistry mapActorRegistry;
         [Inject] private IPrefabPool prefabPool;
@@ -109,6 +109,10 @@ namespace Map
         [ShowInInspector, ReadOnly] private List<Vector2Int> waypointMapPositions = new();
         [ShowInInspector, ReadOnly] private List<Vector2Int> diaryMapSegmentPositions;
         [ShowInInspector, ReadOnly] private bool keyHasBeenSpawned;
+
+        public List<Vector2Int> PotentialKeySegments => potentialKeySegments;
+        public List<Vector2Int> PotentialExitSegments => potentialExitSegments;
+        public bool KeyHasBeenSpawned => keyHasBeenSpawned;
 
         private void OnEnable()
         {
@@ -240,7 +244,7 @@ namespace Map
             });
         }
 
-        private Vector2Int ConvertWorldPositionToSegmentPosition(Vector3 worldPosition)
+        public Vector2Int ConvertWorldPositionToSegmentPosition(Vector3 worldPosition)
         {
             return new Vector2Int(
                 Mathf.FloorToInt(worldPosition.x / mapSegmentSize.x),
@@ -248,7 +252,7 @@ namespace Map
             );
         }
 
-        private Vector2 ConvertSegmentPositionToWorldPosition(Vector2Int segmentPosition)
+        public Vector3 ConvertSegmentPositionToWorldPosition(Vector2Int segmentPosition)
         {
             return segmentPosition * mapSegmentSize + ((Vector2)mapSegmentSize) / 2f;
         }

@@ -50,7 +50,7 @@ namespace DI
             Container.Bind<Canvas>().FromComponentInHierarchy().AsSingle();
 
             Container.Bind<VisualsConfig>().FromInstance(visualsConfig).AsSingle();
-            Container.Bind<MapGenerator>().FromInstance(mapGenerator).AsSingle();
+            Container.BindInterfacesAndSelfTo<MapGenerator>().FromInstance(mapGenerator).AsSingle();
 
             Container.BindInterfacesTo<MapActorRegistry>().FromInstance(mapActorRegistry).AsSingle();
             Container.BindInterfacesTo<MapObjectRegistry>().FromInstance(mapObjectRegistry).AsSingle();

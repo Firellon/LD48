@@ -42,6 +42,7 @@ namespace Map.Actor
         public void SetPlayer(PlayerController newPlayer)
         {
             maybePlayer = Maybe.Of(newPlayer);
+            SignalsHub.DispatchAsync(new PlayerSetEvent());
         }
         
         public IMaybe<MapActor> GetMapActorOrEmpty(MapActorType actorType)
@@ -53,5 +54,9 @@ namespace Map.Actor
         {
             return mapActors.First(mapActor => mapActor.MapActorType == actorType);
         }
+    }
+
+    public class PlayerSetEvent
+    {
     }
 }

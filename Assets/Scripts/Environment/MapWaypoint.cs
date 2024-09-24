@@ -1,5 +1,6 @@
 ﻿using Dialogue;
 using Dialogue.Entry;
+using Environment.Signals;
 using Human;
 using Inventory;
 using LD48;
@@ -78,6 +79,7 @@ namespace Environment
             isActivated = true;
             UpdateSprite();
             UpdateDialogueEntry();
+            SignalsHub.DispatchAsync(new MapWaypointActivatedSignal(transform.position));
         }
 
         public void Remove()
