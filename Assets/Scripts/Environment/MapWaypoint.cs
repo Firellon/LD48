@@ -15,6 +15,9 @@ namespace Environment
 {
     public class MapWaypoint : MonoBehaviour, IInteractable, IClickDialogueTarget
     {
+        [SerializeField] private Sprite inactiveSprite;
+        [SerializeField] private Sprite activeSprite;
+            
         [Inject] private SpriteRenderer spriteRenderer;
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private MapObjectController mapObjectController;
@@ -23,6 +26,7 @@ namespace Environment
 
         private void Start()
         {
+            UpdateSprite();
             UpdateDialogueEntry();
         }
 
@@ -30,6 +34,11 @@ namespace Environment
         {
             spriteRenderer.material =
                 isLit ? visualsConfig.HighlightedInteractableShader : visualsConfig.RegularInteractableShader;
+        }
+        
+        private void UpdateSprite()
+        {
+            spriteRenderer.sprite = isActivated ? activeSprite : inactiveSprite;
         }
 
         #region Dialogue
@@ -67,6 +76,7 @@ namespace Environment
         public void Interact(HumanController humanController)
         {
             isActivated = true;
+            UpdateSprite();
             UpdateDialogueEntry();
         }
 
