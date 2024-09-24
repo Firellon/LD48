@@ -113,7 +113,7 @@ namespace Sanity
         {
             if (humanController.State.Sanity <= HumanState.K_MinSanity && !humanController.State.IsDead)
             {
-                humanController.Die();
+                humanController.Die(CauseOfDeath.Madness);
             }
         }
     }

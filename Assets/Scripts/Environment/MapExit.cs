@@ -3,6 +3,7 @@ using Dialogue.Entry;
 using Inventory;
 using Inventory.Signals;
 using LD48;
+using LD48.Cutscenes;
 using Map.Actor;
 using Signals;
 using UnityEngine;
@@ -16,7 +17,9 @@ namespace Environment
         [Inject] private SpriteRenderer spriteRenderer;
         [Inject] private VisualsConfig visualsConfig;
         [Inject] private IMapActorRegistry mapActorRegistry;
-        
+
+        private bool playerHasKey;
+
         private void OnEnable()
         {
             SignalsHub.AddListener<PlayerInventoryUpdatedEvent>(OnPlayerInventoryUpdated);
@@ -48,23 +51,31 @@ namespace Environment
         }
 
         #region Dialogue
-        
+
         private void UpdateDialogueEntry(IInventory playerInventory)
         {
+            playerHasKey = playerInventory.HasItem(ItemType.Key);
             DialogueEntry = new SerializedDialogueEntry
             {
-                EntryDescription = playerInventory.HasItem(ItemType.Key)
+                EntryDescription = playerHasKey
                     ? "I have a good feeling about this. Let's come closer and give it a look!"
                     : "Hm... that door looks closed."
             };
         }
+
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
+            SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry, () =>
+            {
+                SignalsHub.DispatchAsync(new StartCutsceneSignal
+                {
+                    Type = CutsceneType.VictoryFoundExit,
+                });
+            }));
         }
-        
+
         #endregion
     }
 }

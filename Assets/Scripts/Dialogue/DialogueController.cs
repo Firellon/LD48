@@ -15,6 +15,8 @@ namespace Dialogue
         
         private bool isShown = false;
         private float dialogueShownAt;
+        private Action onClosedAction;
+
         private const double HideDialogueOnPlayerMoveSeconds = 1;
 
         [Inject]
@@ -75,13 +77,17 @@ namespace Dialogue
                 ? entry.EntryTitle
                 : characterRegistry.PlayerCharacter.ValueOrDefault().CharacterName;;
             view.CharacterLineText.text = entry.EntryDescription;
+
+            onClosedAction = command.OnClosed;
         }
 
         private void OnHideDialogueEntry(HideDialogueEntryCommand command)
         {
             HideDialogueEntry();
+            onClosedAction?.Invoke();
+            onClosedAction = null;
         }
-        
+
         private void OnPlayerMoved(PlayerMovedEvent evt)
         {
             if (Time.time >= dialogueShownAt + HideDialogueOnPlayerMoveSeconds)

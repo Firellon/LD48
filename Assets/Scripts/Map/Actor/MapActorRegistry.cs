@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Human;
 using Human.Signal;
 using LD48.Cutscenes;
 using Player;
@@ -38,7 +39,7 @@ namespace Map.Actor
 
                     SignalsHub.DispatchAsync(new StartCutsceneSignal
                     {
-                        Type = CutsceneType.FailDead,
+                        Type = evt.CauseOfDeath == CauseOfDeath.Madness ? CutsceneType.FailMad : CutsceneType.FailDead,
                     });
                 }
             });

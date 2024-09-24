@@ -582,7 +582,7 @@ namespace Human
             }
             else
             {
-                Die();
+                Die(CauseOfDeath.Homicide);
             }
         }
 
@@ -591,7 +591,7 @@ namespace Human
             inventory.IsHelpless = isHit || isSurrendering;
         }
 
-        public void Die()
+        public void Die(CauseOfDeath causeOfDeath = CauseOfDeath.Unknown)
         {
             if (HasWon) return;
 
@@ -614,7 +614,7 @@ namespace Human
             // TODO: Drop the Hand item
             SignalsHub.DispatchAsync(new MapObjectAddedEvent(corpse, MapObjectType.Corpse));
             
-            SignalsHub.DispatchAsync(new HumanDiedEvent(this));
+            SignalsHub.DispatchAsync(new HumanDiedEvent(this, causeOfDeath));
             // Destroy(gameObject);
         }
 
