@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Human.Signal;
+using LD48.Cutscenes;
 using Player;
 using Signals;
 using Sirenix.OdinInspector;
@@ -35,6 +35,11 @@ namespace Map.Actor
                 {
                     maybePlayer = Maybe.Empty<PlayerController>();
                     Destroy(evt.Human.gameObject);
+
+                    SignalsHub.DispatchAsync(new StartCutsceneSignal
+                    {
+                        Type = CutsceneType.FailDead,
+                    });
                 }
             });
         }
