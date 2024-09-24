@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using DG.Tweening;
 using Signals;
 using TMPro;
@@ -26,6 +27,10 @@ namespace LD48.Cutscenes.SimpleCutscene
         {
             ResetImageAndText();
 
+            frameAnimation.PlayDrawingSound();
+            yield return frameAnimation.AnimateFadeIn().WaitForCompletion();
+
+            frameAnimation.PlayDrawingSound();
             yield return monologueText
                 .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
                 .SetEase(Ease.Linear)
@@ -33,7 +38,14 @@ namespace LD48.Cutscenes.SimpleCutscene
                 .SetUpdate(UpdateType.Normal, true)
                 .WaitForCompletion();
 
+            yield return new WaitForSecondsRealtime(2f);
+
             OnEnd();
+
+            SignalsHub.DispatchAsync(new StartCutsceneSignal
+            {
+                Type = CutsceneType.Restart,
+            });
         }
 
         private void ResetImageAndText()

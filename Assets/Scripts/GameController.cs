@@ -35,9 +35,14 @@ namespace LD48
             #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.T))
             {
+                // SignalsHub.DispatchAsync(new StartCutsceneSignal
+                // {
+                //     Type = CutsceneType.Intro,
+                // });
+
                 SignalsHub.DispatchAsync(new StartCutsceneSignal
                 {
-                    Type = CutsceneType.Intro,
+                    Type = CutsceneType.FailDead,
                 });
             }
             #endif

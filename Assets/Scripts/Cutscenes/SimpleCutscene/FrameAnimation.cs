@@ -1,7 +1,9 @@
-using System;
+using AudioTools.Sound;
 using DG.Tweening;
+using LD48.AudioTool;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace LD48.Cutscenes.SimpleCutscene
 {
@@ -11,6 +13,10 @@ namespace LD48.Cutscenes.SimpleCutscene
         [SerializeField] private AnimationCurve fadeInCurve;
 
         [SerializeField] private float drawEffectStroke = 0.2f;
+
+        [SerializeField] private SoundSample drawingSound;
+
+        [Inject] private ISoundManager<SoundType> soundManager;
 
         private string materialFieldName1 = "_Progress";
         private string materialFieldName2 = "_DrawEffectStroke";
@@ -39,12 +45,12 @@ namespace LD48.Cutscenes.SimpleCutscene
                 .SetTarget(image);
 
             return sequence;
+        }
 
-            // return image.material
-            //     .DOFloat(1f, materialFieldName, 2f)
-            //     .SetUpdate(UpdateType.Normal, true)
-            //     .SetLink(gameObject, LinkBehaviour.KillOnDisable)
-            //     .SetTarget(image);
+        public void PlayDrawingSound()
+        {
+            if (drawingSound != null)
+                soundManager.Play(drawingSound);
         }
 
         public void ResetAnimation()

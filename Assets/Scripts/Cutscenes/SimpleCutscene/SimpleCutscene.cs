@@ -53,15 +53,21 @@ namespace LD48.Cutscenes.SimpleCutscene
                 ResetImageAndText(frame);
 
                 if (frame.Sprite != null)
+                {
+                    frameAnimation.PlayDrawingSound();
                     yield return frameAnimation.AnimateFadeIn().WaitForCompletion();
+                }
 
                 if (!string.IsNullOrWhiteSpace(frame.Text))
+                {
+                    frameAnimation.PlayDrawingSound();
                     yield return monologueText
                         .DOTextFast(monologueText.text.Length / textTypewriterSpeed)
                         .SetEase(Ease.Linear)
                         .SetLink(gameObject, LinkBehaviour.KillOnDisable)
                         .SetUpdate(UpdateType.Normal, true)
                         .WaitForCompletion();
+                }
 
                 yield return new WaitForSecondsRealtime(2f);
 
