@@ -9,6 +9,7 @@ using Signals;
 using Sirenix.OdinInspector;
 using UI.Signals;
 using UnityEngine;
+using Zenject;
 
 namespace Day
 {
@@ -16,33 +17,21 @@ namespace Day
     {
         private TerrainGenerator terrainGenerator;
 
-        [SerializeField] private float cycleLength = 15f;
-
-        [SerializeField] private int nightLengthGrowth = 2;
-        
         [SerializeField] private float dayIntensity = 0f;
         [SerializeField] private float nightIntensity = 1f;
 
         [SerializeField] private DayTimeToDayTimeDictionary nextDayTime;
-        private DayTimeToStringDictionary dayTimeMessages = new()
-        {
-            {DayTime.DayComing,"The Night has passed.\n Dawn of Day {0}"},
-            {DayTime.Day, "The Day grows in power..."},
-            {DayTime.NightComing, "The Sunset approaches..."},
-            {DayTime.Night, "The Night arrived!\n Hide and cower, for its terrors are upon you!"},
-        };
-
         [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
-        [ShowInInspector, ReadOnly] private DayTime currentCycle = DayTime.Day;
-
-        public DayTime CurrentCycle => currentCycle;
+        [ShowInInspector, ReadOnly] private DayTime CurrentCycle { get; set; } = DayTime.Day;
 
         private int currentDay = 1;
 
         private LightCycle lightCycle;
 
-        public float TargetIntensity { get; }
+        public float TargetIntensity { get; private set; }
+
+        [Inject] private IDayNightCycleConfig config;
 
         void Start()
         {
@@ -65,7 +54,8 @@ namespace Day
 
         private IEnumerator DayNightCycleProcess()
         {
-            SetDarknessLevel(GetTargetLightIntensity(CurrentCycle));
+            TargetIntensity = GetTargetLightIntensity(CurrentCycle); 
+            SetDarknessLevel(TargetIntensity);
 
             while (true)
             {
@@ -85,7 +75,7 @@ namespace Day
                     yield return new WaitForSeconds(currentCycleTime);
                 }
 
-                currentCycle = GetNextCycle(CurrentCycle);
+                CurrentCycle = GetNextCycle(CurrentCycle);
 
                 SignalsHub.DispatchAsync(new DayNightCycleChangedSignal
                 {
@@ -129,17 +119,7 @@ namespace Day
 
         private float GetCycleLength(DayTime dayTime)
         {
-            if (dayTime == DayTime.Night)
-            {
-                return cycleLength + currentDay * nightLengthGrowth;
-            }
-
-            // if (dayTime == DayTime.DayComing || dayTime == DayTime.NightComing)
-            // {
-            //     return cycleLength / 2f;
-            // }
-
-            return cycleLength;
+            return config.DayTimeToLengthSeconds[dayTime];
         }
 
         private void ShowCycleMessage(DayTime cycle)
@@ -149,27 +129,14 @@ namespace Day
 
         private string GetCycleMessage(DayTime dayTime)
         {
-            return dayTimeMessages.ContainsKey(dayTime)
-                ? string.Format(dayTimeMessages[dayTime], currentDay)
+            return config.DayTimeMessages.ContainsKey(dayTime)
+                ? string.Format(config.DayTimeMessages[dayTime], currentDay)
                 : GetDayTimeNotFoundMessage(dayTime);
         }
 
         private string GetDayTimeNotFoundMessage(DayTime dayTime)
         {
             return $"[DayTime {dayTime} not found!]";
-            switch (dayTime)
-            {
-                case DayTime.DayComing:
-                    return "Day grows in power...";
-                case DayTime.Day:
-                    return "Sunset approaches...";
-                case DayTime.NightComing:
-                    return "The Night arrived!\n Hide and cower, for its terrors are upon you!";
-                case DayTime.Night:
-                    return $"Night has passed.\n Dawn of Day {currentDay}";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(dayTime), dayTime, null);
-            }
         }
 
         private DayTime GetNextCycle(DayTime cycle)

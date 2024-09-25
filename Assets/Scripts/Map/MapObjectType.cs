@@ -11,5 +11,9 @@ namespace Map
         Corpse = 6,
         GuidePost = 7,
         Diary = 8,
+        /// <summary>
+        /// A decoy Map Object that eventually leads the Player to the Exit
+        /// </summary>
+        Waypoint = 9,
     }
 }
