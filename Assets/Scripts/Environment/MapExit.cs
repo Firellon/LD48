@@ -37,6 +37,9 @@ namespace Environment
             mapActorRegistry.Player.IfPresent(player =>
             {
                 UpdateDialogueEntry(player.Inventory);
+            }).IfNotPresent(() =>
+            {
+                Debug.LogWarning("MapExit > Player not found!");
             });
         }
         

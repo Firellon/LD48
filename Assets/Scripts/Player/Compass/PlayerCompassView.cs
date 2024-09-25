@@ -1,10 +1,8 @@
-﻿using Map.Actor;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
 using Utilities.Monads;
-using Zenject;
 
 namespace Player.Compass
 {
@@ -14,11 +12,15 @@ namespace Player.Compass
         [SerializeField] private Image compassHand;
         [SerializeField] private float defaultCompassHandRotation = 45f;
 
+        [SerializeField] private float targetHandRotationSpeed = 1f;
+        [SerializeField] private float minimalTargetDistance = 10f;
+        [SerializeField] private double angleEpsilon = 1f;
         public Image CompassBackground => compassBackground;
         public Image CompassHand => compassHand;
 
         private float CompassHandRotation
         {
+            get => defaultCompassHandRotation - compassHand.rectTransform.eulerAngles.z;
             set =>
                 compassHand.rectTransform.eulerAngles =
                     new Vector3(0, 0, defaultCompassHandRotation - value);
@@ -36,6 +38,7 @@ namespace Player.Compass
         }
 
         private IMaybe<PlayerController> maybePlayer;
+
         public IMaybe<PlayerController> MaybePlayer
         {
             set => maybePlayer = value;
@@ -55,9 +58,22 @@ namespace Player.Compass
                 maybePlayer.IfPresent(player =>
                 {
                     var targetVector = (target - player.transform.position);
-                    var targetAngle = ToAngle(targetVector);
-                    // Debug.Log($"Update > player.transform.position {targetVector} => {targetAngle}");
-                    CompassHandRotation = targetAngle;
+                    if (targetVector.magnitude < minimalTargetDistance)
+                    {
+                        CompassHandRotation += targetHandRotationSpeed;
+                        return;
+                    }
+                    var compassHandVector = new Vector3(
+                        -Mathf.Cos(CompassHandRotation * Mathf.Deg2Rad), 
+                        Mathf.Sin(CompassHandRotation * Mathf.Deg2Rad), 
+                        0);
+                    var targetRotationAngle = Vector3.SignedAngle(compassHandVector, targetVector, Vector3.forward);
+
+                    if (Mathf.Abs(targetRotationAngle) > angleEpsilon && Mathf.Abs(180 - Mathf.Abs(targetRotationAngle)) > angleEpsilon)
+                    {
+                        Debug.Log($"Update > player.transform.position from {compassHandVector} to {targetVector} => {targetRotationAngle}");
+                        CompassHandRotation += targetHandRotationSpeed * Mathf.Sign(targetRotationAngle);   
+                    }
                 }).IfNotPresent(() =>
                 {
                     CompassHandRotation = 0;

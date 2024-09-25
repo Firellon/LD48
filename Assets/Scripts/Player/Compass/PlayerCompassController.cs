@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Environment.Signals;
+using Inventory;
+using LD48;
 using Map;
 using Map.Actor;
 using ModestTree;
@@ -36,6 +38,7 @@ namespace Player.Compass
         public void Initialize()
         {
             SignalsHub.AddListener<MapWaypointActivatedSignal>(OnMapWaypointActivated);
+            SignalsHub.AddListener<MapItemRemovedEvent>(OnMapItemRemoved); 
             SignalsHub.AddListener<PlayerSetEvent>(OnPlayerSet);
 
             remainingKeySegments = mapGenerator.PotentialKeySegments;
@@ -47,8 +50,10 @@ namespace Player.Compass
         public void Dispose()
         {
             SignalsHub.RemoveListener<MapWaypointActivatedSignal>(OnMapWaypointActivated);
+            SignalsHub.RemoveListener<MapItemRemovedEvent>(OnMapItemRemoved); 
             SignalsHub.RemoveListener<PlayerSetEvent>(OnPlayerSet);
         }
+        
 
         private void OnMapWaypointActivated(MapWaypointActivatedSignal signal)
         {
@@ -59,6 +64,15 @@ namespace Player.Compass
             UpdateCurrentWaypoint();
         }
         
+        private void OnMapItemRemoved(MapItemRemovedEvent evt)
+        {
+            if (evt.ItemType == ItemType.Key)
+            {
+                Debug.Log("OnMapItemRemoved > no more remaining key segments");
+                remainingKeySegments = new List<Vector2Int>();
+            }
+        }
+        
         private void OnPlayerSet(PlayerSetEvent evt)
         {
             UpdateCurrentWaypoint();
@@ -67,12 +81,13 @@ namespace Player.Compass
         private void UpdateCurrentWaypoint()
         {
             // TODO: Check if the Player has the Key item here?
-            if (mapGenerator.KeyHasBeenSpawned && remainingExitSegments.Any())
-            {
-                maybeCurrentWaypoint = randomService.Sample(remainingExitSegments).ToMaybe();
-            } else if (remainingKeySegments.Any())
+            if (remainingKeySegments.Any())
             {
                 maybeCurrentWaypoint = randomService.Sample(remainingKeySegments).ToMaybe();
+            }
+            else if (remainingExitSegments.Any())
+            {
+                maybeCurrentWaypoint = randomService.Sample(remainingExitSegments).ToMaybe();
             }
             else
             {
