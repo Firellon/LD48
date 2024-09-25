@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Day;
 using DG.Tweening;
 using FunkyCode;
 using Map.Actor;
+using Signals;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.RandomService;
@@ -47,23 +49,51 @@ namespace LD48.Enemies
         [Inject] private IPrefabPool prefabPool;
 
         [Inject] private ILightCycle lightCycle;
+        [Inject] private IDayNightCycle dayNightCycle;
         [Inject] private IEnemiesHelper enemiesHelper;
 
         private void OnEnable()
         {
-            StartCoroutine(nameof(ShowFlyingObjectProcess));
+            // StartCoroutine(nameof(ShowFlyingObjectProcess));
+
+            SignalsHub.AddListener<DayNightCycleChangedSignal>(OnDayNightCycleChangedSignal);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<DayNightCycleChangedSignal>(OnDayNightCycleChangedSignal);
+        }
+
+        private void OnDayNightCycleChangedSignal(DayNightCycleChangedSignal signal)
+        {
+            if (signal.Cycle != DayTime.Night)
+                return;
+
+            StartCoroutine(nameof(TryShowFlyingObject));
+        }
+
+        private IEnumerator TryShowFlyingObject()
+        {
+            if (!randomService.Chance(0.05f))
+                yield break;
+
+            Debug.LogWarning("Generating random event!");
+
+            // yield return new WaitForSeconds(randomService.Float(0f, dayNightCycle.))
         }
 
         private IEnumerator ShowFlyingObjectProcess()
         {
             while (true)
             {
-                yield return new WaitForSeconds(1f);
-
-                if (lightCycle.Time < 0.9f)
+                if (dayNightCycle.CurrentCycle != DayTime.Night)
                 {
+                    Debug.LogWarning("Not night!");
                     yield return null;
+                    continue;
                 }
+
+                Debug.LogWarning($"Generating a random event!");
 
                 var currentDelay = randomService.Float(delay.Min, delay.Max);
 

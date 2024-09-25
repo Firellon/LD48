@@ -5,5 +5,6 @@ namespace Day
         DayTime GetCurrentCycle();
         
         float TargetIntensity { get; }
+        DayTime CurrentCycle { get; }
     }
 }

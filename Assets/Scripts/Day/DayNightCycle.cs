@@ -6,7 +6,7 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
 using LD48.AudioTool;
 using Signals;
-using TMPro;
+using Sirenix.OdinInspector;
 using UI.Signals;
 using UnityEngine;
 
@@ -34,7 +34,7 @@ namespace Day
 
         [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
-        private DayTime currentCycle = DayTime.Day;
+        [ShowInInspector, ReadOnly] private DayTime currentCycle = DayTime.Day;
 
         public DayTime CurrentCycle => currentCycle;
 
@@ -72,7 +72,7 @@ namespace Day
                 if (CurrentCycle == DayTime.DayComing || CurrentCycle == DayTime.NightComing)
                 {
                     var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(CurrentCycle));
-                    
+
                     var currentCycleTime = GetCycleLength(CurrentCycle);
 
                     yield return DOVirtual
@@ -86,6 +86,11 @@ namespace Day
                 }
 
                 currentCycle = GetNextCycle(CurrentCycle);
+
+                SignalsHub.DispatchAsync(new DayNightCycleChangedSignal
+                {
+                    Cycle = currentCycle,
+                });
 
                 ShowCycleMessage(CurrentCycle);
 
@@ -190,6 +195,11 @@ namespace Day
         {
             return CurrentCycle;
         }
+    }
+
+    public class DayNightCycleChangedSignal
+    {
+        public DayTime Cycle { get; set; }
     }
 
     [Serializable]
