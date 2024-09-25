@@ -28,6 +28,7 @@ namespace DI
         [SerializeField] private JournalEntryRegistry journalEntryRegistry;
         [SerializeField] private ItemRegistry itemRegistry;
         [SerializeField] private DayNightCycle dayNightCycle;
+        [SerializeField] private DayNightCycleConfig dayNightCycleConfig;
         [SerializeField] private LightCycle lightCycle;
         [SerializeField] private MapGenerator mapGenerator;
 
@@ -59,6 +60,7 @@ namespace DI
             Container.BindInterfacesTo<JournalEntryRegistry>().FromInstance(journalEntryRegistry).AsSingle();
                 
             Container.BindInterfacesTo<DayNightCycle>().FromInstance(dayNightCycle).AsSingle();
+            Container.BindInterfacesTo<DayNightCycleConfig>().FromInstance(dayNightCycleConfig).AsSingle();
 
             Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle().NonLazy();
 

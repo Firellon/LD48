@@ -906,6 +906,7 @@ MonoBehaviour:
   journalEntryRegistry: {fileID: 5343087918741375329}
   itemRegistry: {fileID: 7069532891188569250}
   dayNightCycle: {fileID: 0}
+  dayNightCycleConfig: {fileID: 11400000, guid: 9a7fa85dcba879544bf58f8c3b368d18, type: 2}
   lightCycle: {fileID: 6385964874880517366}
   mapGenerator: {fileID: 4669150510530452025}
   visualsConfig: {fileID: 11400000, guid: f655ccb5147d3554aa2e8b45177d6418, type: 2}
