@@ -61,11 +61,9 @@ namespace Environment
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry));
         }
 
-        public IDialogueEntry DialogueEntry { get; } = new SerializedDialogueEntry
-        {
-            EntryDescription =
-                "Someone left a note lying on a ground. I better pick it up before the rains wash it away."
-        };
+        public IDialogueEntry DialogueEntry { get; } = new SerializedDialogueEntry(
+            "Someone left a note lying on a ground. I better pick it up before the rains wash it away."
+        );
 
         #endregion
     }

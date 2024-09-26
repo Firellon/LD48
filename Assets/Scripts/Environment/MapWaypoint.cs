@@ -46,12 +46,10 @@ namespace Environment
         
         private void UpdateDialogueEntry()
         {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = isActivated 
-                    ? "This one does not seem particularly useful anymore." 
-                    : "Looks interesting. I should probably check it out."
-            };
+            var entryDescription = isActivated
+                ? "This one does not seem particularly useful anymore."
+                : "Looks interesting. I should probably check it out.";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
         
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();

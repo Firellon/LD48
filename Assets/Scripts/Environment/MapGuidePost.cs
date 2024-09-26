@@ -68,12 +68,10 @@ namespace Environment
         
         private void UpdateDialogueEntry()
         {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = GuidePostText != string.Empty 
-                    ? $"This post says: \"{GuidePostText}\". I wonder what's the meaning of this..."
-                    : "This post is empty."
-            };
+            var entryDescription = GuidePostText != string.Empty
+                ? $"This post says: \"{GuidePostText}\". I wonder what's the meaning of this..."
+                : "This post is empty.";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
         public void OnPointerClick(PointerEventData eventData)

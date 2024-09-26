@@ -123,14 +123,12 @@ namespace Environment
         
         private void UpdateDialogueEntry()
         {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = isBurning
-                    ? timeToBurn < burnTimePerWood
-                        ? "Looks like the fire's dying down. Won’t last much longer."
-                        : "This fire's putting on quite the show!"
-                    : "Only the embers are left here."
-            };
+            var entryDescription = isBurning
+                ? timeToBurn < burnTimePerWood
+                    ? "Looks like the fire's dying down. Won’t last much longer."
+                    : "This fire's putting on quite the show!"
+                : "Only the embers are left here.";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
 
         public IDialogueEntry DialogueEntry { get; set; } = new SerializedDialogueEntry();

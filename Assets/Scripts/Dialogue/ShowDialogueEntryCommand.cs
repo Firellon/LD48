@@ -14,7 +14,7 @@ namespace Dialogue
             OnClosed = onClosed;
         }
     }
-    
+
     public class HideDialogueEntryCommand
     {
         public HideDialogueEntryCommand()

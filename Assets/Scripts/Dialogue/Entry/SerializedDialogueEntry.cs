@@ -1,14 +1,27 @@
 using System;
-using Stranger;
+using System.Collections.Generic;
 
 namespace Dialogue.Entry
 {
     [Serializable]
     public class SerializedDialogueEntry : IDialogueEntry
     {
+        public SerializedDialogueEntry()
+        {
+        }
+        
+        public SerializedDialogueEntry(string entryDescription)
+        {
+            Replicas = new List<DialogueEntryReplica>
+            {
+                new DialogueEntryReplica
+                {
+                    EntryDescription = entryDescription
+                }
+            };
+        }
+
         public string EntryKey { get; set; } = string.Empty;
-        public string EntryTitle { get; set; } = string.Empty;
-        public string EntryDescription { get; set; } = string.Empty;
-        public Character EntryCharacter { get; set; }
+        public List<DialogueEntryReplica> Replicas { get; set; } = new();
     }
 }

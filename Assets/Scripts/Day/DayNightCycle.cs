@@ -38,7 +38,8 @@ namespace Day
             lightCycle = FindObjectOfType<LightCycle>();
 
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
-
+            
+            SignalsHub.DispatchAsync(new DayNightCycleUpdatedSignal(CurrentCycle, currentDay));
             StartCoroutine(DayNightCycleProcess());
         }
 
@@ -76,6 +77,7 @@ namespace Day
                 }
 
                 CurrentCycle = GetNextCycle(CurrentCycle);
+                SignalsHub.DispatchAsync(new DayNightCycleUpdatedSignal(CurrentCycle, currentDay));
 
                 ShowCycleMessage(CurrentCycle);
 

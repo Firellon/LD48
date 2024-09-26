@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 864c1e856ea040f7ba25bd098c67b880, type: 3}
-  m_Name: TooDark_CantRead
+  m_Name: Tutorial_FirstNightComing
   m_EditorClassIdentifier: 
-  entryKey: TooDark_CantRead
-  entryTitle: 
-  entryDescription: 
-  character: {fileID: 0}
+  entryKey: Tutorial_FirstNightComing
   replicas:
   - entryTitle: 
-    entryDescription: I can not read in this darkness...
+    entryDescription: It is becoming darker fast.
+    character: {fileID: 0}
+  - entryTitle: 
+    entryDescription: I gotta make a bonfire now!
     character: {fileID: 0}

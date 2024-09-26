@@ -80,12 +80,10 @@ namespace Environment
         
         private void UpdateDialogueEntry()
         {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = itemContainer.Items.Any() 
-                     ? $"This unlucky fellow seems to have something of value on {(gender == HumanGender.Male ? "him" : "her")}"
-                     : "Poor soul..."
-            };
+            var entryDescription = itemContainer.Items.Any()
+                ? $"This unlucky fellow seems to have something of value on {(gender == HumanGender.Male ? "him" : "her")}"
+                : "Poor soul...";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
         public void SetHighlight(bool isLit)

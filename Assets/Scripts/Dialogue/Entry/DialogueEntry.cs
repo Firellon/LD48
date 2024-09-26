@@ -1,5 +1,4 @@
-﻿using Stranger;
-using Unity.VisualScripting;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dialogue.Entry
@@ -8,13 +7,10 @@ namespace Dialogue.Entry
     public class DialogueEntry : ScriptableObject, IDialogueEntry
     {
         [SerializeField] private string entryKey = string.Empty;
-        [SerializeField] private string entryTitle = string.Empty;
-        [TextArea(minLines: 5, maxLines: 20), SerializeField, InspectorTextArea] private string entryDescription;
-        [SerializeField] private Character character;
+
+        [SerializeField] private List<DialogueEntryReplica> replicas = new();
 
         public string EntryKey => entryKey;
-        public string EntryTitle => entryTitle;
-        public string EntryDescription => entryDescription;
-        public Character EntryCharacter => character;
+        public List<DialogueEntryReplica> Replicas => replicas;
     }
 }

@@ -80,12 +80,10 @@ namespace Environment
         
         private void UpdateDialogueEntry()
         {
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = Items.Any() 
-                    ? "Let's see if there is something interesting in that crate..."
-                    : "Well, that's just an empty crate."
-            };
+            var entryDescription = Items.Any()
+                ? "Let's see if there is something interesting in that crate..."
+                : "Well, that's just an empty crate.";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
         public void OnPointerClick(PointerEventData eventData)

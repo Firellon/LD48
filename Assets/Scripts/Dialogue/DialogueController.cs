@@ -1,9 +1,11 @@
 ﻿using System;
+using Dialogue.Entry;
 using Player;
 using Signals;
 using Stranger;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utilities.Monads;
 using Zenject;
 
 namespace Dialogue
@@ -15,6 +17,8 @@ namespace Dialogue
         
         private bool isShown = false;
         private float dialogueShownAt;
+        private IMaybe<IDialogueEntry> maybeDialogueEntry = Maybe.Empty<IDialogueEntry>();
+        private int currentReplicaIndex = -1;
         private Action onClosedAction;
 
         private const double HideDialogueOnPlayerMoveSeconds = 1;
@@ -35,14 +39,16 @@ namespace Dialogue
 
         private void OnMouseClick(InputAction.CallbackContext obj)
         {
-            if (isShown) HideDialogueEntry();
+            if (isShown)
+            {
+                ShowNextDialogueReplica();
+            }
         }
 
         public void Initialize()
         {
             SignalsHub.AddListener<ShowDialogueEntryCommand>(OnShowDialogueEntry);
             SignalsHub.AddListener<HideDialogueEntryCommand>(OnHideDialogueEntry);
-            
         }
 
         public void Dispose()
@@ -57,35 +63,51 @@ namespace Dialogue
             if (entry == null)
             {
                 throw new Exception(
-                    "No Dialogue Entry provided!!");
+                    "No Dialogue Entry provided!");
             }
 
             view.gameObject.SetActive(true); // TODO: Fade-in animation
             isShown = true;
             dialogueShownAt = Time.time;
-
-            if (entry.EntryCharacter == null && characterRegistry.PlayerCharacter.IsNotPresent)
-            {
-                throw new Exception(
-                    "No Player Character found to replace the null provided in the Show Dialogue command!");
-            }
-            
-            view.CharacterPortraitImage.sprite = entry.EntryCharacter != null 
-                ? entry.EntryCharacter.Portrait 
-                : characterRegistry.PlayerCharacter.ValueOrDefault().Portrait;
-            view.CharacterNameText.text = entry.EntryTitle != string.Empty 
-                ? entry.EntryTitle
-                : characterRegistry.PlayerCharacter.ValueOrDefault().CharacterName;;
-            view.CharacterLineText.text = entry.EntryDescription;
-
+            maybeDialogueEntry = entry.ToMaybe();
             onClosedAction = command.OnClosed;
+            currentReplicaIndex = -1;
+            
+            ShowNextDialogueReplica();
+        }
+
+        private void ShowNextDialogueReplica()
+        {
+            maybeDialogueEntry.IfPresent(dialogueEntry =>
+            {
+                currentReplicaIndex++;
+                if (dialogueEntry.Replicas.Count <= currentReplicaIndex)
+                {
+                    HideDialogueEntry();
+                    return;
+                }
+                var currentReplica = dialogueEntry.Replicas[currentReplicaIndex];
+                if (currentReplica.EntryCharacter == null && characterRegistry.PlayerCharacter.IsNotPresent)
+                {
+                    throw new Exception(
+                        "No Player Character found to replace the null provided in the Show Dialogue command!");
+                }
+
+                var entryCharacter = currentReplica.EntryCharacter != null
+                    ? currentReplica.EntryCharacter
+                    : characterRegistry.PlayerCharacter.ValueOrDefault();
+                view.CharacterPortraitImage.sprite = entryCharacter.Portrait;
+                view.CharacterNameText.text = currentReplica.EntryTitle != string.Empty 
+                    ? currentReplica.EntryTitle
+                    : entryCharacter.CharacterName;
+                view.CharacterLineText.text = currentReplica.EntryDescription;
+                // TODO: Play a sound when showing a new replica
+            });
         }
 
         private void OnHideDialogueEntry(HideDialogueEntryCommand command)
         {
             HideDialogueEntry();
-            onClosedAction?.Invoke();
-            onClosedAction = null;
         }
 
         private void OnPlayerMoved(PlayerMovedEvent evt)
@@ -101,6 +123,8 @@ namespace Dialogue
             if (!isShown) return;
             view.gameObject.SetActive(false); // TODO: Fade-out animation
             isShown = false;
+            onClosedAction?.Invoke();
+            onClosedAction = null;
         }
     }
 }

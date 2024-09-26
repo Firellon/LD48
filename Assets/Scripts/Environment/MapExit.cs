@@ -57,12 +57,10 @@ namespace Environment
         private void UpdateDialogueEntry(IInventory playerInventory)
         {
             playerHasKey = playerInventory.HasItem(ItemType.Key);
-            DialogueEntry = new SerializedDialogueEntry
-            {
-                EntryDescription = playerHasKey
-                    ? "I have a good feeling about this. Let's come closer and give it a look!"
-                    : "Hm... that door looks closed."
-            };
+            var entryDescription = playerHasKey
+                ? "I have a good feeling about this. Let's come closer and give it a look!"
+                : "Hm... that door looks closed.";
+            DialogueEntry = new SerializedDialogueEntry(entryDescription);
         }
 
         public IDialogueEntry DialogueEntry { get; private set; } = new SerializedDialogueEntry();
