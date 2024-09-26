@@ -6,7 +6,7 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using FunkyCode;
 using LD48.AudioTool;
 using Signals;
-using TMPro;
+using Sirenix.OdinInspector;
 using UI.Signals;
 using UnityEngine;
 using Zenject;
@@ -23,7 +23,7 @@ namespace Day
         [SerializeField] private DayTimeToDayTimeDictionary nextDayTime;
         [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
-        private DayTime CurrentCycle { get; set; } = DayTime.Day;
+        [ShowInInspector, ReadOnly] public DayTime CurrentCycle { get; set; } = DayTime.Day;
 
         private int currentDay = 1;
 
@@ -31,15 +31,17 @@ namespace Day
 
         public float TargetIntensity { get; private set; }
 
+        public float CurrentCycleLength => GetCycleLength(CurrentCycle);
+
         [Inject] private IDayNightCycleConfig config;
 
         void Start()
         {
             lightCycle = FindObjectOfType<LightCycle>();
-
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
-            
+
             SignalsHub.DispatchAsync(new DayNightCycleUpdatedSignal(CurrentCycle, currentDay));
+
             StartCoroutine(DayNightCycleProcess());
         }
 
@@ -63,7 +65,7 @@ namespace Day
                 if (CurrentCycle == DayTime.DayComing || CurrentCycle == DayTime.NightComing)
                 {
                     var nextLightIntensity = GetTargetLightIntensity(GetNextCycle(CurrentCycle));
-                    
+
                     var currentCycleTime = GetCycleLength(CurrentCycle);
 
                     yield return DOVirtual
@@ -78,6 +80,11 @@ namespace Day
 
                 CurrentCycle = GetNextCycle(CurrentCycle);
                 SignalsHub.DispatchAsync(new DayNightCycleUpdatedSignal(CurrentCycle, currentDay));
+
+                SignalsHub.DispatchAsync(new DayNightCycleChangedSignal
+                {
+                    Cycle = CurrentCycle,
+                });
 
                 ShowCycleMessage(CurrentCycle);
 
@@ -159,6 +166,11 @@ namespace Day
         {
             return CurrentCycle;
         }
+    }
+
+    public class DayNightCycleChangedSignal
+    {
+        public DayTime Cycle { get; set; }
     }
 
     [Serializable]

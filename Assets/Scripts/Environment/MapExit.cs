@@ -37,15 +37,18 @@ namespace Environment
 
         private void Start()
         {
-            mapActorRegistry.Player.IfPresent(player =>
-            {
-                UpdateDialogueEntry(player.Inventory);
-            }).IfNotPresent(() =>
-            {
-                Debug.LogWarning("MapExit > Player not found!");
-            });
+            mapActorRegistry
+                .Player
+                .IfPresent(player =>
+                {
+                    UpdateDialogueEntry(player.Inventory);
+                })
+                .IfNotPresent(() =>
+                {
+                    Debug.LogWarning("MapExit > Player not found!");
+                });
         }
-        
+
         public void SetHighlight(bool isLit)
         {
             spriteRenderer.material =
@@ -69,6 +72,9 @@ namespace Environment
         {
             SignalsHub.DispatchAsync(new ShowDialogueEntryCommand(DialogueEntry, () =>
             {
+                if (!playerHasKey)
+                    return;
+
                 SignalsHub.DispatchAsync(new StartCutsceneSignal
                 {
                     Type = CutsceneType.VictoryFoundExit,
