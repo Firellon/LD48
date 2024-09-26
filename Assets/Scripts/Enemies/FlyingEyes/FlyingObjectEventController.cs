@@ -6,6 +6,7 @@ using DG.Tweening;
 using FunkyCode;
 using Map.Actor;
 using Signals;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.RandomService;
@@ -40,7 +41,7 @@ namespace LD48.Enemies
 
     public class FlyingObjectEventController : MonoBehaviour
     {
-        [SerializeField] private FloatMinMax delay;
+        [SerializeField, MinMaxSlider(0f, 1f)] private float randomEventChance = 0.05f;
 
         [SerializeField] private List<FlyingObjectItem> items;
 
@@ -54,8 +55,6 @@ namespace LD48.Enemies
 
         private void OnEnable()
         {
-            // StartCoroutine(nameof(ShowFlyingObjectProcess));
-
             SignalsHub.AddListener<DayNightCycleChangedSignal>(OnDayNightCycleChangedSignal);
         }
 
@@ -74,109 +73,99 @@ namespace LD48.Enemies
 
         private IEnumerator TryShowFlyingObject()
         {
-            if (!randomService.Chance(0.05f))
+            if (!randomService.Chance(randomEventChance))
                 yield break;
 
-            Debug.LogWarning("Generating random event!");
+            Debug.LogWarning("Generating a random event!");
 
-            // yield return new WaitForSeconds(randomService.Float(0f, dayNightCycle.))
+            var nightLength = dayNightCycle.CurrentCycleLength;
+
+            var randomEventMoment = randomService.Float(0f, nightLength);
+
+            yield return new WaitForSeconds(randomEventMoment);
+
+            yield return GenerateFlyingObject();
         }
 
-        private IEnumerator ShowFlyingObjectProcess()
+        private IEnumerator GenerateFlyingObject()
         {
-            while (true)
+            var (startPoint, endPoint) = enemiesHelper.FindPathNearCharacter();
+
+            var item = randomService.Sample(items);
+            var moveTime = Vector2.Distance(startPoint, endPoint) / item.MoveSpeed;
+
+            var flyingObject = prefabPool.Spawn(item.Prefab, transform);
+            flyingObject.transform.position = startPoint;
+
+            if (item.MovementType == FlyingObjectMovementType.Steps)
             {
-                if (dayNightCycle.CurrentCycle != DayTime.Night)
+                var moves = randomService.Int(3, 5);
+
+                moveTime /= moves;
+
+                for (var i = 1; i <= moves; i++)
                 {
-                    Debug.LogWarning("Not night!");
-                    yield return null;
-                    continue;
-                }
+                    var start = Vector2.Lerp(startPoint, endPoint, (i - 1) / (float)moves);
+                    var end = Vector2.Lerp(startPoint, endPoint, i / (float)moves);
 
-                Debug.LogWarning($"Generating a random event!");
+                    flyingObject.transform.position = start;
 
-                var currentDelay = randomService.Float(delay.Min, delay.Max);
-
-                yield return new WaitForSeconds(currentDelay);
-
-                var (startPoint, endPoint) = enemiesHelper.FindPathNearCharacter();
-
-                var item = randomService.Sample(items);
-                var moveTime = Vector2.Distance(startPoint, endPoint) / item.MoveSpeed;
-
-                var flyingObject = prefabPool.Spawn(item.Prefab, transform);
-                flyingObject.transform.position = startPoint;
-
-                if (item.MovementType == FlyingObjectMovementType.Steps)
-                {
-                    var moves = randomService.Int(3, 5);
-
-                    moveTime /= moves;
-
-                    for (var i = 1; i <= moves; i++)
-                    {
-                        var start = Vector2.Lerp(startPoint, endPoint, (i - 1) / (float)moves);
-                        var end = Vector2.Lerp(startPoint, endPoint, i / (float)moves);
-
-                        flyingObject.transform.position = start;
-
-                        yield return DOTween.Sequence()
-                            .Append(flyingObject.transform
-                                .DOMoveX(end.x, moveTime))
-                            .Insert(0f, flyingObject.transform
-                                .DOMoveY(end.y, moveTime)
-                                .SetEase(item.AnimationCurve))
-                            .WaitForCompletion();
-
-                        yield return new WaitForSeconds(randomService.Float(0.5f, 2f));
-                    }
-                }
-
-                if (item.MovementType == FlyingObjectMovementType.Continuos)
-                {
                     yield return DOTween.Sequence()
                         .Append(flyingObject.transform
-                            .DOMoveX(endPoint.x, moveTime))
+                            .DOMoveX(end.x, moveTime))
                         .Insert(0f, flyingObject.transform
-                            .DOMoveY(endPoint.y, moveTime)
+                            .DOMoveY(end.y, moveTime)
                             .SetEase(item.AnimationCurve))
                         .WaitForCompletion();
+
+                    yield return new WaitForSeconds(randomService.Float(0.5f, 2f));
                 }
-
-                if (item.MovementType == FlyingObjectMovementType.Manual)
-                {
-                    flyingObject.transform.position = startPoint;
-                    yield break;
-                }
-
-                if (item.MovementType == FlyingObjectMovementType.WalkingAround)
-                {
-                    var moves = randomService.Int(3, 5);
-
-                    for (var i = 1; i <= moves; i++)
-                    {
-                        var nextPoint = enemiesHelper.FindPointAround(startPoint, 2f);
-
-                        flyingObject.transform.position = startPoint;
-
-                        moveTime = Vector2.Distance(startPoint, nextPoint) / item.MoveSpeed;
-
-                        yield return DOTween.Sequence()
-                            .Append(flyingObject.transform
-                                .DOMoveX(nextPoint.x, moveTime))
-                            .Insert(0f, flyingObject.transform
-                                .DOMoveY(nextPoint.y, moveTime)
-                                .SetEase(item.AnimationCurve))
-                            .WaitForCompletion();
-
-                        yield return new WaitForSeconds(item.Options.StepsDelay);
-
-                        startPoint = nextPoint;
-                    }
-                }
-
-                prefabPool.Despawn(flyingObject);
             }
+
+            if (item.MovementType == FlyingObjectMovementType.Continuos)
+            {
+                yield return DOTween.Sequence()
+                    .Append(flyingObject.transform
+                        .DOMoveX(endPoint.x, moveTime))
+                    .Insert(0f, flyingObject.transform
+                        .DOMoveY(endPoint.y, moveTime)
+                        .SetEase(item.AnimationCurve))
+                    .WaitForCompletion();
+            }
+
+            if (item.MovementType == FlyingObjectMovementType.Manual)
+            {
+                flyingObject.transform.position = startPoint;
+                yield break;
+            }
+
+            if (item.MovementType == FlyingObjectMovementType.WalkingAround)
+            {
+                var moves = randomService.Int(3, 5);
+
+                for (var i = 1; i <= moves; i++)
+                {
+                    var nextPoint = enemiesHelper.FindPointAround(startPoint, 2f);
+
+                    flyingObject.transform.position = startPoint;
+
+                    moveTime = Vector2.Distance(startPoint, nextPoint) / item.MoveSpeed;
+
+                    yield return DOTween.Sequence()
+                        .Append(flyingObject.transform
+                            .DOMoveX(nextPoint.x, moveTime))
+                        .Insert(0f, flyingObject.transform
+                            .DOMoveY(nextPoint.y, moveTime)
+                            .SetEase(item.AnimationCurve))
+                        .WaitForCompletion();
+
+                    yield return new WaitForSeconds(item.Options.StepsDelay);
+
+                    startPoint = nextPoint;
+                }
+            }
+
+            prefabPool.Despawn(flyingObject);
         }
     }
 }

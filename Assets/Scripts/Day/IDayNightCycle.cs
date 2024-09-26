@@ -6,5 +6,6 @@ namespace Day
         
         float TargetIntensity { get; }
         DayTime CurrentCycle { get; }
+        float CurrentCycleLength { get; }
     }
 }

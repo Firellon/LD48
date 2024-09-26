@@ -23,7 +23,7 @@ namespace Day
         [SerializeField] private DayTimeToDayTimeDictionary nextDayTime;
         [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
-        [ShowInInspector, ReadOnly] private DayTime CurrentCycle { get; set; } = DayTime.Day;
+        [ShowInInspector, ReadOnly] public DayTime CurrentCycle { get; set; } = DayTime.Day;
 
         private int currentDay = 1;
 
@@ -31,14 +31,14 @@ namespace Day
 
         public float TargetIntensity { get; private set; }
 
+        public float CurrentCycleLength => GetCycleLength(CurrentCycle);
+
         [Inject] private IDayNightCycleConfig config;
 
         void Start()
         {
             lightCycle = FindObjectOfType<LightCycle>();
-
             terrainGenerator = Camera.main.GetComponent<TerrainGenerator>();
-
             StartCoroutine(DayNightCycleProcess());
         }
 
@@ -79,7 +79,7 @@ namespace Day
 
                 SignalsHub.DispatchAsync(new DayNightCycleChangedSignal
                 {
-                    Cycle = currentCycle,
+                    Cycle = CurrentCycle,
                 });
 
                 ShowCycleMessage(CurrentCycle);
