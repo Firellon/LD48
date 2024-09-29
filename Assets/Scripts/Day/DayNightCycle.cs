@@ -24,8 +24,9 @@ namespace Day
         [SerializeField] private List<DayTime> ghostSpawnDayTimes = new() {DayTime.NightComing};
 
         [ShowInInspector, ReadOnly] public DayTime CurrentCycle { get; set; } = DayTime.Day;
+        public int CurrentDay => currentDay;
 
-        private int currentDay = 1;
+        [ShowInInspector, ReadOnly]  private int currentDay = 1;
 
         private LightCycle lightCycle;
 
@@ -156,7 +157,6 @@ namespace Day
                     return dayIntensity;
                 case DayTime.Night:
                     return nightIntensity;
-
                 default:
                     throw new ArgumentOutOfRangeException();
             }

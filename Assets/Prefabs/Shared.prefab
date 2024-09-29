@@ -230,9 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4347169bb302454b84d06ad484050a4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay:
-    Min: 1
-    Max: 5
+  randomEventChance: 0.05
   items:
   - MovementType: 0
     AnimationCurve:
@@ -649,9 +647,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a28eff26c14cc8b9b5d416f588657e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstDayTutorial: {fileID: 11400000, guid: b7977253991c7234a97b43380fe6352e, type: 2}
-  firstNightComingTutorial: {fileID: 11400000, guid: f0ed9aae15aa2644c90730a4b428c255, type: 2}
-  craftingTutorial: {fileID: 11400000, guid: 040ae8125fccbe0488c813f454a1e75c, type: 2}
+  tutorials:
+  - {fileID: 11400000, guid: bad741a2d46e4c9469d20d5aef15f3e7, type: 2}
+  - {fileID: 11400000, guid: bffce6075b6b0164a9c92e3aeb797368, type: 2}
+  - {fileID: 11400000, guid: 59ea551f6eb54a6478ac9c7e60ed8fbc, type: 2}
+  - {fileID: 11400000, guid: e209bd77b4fa8f24a8be67cabd8f48e1, type: 2}
+  - {fileID: 11400000, guid: a0f10a8fbe9e44f40994e5f4595824f1, type: 2}
 --- !u!1 &5930166732300080848
 GameObject:
   m_ObjectHideFlags: 0

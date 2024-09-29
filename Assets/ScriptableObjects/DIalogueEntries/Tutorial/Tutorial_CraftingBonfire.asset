@@ -10,18 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 864c1e856ea040f7ba25bd098c67b880, type: 3}
-  m_Name: Tutorial_FirstDay
+  m_Name: Tutorial_CraftingBonfire
   m_EditorClassIdentifier: 
-  entryKey: Tutorial_FirstDay
+  entryKey: Tutorial_CraftingBonfire
   replicas:
   - entryTitle: 
-    entryDescription: To live through this, I need to craft and set up a fire.
+    entryDescription: Now that I have enough materials, let's get the fire going
     character: {fileID: 0}
   - entryTitle: 
-    entryDescription: To craft, I need the materials - like the wood that islying
-      around.
-    character: {fileID: 0}
-  - entryTitle: 
-    entryDescription: 3 logs should be enough to craft a proper bonfire, but I should
-      gather a few extra to keep the fire up and burning.
+    entryDescription: '[ Click on the arrow UI buttons below until you find the bonfire
+      item, then craft it using the hammer UI button ]'
     character: {fileID: 0}

@@ -18,5 +18,11 @@ MonoBehaviour:
     entryDescription: It is becoming darker fast.
     character: {fileID: 0}
   - entryTitle: 
-    entryDescription: I gotta make a bonfire now!
+    entryDescription: Those shadows are creeping me out...
+    character: {fileID: 0}
+  - entryTitle: 
+    entryDescription: A bonfire would make me feel much more comfortable!
+    character: {fileID: 0}
+  - entryTitle: 
+    entryDescription: '[ I can pick up wood by coming closer and pressing "E" button]'
     character: {fileID: 0}

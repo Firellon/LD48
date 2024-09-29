@@ -57,6 +57,11 @@ namespace Player.Compass
             {
                 maybePlayer.IfPresent(player =>
                 {
+                    if (player == null)
+                    {
+                        CompassHandRotation = 0;
+                        return;
+                    }
                     var targetVector = (target - player.transform.position);
                     if (targetVector.magnitude < minimalTargetDistance)
                     {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FunkyCode;
 using Human;
 using Inventory;
 using Inventory.Signals;
@@ -25,6 +26,7 @@ namespace Player
         private float vertical;
         
         [SerializeField] protected InputActionReference pointerPositionInput;
+        [SerializeField] private LightEventListener lightEventListener;
             
         private PointerEventData clickData;
         private List<RaycastResult> clickResults = new();
@@ -32,7 +34,8 @@ namespace Player
         public IInventory Inventory => humanInventory;
         public IMaybe<Item> HandItem => humanInventory.HandItem;
         public HumanState State => humanController.State;
-        
+        public double Visibility => lightEventListener.visability;
+
         private bool isEnabled = true;
 
         public void OnMove(InputAction.CallbackContext ctx)

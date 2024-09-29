@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 864c1e856ea040f7ba25bd098c67b880, type: 3}
+  m_Name: Tutorial_FirstDay
+  m_EditorClassIdentifier: 
+  entryKey: Tutorial_FirstDay
+  replicas:
+  - entryTitle: 
+    entryDescription: To live through this, I need to craft and set up a fire.
+    character: {fileID: 0}
+  - entryTitle: 
+    entryDescription: To craft, I need the materials - like the wood that is lying
+      around.
+    character: {fileID: 0}
+  - entryTitle: 
+    entryDescription: 3 logs will suffice to craft a proper bonfire, but I should
+      gather a few spares to keep the fire up and burning for the whole night.
+    character: {fileID: 0}
